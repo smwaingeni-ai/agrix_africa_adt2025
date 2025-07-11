@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 class FarmerProfile {
   final String farmerId;
   final String fullName;
+  final String idNumber;
   final String country;
   final String province;
   final String district;
@@ -14,10 +17,12 @@ class FarmerProfile {
   final String language;
   final DateTime createdAt;
   final String? qrImagePath;
+  final String? photoPath;
 
   FarmerProfile({
     required this.farmerId,
     required this.fullName,
+    required this.idNumber,
     required this.country,
     required this.province,
     required this.district,
@@ -31,12 +36,14 @@ class FarmerProfile {
     required this.language,
     required this.createdAt,
     this.qrImagePath,
+    this.photoPath,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'farmerId': farmerId,
       'fullName': fullName,
+      'idNumber': idNumber,
       'country': country,
       'province': province,
       'district': district,
@@ -50,6 +57,7 @@ class FarmerProfile {
       'language': language,
       'createdAt': createdAt.toIso8601String(),
       'qrImagePath': qrImagePath,
+      'photoPath': photoPath,
     };
   }
 
@@ -57,6 +65,7 @@ class FarmerProfile {
     return FarmerProfile(
       farmerId: json['farmerId'],
       fullName: json['fullName'],
+      idNumber: json['idNumber'],
       country: json['country'],
       province: json['province'],
       district: json['district'],
@@ -70,6 +79,7 @@ class FarmerProfile {
       language: json['language'],
       createdAt: DateTime.parse(json['createdAt']),
       qrImagePath: json['qrImagePath'],
+      photoPath: json['photoPath'],
     );
   }
 

@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/farmer_profile.dart';
+import '../models/user_model.dart';
 import '../services/profile_service.dart';
 
 class LandingPage extends StatefulWidget {
-  const LandingPage({super.key});
+  final UserModel loggedInUser;
+
+  const LandingPage({super.key, required this.loggedInUser});
 
   @override
   State<LandingPage> createState() => _LandingPageState();
@@ -27,6 +31,31 @@ class _LandingPageState extends State<LandingPage> {
     });
   }
 
+  Future<void> _deleteProfile() async {
+    await ProfileService.deleteProfile();
+    setState(() {
+      _profile = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ Profile deleted successfully')),
+    );
+  }
+
+  void _shareProfile() {
+    if (_profile != null) {
+      final profileText = '''
+👤 Name: ${_profile!.fullName}
+📞 Contact: ${_profile!.contactNumber}
+🌍 Country: ${_profile!.country}, Province: ${_profile!.province}
+📐 Farm Size: ${_profile!.farmSize} acres
+🌱 Type: ${_profile!.farmType}
+🏛️ Subsidised: ${_profile!.subsidised ? "Yes" : "No"}
+🆔 ID Number: ${_profile!.idNumber ?? "N/A"}
+''';
+      Share.share(profileText);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final buttons = [
@@ -42,46 +71,87 @@ class _LandingPageState extends State<LandingPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            // 🔸 Logged-in user info
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.lightGreen.shade100,
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: const Text(
-                '✅ AgriX Landing Page Loaded Successfully!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              child: Text(
+                '👤 Welcome ${widget.loggedInUser.name} (${widget.loggedInUser.role})',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
+
             const SizedBox(height: 20),
 
-            // 🔹 Farmer Profile Summary
+            // 🔹 Profile Summary
             if (_profile != null) ...[
               Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 elevation: 2,
-                child: ListTile(
-                  leading: const Icon(Icons.person, color: Colors.green),
-                  title: Text(_profile!.fullName),
-                  subtitle: Text(
-                      '${_profile!.country}, ${_profile!.province}\nFarm Type: ${_profile!.farmType} • Subsidised: ${_profile!.subsidised ? 'Yes' : 'No'}'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/profile')
-                          .then((_) => _loadProfile());
-                    },
-                  ),
+                child: Column(
+                  children: [
+                    if (_profile!.photoPath != null &&
+                        File(_profile!.photoPath!).existsSync()) ...[
+                      const SizedBox(height: 10),
+                      const Text('📷 Farmer Photo',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          File(_profile!.photoPath!),
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ],
+                    ListTile(
+                      leading: const Icon(Icons.person, color: Colors.green),
+                      title: Text(_profile!.fullName),
+                      subtitle: Text(
+                          '${_profile!.country}, ${_profile!.province}\nFarm Type: ${_profile!.farmType} • Subsidised: ${_profile!.subsidised ? 'Yes' : 'No'}'),
+                    ),
+                    if (_profile!.qrImagePath != null &&
+                        File(_profile!.qrImagePath!).existsSync())
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Image.file(File(_profile!.qrImagePath!), height: 100),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.edit),
+                            label: const Text("Edit"),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/profile')
+                                  .then((_) => _loadProfile());
+                            },
+                          ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.share),
+                            label: const Text("Share"),
+                            onPressed: _shareProfile,
+                          ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.delete),
+                            label: const Text("Delete"),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent),
+                            onPressed: _deleteProfile,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 10),
-              if (_profile!.farmerId.isNotEmpty)
-                QrImageView(
-                  data: _profile!.farmerId,
-                  version: QrVersions.auto,
-                  size: 120,
-                  backgroundColor: Colors.white,
-                ),
               const SizedBox(height: 10),
             ] else
               ElevatedButton.icon(
