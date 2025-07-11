@@ -1,30 +1,49 @@
-# Flutter/Dart/Pub related
+# --------------------------
+# Flutter/Dart/Pub Related
+# --------------------------
 .dart_tool/
 .packages
+.pub/
 .pub-cache/
 build/
-flutter_*.png
-.pub/
-.idea/
-.vscode/
-*.iml
-*.lock
-*.log
-*.tmp
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-versions
+generated_plugin_registrant.dart
 
-# Environment files
+# --------------------------
+# Environment Files
+# --------------------------
 .env
 .env.*
 
-# macOS/Linux/Windows
-.DS_Store
+# --------------------------
+# IDE Configs
+# --------------------------
+.idea/
+.vscode/
+*.iml
+
+# --------------------------
+# Log/Temp Files
+# --------------------------
+*.lock
+*.log
+*.tmp
 *.swp
 *.swo
 
-# Android/iOS build artifacts
+# --------------------------
+# macOS/Linux/Windows
+# --------------------------
+.DS_Store
+
+# --------------------------
+# Android/iOS Build Artifacts
+# --------------------------
 android/.gradle/
-android/captures/
 android/.idea/
+android/captures/
 ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 ios/Pods/
@@ -36,5 +55,18 @@ macos/Flutter/ephemeral/
 windows/Flutter/ephemeral/
 linux/Flutter/ephemeral/
 
-# Web-specific
+# --------------------------
+# Web-Specific
+# --------------------------
 web/generated_plugin_registrant.dart
+
+# --------------------------
+# Firebase (optional)
+# --------------------------
+firebase.json
+*.firebase
+
+# --------------------------
+# Coverage Reports (optional)
+# --------------------------
+coverage/
