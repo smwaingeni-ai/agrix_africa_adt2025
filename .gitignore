@@ -1,0 +1,40 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+build/
+flutter_*.png
+.pub/
+.idea/
+.vscode/
+*.iml
+*.lock
+*.log
+*.tmp
+
+# Environment files
+.env
+.env.*
+
+# macOS/Linux/Windows
+.DS_Store
+*.swp
+*.swo
+
+# Android/iOS build artifacts
+android/.gradle/
+android/captures/
+android/.idea/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Pods/
+ios/.symlinks/
+ios/Runner.xcworkspace/
+ios/.flutter-plugins
+ios/.flutter-plugins-dependencies
+macos/Flutter/ephemeral/
+windows/Flutter/ephemeral/
+linux/Flutter/ephemeral/
+
+# Web-specific
+web/generated_plugin_registrant.dart
