@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/farmer_profile.dart';
 import '../models/user_model.dart';
@@ -53,24 +52,51 @@ class _LandingPageState extends State<LandingPage> {
     }
   }
 
+  Widget buildGridButton(String label, String route) {
+    return ElevatedButton.icon(
+      icon: const Icon(Icons.arrow_forward_ios),
+      label: Text(label, textAlign: TextAlign.center),
+      onPressed: () {
+        Navigator.pushNamed(context, route);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final buttons = [
+      {'label': 'Scan / Upload Image', 'route': '/upload'},
       {'label': 'Get Advice', 'route': '/advice'},
       {'label': 'Logbook', 'route': '/logbook'},
       {'label': 'Market', 'route': '/market'},
       {'label': 'Loan', 'route': '/loan'},
-      {'label': 'AgriGPT', 'route': '/agrigpt'},     // 🧠 Text-style AI Q&A
-      {'label': 'AgriGPT Chat', 'route': '/chat'},   // 💬 Chat-style assistant
-      {'label': 'Crops', 'route': '/crops'},         // 🌾 NEW Crop Diagnosis Tool
+      {'label': 'AgriGPT', 'route': '/agrigpt'},
+      {'label': 'AgriGPT Chat', 'route': '/chat'},
+      {'label': 'Crops', 'route': '/crops'},
       {'label': 'Field Assessments', 'route': '/fieldAssessment'},
-      {'label': 'Help', 'route': '/help'},
+      {'label': 'Farming Tips', 'route': '/tips'},
+      {'label': 'Contract Offers', 'route': '/contracts/list'},
+      {'label': 'Submit Offer', 'route': '/contracts/new'},
+      {'label': 'Investor Portal', 'route': '/investor/register'},
+      {'label': 'AREX Tasks', 'route': '/officer/tasks'},
+      {'label': 'AREX Assessments', 'route': '/officer/assessments'},
+      {'label': 'Sync & Backup', 'route': '/sync'},
+      {'label': 'Notifications', 'route': '/notifications'},
+      {'label': 'Help & FAQs', 'route': '/help'},
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('AgriX Beta – ADT 2025'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.pushNamed(context, '/profile')
+                .then((_) => _loadProfile()),
+            tooltip: 'Edit Profile',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -104,7 +130,7 @@ class _LandingPageState extends State<LandingPage> {
             ),
             const SizedBox(height: 16),
 
-            // 🔹 Profile Summary
+            // 🔹 Profile Card
             if (_profile != null) ...[
               Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -182,7 +208,6 @@ class _LandingPageState extends State<LandingPage> {
               ),
 
             const SizedBox(height: 16),
-
             const Text(
               'Your AI-powered farming assistant.',
               style: TextStyle(fontSize: 16),
@@ -190,20 +215,15 @@ class _LandingPageState extends State<LandingPage> {
             ),
             const SizedBox(height: 24),
 
+            // 🔸 Action Buttons Grid
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                children: buttons.map((btn) {
-                  return ElevatedButton.icon(
-                    icon: const Icon(Icons.arrow_forward_ios),
-                    label: Text(btn['label']!),
-                    onPressed: () {
-                      Navigator.pushNamed(context, btn['route']!);
-                    },
-                  );
-                }).toList(),
+                children: buttons
+                    .map((btn) => buildGridButton(btn['label']!, btn['route']!))
+                    .toList(),
               ),
             ),
           ],
