@@ -60,7 +60,8 @@ class _LandingPageState extends State<LandingPage> {
       {'label': 'Logbook', 'route': '/logbook'},
       {'label': 'Market', 'route': '/market'},
       {'label': 'Loan', 'route': '/loan'},
-      {'label': 'AgriGPT', 'route': '/agrigpt'}, // ✅ New AI Assistant
+      {'label': 'AgriGPT', 'route': '/agrigpt'},     // 🧠 Text-style AI Q&A
+      {'label': 'AgriGPT Chat', 'route': '/chat'},   // 💬 Chat-style assistant
     ];
 
     return Scaffold(
