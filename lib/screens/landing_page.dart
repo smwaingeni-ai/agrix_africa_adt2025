@@ -38,18 +38,19 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   void _shareProfile() {
-    if (_profile != null) {
-      final profileText = '''
+    if (_profile == null) return;
+
+    final profileText = '''
 👤 Name: ${_profile!.fullName}
 📞 Contact: ${_profile!.contactNumber}
 🌍 Country: ${_profile!.country}, Province: ${_profile!.province}
 📐 Farm Size: ${_profile!.farmSize} acres
 🌱 Type: ${_profile!.farmType}
 🏛️ Subsidised: ${_profile!.subsidised ? "Yes" : "No"}
-🆔 ID Number: ${_profile!.idNumber ?? "N/A"}
+🆔 ID Number: ${_profile!.idNumber}
 ''';
-      Share.share(profileText);
-    }
+
+    Share.share(profileText);
   }
 
   Widget buildGridButton(String label, String route) {
@@ -130,8 +131,8 @@ class _LandingPageState extends State<LandingPage> {
             ),
             const SizedBox(height: 16),
 
-            // 🔹 Profile Card
-            if (_profile != null) ...[
+            // 🔹 Profile Card or Create Button
+            if (_profile != null)
               Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 elevation: 2,
@@ -163,7 +164,10 @@ class _LandingPageState extends State<LandingPage> {
                         File(_profile!.qrImagePath!).existsSync())
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Image.file(File(_profile!.qrImagePath!), height: 100),
+                        child: Image.file(
+                          File(_profile!.qrImagePath!),
+                          height: 100,
+                        ),
                       ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -187,7 +191,8 @@ class _LandingPageState extends State<LandingPage> {
                             icon: const Icon(Icons.delete),
                             label: const Text("Delete"),
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent),
+                              backgroundColor: Colors.redAccent,
+                            ),
                             onPressed: _deleteProfile,
                           ),
                         ],
@@ -195,9 +200,8 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 10),
-            ] else
+              )
+            else
               ElevatedButton.icon(
                 icon: const Icon(Icons.person_add),
                 label: const Text('Create Farmer Profile'),
@@ -222,7 +226,8 @@ class _LandingPageState extends State<LandingPage> {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 children: buttons
-                    .map((btn) => buildGridButton(btn['label']!, btn['route']!))
+                    .map((btn) =>
+                        buildGridButton(btn['label']!, btn['route']!))
                     .toList(),
               ),
             ),
