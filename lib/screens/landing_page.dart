@@ -36,9 +36,6 @@ class _LandingPageState extends State<LandingPage> {
     setState(() {
       _profile = null;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('✅ Profile deleted successfully')),
-    );
   }
 
   void _shareProfile() {
@@ -66,25 +63,41 @@ class _LandingPageState extends State<LandingPage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('AgriX Beta – ADT 2025')),
+      appBar: AppBar(
+        title: const Text('AgriX Beta – ADT 2025'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // 🔸 Logged-in user info
+            // 🔸 Logo and Motto
+            Column(
+              children: [
+                Image.asset('assets/alogo.png', height: 100),
+                const SizedBox(height: 8),
+                const Text(
+                  'AgriX – Smart Economies',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // 🔹 Welcome Banner
             Container(
-              padding: const EdgeInsets.all(16),
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.green.shade50,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                '👤 Welcome ${widget.loggedInUser.name} (${widget.loggedInUser.role})',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                '👋 Welcome ${widget.loggedInUser.name} (${widget.loggedInUser.role})',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
-
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // 🔹 Profile Summary
             if (_profile != null) ...[
@@ -163,13 +176,14 @@ class _LandingPageState extends State<LandingPage> {
                 },
               ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+
             const Text(
-              'Welcome to AgriX 🌾\nYour AI-powered farming assistant.',
+              'Your AI-powered farming assistant.',
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
 
             Expanded(
               child: GridView.count(
