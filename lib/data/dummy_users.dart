@@ -25,4 +25,16 @@ final List<UserModel> dummyUsers = [
     role: 'Admin',
     passcode: 'admin',
   ),
+  UserModel(
+    id: 'user005',
+    name: 'Trader Nyambe',
+    role: 'Trader',
+    passcode: 'trade123',
+  ),
+  UserModel(
+    id: 'user006',
+    name: 'Investor Grace',
+    role: 'Investor',
+    passcode: 'invest456',
+  ),
 ];
