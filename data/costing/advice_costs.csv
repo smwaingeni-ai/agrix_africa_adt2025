@@ -1,0 +1,4 @@
+AdviceID,AdviceType,Cost,Currency,SubsidyPercent,ApplicableTo
+CROP001,Crop Disease Treatment,4.50,ZWL,50,All
+SOIL001,Soil Fertility Boost,3.20,ZMW,40,FemaleOnly
+LIV001,Livestock Deworming,5.00,KES,60,GoatFarmers
