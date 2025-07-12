@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/user_model.dart';
+import '../../models/farmer_profile.dart';
+import '../../services/profile_service.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({super.key});
@@ -16,6 +19,11 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   String role = 'Farmer';
   String name = '';
   String passcode = '';
+  String phone = '';
+  String region = '';
+  String farmType = '';
+  bool _submitted = false;
+  FarmerProfile? _profile;
 
   final List<String> roles = ['Farmer', 'Officer', 'Official', 'Admin'];
 
@@ -23,8 +31,10 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      final userId = DateTime.now().millisecondsSinceEpoch.toString();
+
       final user = UserModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: userId,
         role: role,
         name: name,
         passcode: passcode,
@@ -44,13 +54,33 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       users.add(user.toJson());
       await file.writeAsString(jsonEncode(users));
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ User registered successfully')),
+      if (role == 'Farmer') {
+        _profile = FarmerProfile(
+          id: userId,
+          name: name,
+          phone: phone,
+          region: region,
+          farmType: farmType,
+          qrImagePath: '',
         );
-        Navigator.pop(context);
+        await ProfileService.saveActiveProfile(_profile!);
       }
+
+      setState(() => _submitted = true);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('✅ User registered successfully')),
+      );
     }
+  }
+
+  Widget _buildQRCode() {
+    final encoded = jsonEncode(_profile?.toJson() ?? {});
+    return QrImageView(
+      data: encoded,
+      version: QrVersions.auto,
+      size: 200.0,
+    );
   }
 
   @override
@@ -59,46 +89,68 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       appBar: AppBar(title: const Text('Register New User')),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Role'),
-                value: role,
-                items: roles
-                    .map((r) => DropdownMenuItem(value: r, child: Text(r)))
-                    .toList(),
-                onChanged: (val) => setState(() => role = val!),
+        child: _submitted && role == 'Farmer'
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('QR Code Generated:', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 20),
+                  _buildQRCode(),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Back to Home'),
+                  ),
+                ],
+              )
+            : Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(labelText: 'Role'),
+                      value: role,
+                      items: roles.map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
+                      onChanged: (val) => setState(() => role = val!),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Username / Full Name'),
+                      validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                      onSaved: (val) => name = val!,
+                    ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Phone Number'),
+                        keyboardType: TextInputType.phone,
+                        validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                        onSaved: (val) => phone = val!,
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Region'),
+                        validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                        onSaved: (val) => region = val!,
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Farm Type (e.g. Crops, Livestock)'),
+                        onSaved: (val) => farmType = val ?? '',
+                      ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Passcode'),
+                      obscureText: true,
+                      validator: (val) => val == null || val.length < 4 ? 'Min 4 digits' : null,
+                      onSaved: (val) => passcode = val!,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _registerUser,
+                      child: const Text('Register'),
+                    ),
+                  ],
+                ),
               ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Username'),
-                validator: (val) =>
-                    val == null || val.isEmpty ? 'Required' : null,
-                onSaved: (val) => name = val!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Passcode'),
-                obscureText: true,
-                validator: (val) =>
-                    val == null || val.length < 4 ? 'Min 4 digits' : null,
-                onSaved: (val) => passcode = val!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _registerUser,
-                child: const Text('Register'),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
 }
-
-// 🔜 LATER IMPROVEMENTS:
-// - Validate if username already exists
-// - Encrypt passcode (basic hash)
-// - Admin-only access to register users
-// - Remote sync/storage
