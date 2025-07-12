@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageCountrySetupScreen extends StatefulWidget {
   const LanguageCountrySetupScreen({super.key});
 
   @override
-  State<LanguageCountrySetupScreen> createState() => _LanguageCountrySetupScreenState();
+  State<LanguageCountrySetupScreen> createState() =>
+      _LanguageCountrySetupScreenState();
 }
 
-class _LanguageCountrySetupScreenState extends State<LanguageCountrySetupScreen> {
+class _LanguageCountrySetupScreenState
+    extends State<LanguageCountrySetupScreen> {
   String? _selectedLanguage;
   String? _selectedCountry;
   String? _selectedProvince;
@@ -23,25 +26,44 @@ class _LanguageCountrySetupScreenState extends State<LanguageCountrySetupScreen>
   final List<String> _countries = ['Zimbabwe', 'Zambia', 'Kenya'];
   final List<String> _areas = ['Urban', 'Rural', 'Peri-Urban'];
 
-  void _saveSetup() {
+  @override
+  void initState() {
+    super.initState();
+    _loadPreviousSelections();
+  }
+
+  Future<void> _loadPreviousSelections() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _selectedLanguage = prefs.getString('language');
+      _selectedCountry = prefs.getString('country');
+      _selectedProvince = prefs.getString('province');
+      _selectedArea = prefs.getString('area');
+    });
+  }
+
+  Future<void> _saveSetup() async {
     if (_selectedLanguage == null ||
         _selectedCountry == null ||
         _selectedProvince == null ||
         _selectedArea == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please complete all selections')),
+        const SnackBar(content: Text('⚠️ Please complete all selections')),
       );
       return;
     }
 
-    // TODO: Save selections to user profile or shared preferences
-    // Example: UserPreferences.saveRegionSettings(...)
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language', _selectedLanguage!);
+    await prefs.setString('country', _selectedCountry!);
+    await prefs.setString('province', _selectedProvince!);
+    await prefs.setString('area', _selectedArea!);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('✅ Setup saved successfully')),
     );
 
-    Navigator.pushReplacementNamed(context, '/landing'); // Or wherever needed
+    Navigator.pushReplacementNamed(context, '/home'); // or another route
   }
 
   @override
@@ -76,7 +98,7 @@ class _LanguageCountrySetupScreenState extends State<LanguageCountrySetupScreen>
                   .toList(),
               onChanged: (val) => setState(() {
                 _selectedCountry = val;
-                _selectedProvince = null; // reset province when country changes
+                _selectedProvince = null;
               }),
             ),
             const SizedBox(height: 16),
