@@ -27,8 +27,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   }
 
   double _scoreFarmer(FarmerProfile f) {
-    // Basic scoring logic based on farm size and affiliation
-    double score = f.farmSizeHectares * (f.govtAffiliated ? 1.5 : 1.0);
+    double score = (f.farmSizeHectares ?? 0.0) * (f.govtAffiliated ? 1.5 : 1.0);
     return score.clamp(0, 100);
   }
 
@@ -42,7 +41,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     }
 
     final score = _scoreFarmer(_selectedFarmer!);
-    final approved = score > 30; // threshold for approval
+    final approved = score > 30;
 
     showDialog(
       context: context,
@@ -77,9 +76,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               items: _farmerMap.values.map((farmer) {
                 return DropdownMenuItem(
                   value: farmer,
-                  child: Text(
-                    '${farmer.name} (${farmer.govtAffiliated ? 'Govt' : 'Private'})',
-                  ),
+                  child: Text('${farmer.name} (${farmer.govtAffiliated ? 'Govt' : 'Private'})'),
                 );
               }).toList(),
               onChanged: (value) => setState(() => _selectedFarmer = value),
