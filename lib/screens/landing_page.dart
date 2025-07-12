@@ -64,6 +64,7 @@ class _LandingPageState extends State<LandingPage> {
       {'label': 'AgriGPT Chat', 'route': '/chat'},   // 💬 Chat-style assistant
       {'label': 'Crops', 'route': '/crops'},         // 🌾 NEW Crop Diagnosis Tool
       {'label': 'Field Assessments', 'route': '/fieldAssessment'},
+      {'label': 'Help', 'route': '/help'},
     ];
 
     return Scaffold(
