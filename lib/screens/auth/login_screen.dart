@@ -20,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
     'AREX Officer',
     'Government Official',
     'Admin',
+    'Trader',
+    'Investor',
   ];
 
   void _validateLogin() {
@@ -57,6 +59,12 @@ class _LoginScreenState extends State<LoginScreen> {
         break;
       case 'Admin':
         Navigator.pushReplacementNamed(context, '/admin_panel', arguments: user);
+        break;
+      case 'Trader':
+        Navigator.pushReplacementNamed(context, '/trader_dashboard', arguments: user);
+        break;
+      case 'Investor':
+        Navigator.pushReplacementNamed(context, '/investor_dashboard', arguments: user);
         break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(
