@@ -30,7 +30,6 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
       final userId = DateTime.now().millisecondsSinceEpoch.toString();
 
       final user = UserModel(
@@ -61,6 +60,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           phone: phone,
           region: region,
           farmType: farmType,
+          govtAffiliated: true,
+          farmSizeHectares: 1.0,
           qrImagePath: '',
         );
         await ProfileService.saveActiveProfile(_profile!);
