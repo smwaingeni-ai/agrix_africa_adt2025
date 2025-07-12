@@ -39,6 +39,12 @@ class FarmerProfile {
     this.photoPath,
   });
 
+  // ➕ Virtual aliases for compatibility
+  String get id => farmerId;
+  String get name => fullName;
+  bool get govtAffiliated => subsidised;
+  double get farmSizeHectares => farmSize;
+
   /// Creates an empty profile (useful for form initialization)
   factory FarmerProfile.empty() => FarmerProfile(
         farmerId: '',
