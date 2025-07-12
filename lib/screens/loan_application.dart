@@ -76,7 +76,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               items: _farmerMap.values.map((farmer) {
                 return DropdownMenuItem(
                   value: farmer,
-                  child: Text('${farmer.name} (${farmer.govtAffiliated ? 'Govt' : 'Private'})'),
+                  child: Text('${farmer.fullName} (${farmer.govtAffiliated ? 'Govt' : 'Private'})'),
                 );
               }).toList(),
               onChanged: (value) => setState(() => _selectedFarmer = value),
