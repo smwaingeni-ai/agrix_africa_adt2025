@@ -4,91 +4,87 @@ import 'package:path_provider/path_provider.dart';
 import '../models/farmer_profile.dart';
 
 class ProfileService {
-  static const String _fileName = 'farmer_profile.json';
+  static const String _fileName = 'farmer_profiles.json';
 
-  /// 🔹 Get full file path for storing farmer profile
-  static Future<String> _getFilePath() async {
+  /// Get the full file for storing the profiles
+  static Future<File> _getFile() async {
     final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/$_fileName';
+    return File('${directory.path}/$_fileName');
   }
 
-  /// 🔹 Save FarmerProfile to disk
+  /// Save a new profile (append to existing list)
   static Future<void> saveProfile(FarmerProfile profile) async {
     try {
-      final path = await _getFilePath();
-      final file = File(path);
-      final json = profile.toRawJson();
-      await file.writeAsString(json, flush: true, encoding: utf8);
-      print('✅ Profile saved at: $path');
+      final profiles = await loadProfiles();
+      profiles.add(profile);
+      final file = await _getFile();
+      await file.writeAsString(FarmerProfile.encode(profiles), flush: true);
+      print('✅ Profile saved successfully.');
     } catch (e) {
       print('❌ Error saving profile: $e');
     }
   }
 
-  /// 🔹 Load FarmerProfile from disk
-  static Future<FarmerProfile?> loadProfile() async {
+  /// Load all profiles
+  static Future<List<FarmerProfile>> loadProfiles() async {
     try {
-      final path = await _getFilePath();
-      final file = File(path);
+      final file = await _getFile();
       if (await file.exists()) {
-        final contents = await file.readAsString(encoding: utf8);
-        return FarmerProfile.fromRawJson(contents);
+        final contents = await file.readAsString();
+        return FarmerProfile.decode(contents);
       } else {
-        print('ℹ️ No saved profile found.');
-        return null;
+        return [];
       }
     } catch (e) {
-      print('❌ Error loading profile: $e');
-      return null;
+      print('❌ Error loading profiles: $e');
+      return [];
     }
   }
 
-  /// 🔹 Delete FarmerProfile file
-  static Future<void> deleteProfile() async {
+  /// Delete all saved profiles
+  static Future<void> clearProfiles() async {
     try {
-      final path = await _getFilePath();
-      final file = File(path);
+      final file = await _getFile();
       if (await file.exists()) {
-        await file.delete();
-        print('🗑️ Farmer profile deleted.');
-      } else {
-        print('⚠️ No profile file to delete.');
+        await file.writeAsString('[]');
+        print('🗑️ All profiles cleared.');
       }
     } catch (e) {
-      print('❌ Error deleting profile: $e');
+      print('❌ Error clearing profiles: $e');
     }
   }
 
-  /// 🔹 Check if profile file exists
+  /// Check if any profile exists
   static Future<bool> profileExists() async {
     try {
-      final path = await _getFilePath();
-      return File(path).exists();
+      final file = await _getFile();
+      return file.exists();
     } catch (e) {
       print('❌ Error checking profile existence: $e');
       return false;
     }
   }
 
-  /// 🔹 Export profile as raw JSON string (for sharing or backup)
-  static Future<String?> exportProfileAsJson() async {
+  /// Export all profiles as raw JSON string
+  static Future<String?> exportProfilesAsJson() async {
     try {
-      final profile = await loadProfile();
-      return profile?.toRawJson();
+      final profiles = await loadProfiles();
+      return FarmerProfile.encode(profiles);
     } catch (e) {
-      print('❌ Error exporting profile: $e');
+      print('❌ Error exporting profiles: $e');
       return null;
     }
   }
 
-  /// 🔹 Import and save a profile from raw JSON string (optional use)
-  static Future<void> importProfileFromJson(String jsonStr) async {
+  /// Import multiple profiles from JSON string (overwrites all)
+  static Future<void> importProfilesFromJson(String jsonStr) async {
     try {
-      final profile = FarmerProfile.fromRawJson(jsonStr);
-      await saveProfile(profile);
-      print('📥 Profile imported successfully.');
+      final profiles = FarmerProfile.decode(jsonStr);
+      final file = await _getFile();
+      await file.writeAsString(FarmerProfile.encode(profiles), flush: true);
+      print('📥 Profiles imported successfully.');
     } catch (e) {
-      print('❌ Error importing profile: $e');
+      print('❌ Error importing profiles: $e');
     }
   }
 }
