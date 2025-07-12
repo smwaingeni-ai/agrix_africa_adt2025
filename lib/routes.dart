@@ -14,6 +14,8 @@ import 'screens/farmer_profile_screen.dart';
 import 'screens/dashboards/officer_dashboard.dart';
 import 'screens/dashboards/official_dashboard.dart';
 import 'screens/dashboards/admin_panel.dart';
+import 'screens/dashboards/trader_dashboard.dart';
+import 'screens/dashboards/investor_dashboard.dart';
 
 // 🔹 Models
 import 'models/user_model.dart';
@@ -31,6 +33,10 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/officer_dashboard': (context) => const OfficerDashboard(),
   '/official_dashboard': (context) => const OfficialDashboard(),
   '/admin_panel': (context) => const AdminPanel(),
+  '/trader_dashboard': (context) => const TraderDashboard(),
+  '/investor_dashboard': (context) => const InvestorDashboard(),
+
+  // 🔸 Features
   '/advice': (context) => const AdviceScreen(),
   '/logbook': (context) => const LogbookScreen(),
   '/market': (context) => const MarketScreen(),
