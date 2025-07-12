@@ -8,12 +8,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Core Dependencies
   qr_flutter: ^4.0.0
   path_provider: ^2.1.1
   uuid: ^4.1.0
   share_plus: ^7.2.1
   image_picker: ^1.0.7
   file_picker: ^6.1.1
+  local_auth: ^2.1.6
+
+  # Firebase Dependencies
+  cloud_firestore: ^4.9.1
+  firebase_core: ^2.24.2
+
+  # Linking & Navigation
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
