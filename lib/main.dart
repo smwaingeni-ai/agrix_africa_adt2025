@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'routes.dart'; // ✅ Your central route definitions
+import 'routes.dart'; // Make sure this file is correctly set up
+import 'screens/core/language_country_setup.dart'; // Startup screen
 
 void main() {
   runApp(const MyApp());
@@ -18,10 +19,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      // ✅ Starts with LoginScreen via '/' route
-      initialRoute: '/',
-      // ✅ Centralized route mapping from routes.dart
-      routes: appRoutes,
+      // Starts with the language and region setup screen
+      home: const LanguageCountrySetupScreen(), // 🌍 Initial screen
+      routes: appRoutes, // ✅ From routes.dart
     );
   }
 }
