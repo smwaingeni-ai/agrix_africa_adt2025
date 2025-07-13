@@ -11,80 +11,91 @@ class InvestorRegistrationScreen extends StatefulWidget {
 
 class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _contactController = TextEditingController();
 
-  final List<String> _selectedTerms = [];
+  final List<InvestmentHorizon> _selectedHorizons = [];
   final List<String> _selectedInterests = [];
-  String _investmentStatus = 'Indifferent';
+  InvestorStatus _status = InvestorStatus.indifferent;
+  String _selectedCountry = 'Zambia';
 
-  final List<String> _investmentTerms = ['Short-term (1–2 yrs)', 'Mid-term (3–5 yrs)', 'Long-term (6+ yrs)'];
-  final List<String> _interestCategories = ['Crops', 'Livestock', 'Land', 'Equipment', 'Services'];
-  final List<String> _statuses = ['Open', 'Indifferent', 'Not Open'];
+  final List<String> _interestOptions = ['Crops', 'Livestock', 'Land', 'Equipment', 'Services'];
+  final List<String> _countryOptions = ['Zambia', 'Zimbabwe', 'Kenya', 'Nigeria', 'Ghana'];
 
-  void _saveInvestor() async {
-    if (_formKey.currentState?.validate() ?? false) {
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
       final newInvestor = InvestorProfile(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: _nameController.text,
-        contactInfo: _contactController.text,
-        term: _selectedTerms.join(', '),
-        interestArea: _selectedInterests.join(', '),
-        status: _investmentStatus,
-        country: 'N/A',
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        contactNumber: _contactController.text.trim(),
+        location: _selectedCountry,
+        preferredHorizons: _selectedHorizons,
+        status: _status,
+        interests: _selectedInterests,
+        registeredAt: DateTime.now(),
       );
 
       await InvestorService().addInvestor(newInvestor);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ Investor Registered Successfully')),
+          const SnackBar(content: Text('✅ Investor registered successfully')),
         );
         Navigator.pop(context);
       }
     }
   }
 
-  Widget _buildChipSelector({
-    required String label,
-    required List<String> options,
-    required List<String> selectedList,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-        const SizedBox(height: 6),
-        Wrap(
-          spacing: 8,
-          children: options.map((item) {
-            final isSelected = selectedList.contains(item);
-            return FilterChip(
-              label: Text(item),
-              selected: isSelected,
-              onSelected: (bool selected) {
-                setState(() {
-                  if (selected) {
-                    selectedList.add(item);
-                  } else {
-                    selectedList.remove(item);
-                  }
-                });
-              },
+  Widget _buildHorizonChips() {
+    return Wrap(
+      spacing: 8,
+      children: InvestmentHorizon.values.map((horizon) {
+        final selected = _selectedHorizons.contains(horizon);
+        final label = horizon.name.replaceAll('Term', '-term').replaceAllMapped(
+              RegExp(r'([a-z])([A-Z])'),
+              (m) => '${m[1]} ${m[2]}',
             );
-          }).toList(),
-        ),
-        const SizedBox(height: 12),
-      ],
+        return FilterChip(
+          label: Text(label),
+          selected: selected,
+          onSelected: (bool selected) {
+            setState(() {
+              selected
+                  ? _selectedHorizons.add(horizon)
+                  : _selectedHorizons.remove(horizon);
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildInterestChips() {
+    return Wrap(
+      spacing: 8,
+      children: _interestOptions.map((interest) {
+        final selected = _selectedInterests.contains(interest);
+        return FilterChip(
+          label: Text(interest),
+          selected: selected,
+          onSelected: (bool selected) {
+            setState(() {
+              selected
+                  ? _selectedInterests.add(interest)
+                  : _selectedInterests.remove(interest);
+            });
+          },
+        );
+      }).toList(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register as Investor'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Register as Investor')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -98,55 +109,83 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.trim().isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.trim().isEmpty ? 'Name is required' : null,
               ),
               const SizedBox(height: 16),
+
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email Address',
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) =>
+                    val == null || !val.contains('@') ? 'Enter a valid email' : null,
+              ),
+              const SizedBox(height: 16),
+
               TextFormField(
                 controller: _contactController,
+                keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
-                  labelText: 'Contact Info (Phone or Email)',
+                  labelText: 'Phone Number',
                   prefixIcon: Icon(Icons.phone),
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.trim().isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.trim().length < 8 ? 'Phone too short' : null,
               ),
-              const SizedBox(height: 20),
-
-              _buildChipSelector(
-                label: 'Preferred Investment Duration',
-                options: _investmentTerms,
-                selectedList: _selectedTerms,
-              ),
-              _buildChipSelector(
-                label: 'Areas of Interest',
-                options: _interestCategories,
-                selectedList: _selectedInterests,
-              ),
+              const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _investmentStatus,
+                value: _selectedCountry,
+                items: _countryOptions
+                    .map((country) => DropdownMenuItem(
+                          value: country,
+                          child: Text(country),
+                        ))
+                    .toList(),
+                onChanged: (val) => setState(() => _selectedCountry = val ?? 'Zambia'),
+                decoration: const InputDecoration(
+                  labelText: 'Country',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Preferred Investment Term', style: TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 6),
+              _buildHorizonChips(),
+              const SizedBox(height: 16),
+
+              const Text('Interest Areas', style: TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 6),
+              _buildInterestChips(),
+              const SizedBox(height: 16),
+
+              DropdownButtonFormField<InvestorStatus>(
+                value: _status,
+                items: InvestorStatus.values.map((status) {
+                  return DropdownMenuItem(
+                    value: status,
+                    child: Text(status.name[0].toUpperCase() + status.name.substring(1)),
+                  );
+                }).toList(),
+                onChanged: (value) => setState(() => _status = value!),
                 decoration: const InputDecoration(
                   labelText: 'Investment Status',
                   border: OutlineInputBorder(),
                 ),
-                items: _statuses
-                    .map((status) => DropdownMenuItem(value: status, child: Text(status)))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _investmentStatus = value!;
-                  });
-                },
               ),
               const SizedBox(height: 24),
 
               ElevatedButton.icon(
-                icon: const Icon(Icons.save),
-                label: const Text('Submit Investor Profile'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: _saveInvestor,
+                icon: const Icon(Icons.check),
+                label: const Text('Submit'),
+                style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
+                onPressed: _submitForm,
               ),
             ],
           ),
