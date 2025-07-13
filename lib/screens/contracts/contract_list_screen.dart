@@ -31,21 +31,24 @@ class _ContractListScreenState extends State<ContractListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Contract Offers')),
+      appBar: AppBar(title: const Text('Contract Farming Offers')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _contracts.isEmpty
-              ? const Center(child: Text('No contract offers found.'))
+              ? const Center(child: Text('No contract offers available.'))
               : ListView.builder(
                   itemCount: _contracts.length,
                   itemBuilder: (context, index) {
                     final contract = _contracts[index];
                     return Card(
-                      margin: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: ListTile(
+                        leading: const Icon(Icons.handshake, color: Colors.green),
                         title: Text(contract.title),
-                        subtitle: Text('Amount: \$${contract.amount.toStringAsFixed(2)}'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+                        subtitle: Text(
+                          '${contract.cropOrLivestockType} • ${contract.location} • \$${contract.amount.toStringAsFixed(2)}',
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -58,6 +61,11 @@ class _ContractListScreenState extends State<ContractListScreen> {
                     );
                   },
                 ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, '/contracts/new'),
+        child: const Icon(Icons.add),
+        tooltip: 'Add Contract Offer',
+      ),
     );
   }
 }
