@@ -23,11 +23,18 @@ class _ContractApplicationsListScreenState extends State<ContractApplicationsLis
   }
 
   Future<void> _loadApplications() async {
-    final apps = await ContractApplicationService().loadApplications(widget.offer.id);
-    setState(() {
-      _applications = apps;
-      _loading = false;
-    });
+    try {
+      final apps = await ContractApplicationService().loadApplications(widget.offer.id);
+      setState(() {
+        _applications = apps;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() => _loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load applications: $e')),
+      );
+    }
   }
 
   @override
@@ -36,7 +43,7 @@ class _ContractApplicationsListScreenState extends State<ContractApplicationsLis
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Applicants: ${offer.title}'),
+        title: Text('Applicants for "${offer.title}"'),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
