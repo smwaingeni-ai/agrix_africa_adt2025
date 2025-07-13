@@ -5,6 +5,7 @@ class MarketItem {
   final String title;
   final String description;
   final String category;
+  final String type; // 🆕 NEW
   final String listingType;
   final String location;
   final double? price;
@@ -12,9 +13,10 @@ class MarketItem {
   final List<String> contactMethods;
   final List<String> paymentOptions;
   final bool isAvailable;
+  final bool isLoanAccepted; // 🆕 NEW
   final bool isInvestmentOpen;
+  final String investmentTerm; // 🆕 renamed from 'duration'
   final String investmentStatus;
-  final String duration;
   final String ownerName;
   final String ownerContact;
   final DateTime postedAt;
@@ -24,6 +26,7 @@ class MarketItem {
     required this.title,
     required this.description,
     required this.category,
+    required this.type,
     required this.listingType,
     required this.location,
     this.price,
@@ -31,9 +34,10 @@ class MarketItem {
     required this.contactMethods,
     required this.paymentOptions,
     required this.isAvailable,
+    required this.isLoanAccepted,
     required this.isInvestmentOpen,
     required this.investmentStatus,
-    required this.duration,
+    required this.investmentTerm,
     required this.ownerName,
     required this.ownerContact,
     required this.postedAt,
@@ -44,6 +48,7 @@ class MarketItem {
         title: '',
         description: '',
         category: '',
+        type: '',
         listingType: '',
         location: '',
         price: 0.0,
@@ -51,9 +56,10 @@ class MarketItem {
         contactMethods: [],
         paymentOptions: [],
         isAvailable: true,
+        isLoanAccepted: false,
         isInvestmentOpen: false,
         investmentStatus: 'Open',
-        duration: 'Short',
+        investmentTerm: 'Short',
         ownerName: '',
         ownerContact: '',
         postedAt: DateTime.now(),
@@ -64,6 +70,7 @@ class MarketItem {
         'title': title,
         'description': description,
         'category': category,
+        'type': type,
         'listingType': listingType,
         'location': location,
         'price': price,
@@ -71,9 +78,10 @@ class MarketItem {
         'contactMethods': contactMethods,
         'paymentOptions': paymentOptions,
         'isAvailable': isAvailable,
+        'isLoanAccepted': isLoanAccepted,
         'isInvestmentOpen': isInvestmentOpen,
         'investmentStatus': investmentStatus,
-        'duration': duration,
+        'investmentTerm': investmentTerm,
         'ownerName': ownerName,
         'ownerContact': ownerContact,
         'postedAt': postedAt.toIso8601String(),
@@ -84,6 +92,7 @@ class MarketItem {
         title: json['title'] ?? '',
         description: json['description'] ?? '',
         category: json['category'] ?? '',
+        type: json['type'] ?? '',
         listingType: json['listingType'] ?? '',
         location: json['location'] ?? '',
         price: (json['price'] as num?)?.toDouble(),
@@ -91,9 +100,10 @@ class MarketItem {
         contactMethods: List<String>.from(json['contactMethods'] ?? []),
         paymentOptions: List<String>.from(json['paymentOptions'] ?? []),
         isAvailable: json['isAvailable'] ?? true,
+        isLoanAccepted: json['isLoanAccepted'] ?? false,
         isInvestmentOpen: json['isInvestmentOpen'] ?? false,
         investmentStatus: json['investmentStatus'] ?? 'Open',
-        duration: json['duration'] ?? 'Short',
+        investmentTerm: json['investmentTerm'] ?? 'Short',
         ownerName: json['ownerName'] ?? '',
         ownerContact: json['ownerContact'] ?? '',
         postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
