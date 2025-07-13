@@ -80,9 +80,10 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
                       maxLines: 4,
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       onPressed: _submitting ? null : _submitForm,
-                      child: const Text('Submit Contract'),
+                      icon: const Icon(Icons.check),
+                      label: const Text('Submit Contract'),
                     ),
                   ],
                 ),
@@ -98,15 +99,21 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
     bool required = true,
     int maxLines = 1,
   }) {
-    return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      onSaved: onSaved,
-      validator: (val) {
-        if (!required) return null;
-        return (val == null || val.isEmpty) ? 'Required' : null;
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        onSaved: onSaved,
+        validator: (val) {
+          if (!required) return null;
+          return (val == null || val.isEmpty) ? 'Required' : null;
+        },
+      ),
     );
   }
 }
