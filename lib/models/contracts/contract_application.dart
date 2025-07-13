@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ContractApplication {
   String id;
   String contractOfferId;
@@ -12,7 +10,7 @@ class ContractApplication {
   String experience;
   String motivation;
   DateTime appliedAt;
-  String status; // Pending, Approved, Rejected, In Progress
+  String status;
 
   ContractApplication({
     required this.id,
