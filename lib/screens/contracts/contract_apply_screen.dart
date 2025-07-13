@@ -24,21 +24,27 @@ class _ContractApplyScreenState extends State<ContractApplyScreen> {
 
     setState(() => _isSubmitting = true);
 
-    await ContractApplicationService().saveApplication(
-      offerId: widget.offer.id,
-      farmerName: _farmerNameController.text.trim(),
-      farmLocation: _farmLocationController.text.trim(),
-      contactInfo: _contactInfoController.text.trim(),
-      notes: _notesController.text.trim(),
-    );
+    try {
+      await ContractApplicationService().saveApplication(
+        offerId: widget.offer.id,
+        farmerName: _farmerNameController.text.trim(),
+        farmLocation: _farmLocationController.text.trim(),
+        contactInfo: _contactInfoController.text.trim(),
+        notes: _notesController.text.trim(),
+      );
 
-    setState(() => _isSubmitting = false);
-
-    if (mounted) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Application submitted successfully!")),
       );
       Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error submitting application: $e")),
+      );
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
     }
   }
 
