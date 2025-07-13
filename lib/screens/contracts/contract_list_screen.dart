@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/contracts/contract_offer.dart';
 import '../../services/contracts/contract_service.dart';
-import 'contract_detail_screen.dart'; // Optional if needed
+import 'contract_detail_screen.dart';
 
 class ContractListScreen extends StatefulWidget {
   const ContractListScreen({super.key});
@@ -21,11 +21,20 @@ class _ContractListScreenState extends State<ContractListScreen> {
   }
 
   Future<void> _loadContracts() async {
-    final contracts = await ContractService().loadContracts();
-    setState(() {
-      _contracts = contracts;
-      _loading = false;
-    });
+    try {
+      final contracts = await ContractService().loadContracts();
+      setState(() {
+        _contracts = contracts;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load contracts: $e')),
+      );
+    }
   }
 
   @override
@@ -47,10 +56,12 @@ class _ContractListScreenState extends State<ContractListScreen> {
                         subtitle: Text('Amount: \$${contract.amount.toStringAsFixed(2)}'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          // Optionally navigate to detail screen
-                          // Navigator.push(context, MaterialPageRoute(
-                          //   builder: (_) => ContractDetailScreen(contract: contract),
-                          // ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ContractDetailScreen(contract: contract),
+                            ),
+                          );
                         },
                       ),
                     );
