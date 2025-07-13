@@ -1,40 +1,60 @@
 import 'package:flutter/material.dart';
 import '../../models/contracts/contract_offer.dart';
-import '../../models/contracts/contract_application.dart';
 import '../../services/contracts/contract_application_service.dart';
 
-class ContractApplicationsListScreen extends StatefulWidget {
+class ContractApplyScreen extends StatefulWidget {
   final ContractOffer offer;
 
-  const ContractApplicationsListScreen({super.key, required this.offer});
+  const ContractApplyScreen({super.key, required this.offer});
 
   @override
-  State<ContractApplicationsListScreen> createState() => _ContractApplicationsListScreenState();
+  State<ContractApplyScreen> createState() => _ContractApplyScreenState();
 }
 
-class _ContractApplicationsListScreenState extends State<ContractApplicationsListScreen> {
-  List<ContractApplication> _applications = [];
-  bool _loading = true;
+class _ContractApplyScreenState extends State<ContractApplyScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _farmerNameController = TextEditingController();
+  final _farmLocationController = TextEditingController();
+  final _contactInfoController = TextEditingController();
+  final _notesController = TextEditingController();
+  bool _isSubmitting = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadApplications();
+  Future<void> _submitApplication() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      await ContractApplicationService().saveApplication(
+        offerId: widget.offer.id,
+        farmerName: _farmerNameController.text.trim(),
+        farmLocation: _farmLocationController.text.trim(),
+        contactInfo: _contactInfoController.text.trim(),
+        notes: _notesController.text.trim(),
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Application submitted successfully!")),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error submitting application: $e")),
+      );
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 
-  Future<void> _loadApplications() async {
-    try {
-      final apps = await ContractApplicationService().loadApplications(widget.offer.id);
-      setState(() {
-        _applications = apps;
-        _loading = false;
-      });
-    } catch (e) {
-      setState(() => _loading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load applications: $e')),
-      );
-    }
+  @override
+  void dispose() {
+    _farmerNameController.dispose();
+    _farmLocationController.dispose();
+    _contactInfoController.dispose();
+    _notesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,33 +63,44 @@ class _ContractApplicationsListScreenState extends State<ContractApplicationsLis
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Applicants for "${offer.title}"'),
+        title: Text('Apply to "${offer.title}"'),
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _applications.isEmpty
-              ? const Center(child: Text('No applications yet.'))
-              : ListView.builder(
-                  itemCount: _applications.length,
-                  itemBuilder: (context, index) {
-                    final app = _applications[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      child: ListTile(
-                        leading: const Icon(Icons.account_circle, color: Colors.green),
-                        title: Text(app.farmerName),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Location: ${app.farmLocation}'),
-                            Text('Contact: ${app.contactInfo}'),
-                            if (app.notes.isNotEmpty) Text('Notes: ${app.notes}'),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _farmerNameController,
+                decoration: const InputDecoration(labelText: 'Farmer Name'),
+                validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
+              ),
+              TextFormField(
+                controller: _farmLocationController,
+                decoration: const InputDecoration(labelText: 'Farm Location'),
+                validator: (value) => value!.isEmpty ? 'Enter farm location' : null,
+              ),
+              TextFormField(
+                controller: _contactInfoController,
+                decoration: const InputDecoration(labelText: 'Contact Info (Phone/Email)'),
+                validator: (value) => value!.isEmpty ? 'Provide a way to contact you' : null,
+              ),
+              TextFormField(
+                controller: _notesController,
+                decoration: const InputDecoration(labelText: 'Additional Notes (Optional)'),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.send),
+                label: Text(_isSubmitting ? 'Submitting...' : 'Submit Application'),
+                onPressed: _isSubmitting ? null : _submitApplication,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
