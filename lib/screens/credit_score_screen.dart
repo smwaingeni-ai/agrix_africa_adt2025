@@ -21,6 +21,8 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
 
   Future<void> _loadFarmers() async {
     final farmers = await FarmerService.loadFarmers();
+    farmers.sort((a, b) =>
+        _calculateScore(b).compareTo(_calculateScore(a))); // sort by score
     setState(() {
       _farmers = farmers;
       _loading = false;
@@ -45,9 +47,11 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
           child: Text(score.toInt().toString()),
         ),
         title: Text(farmer.fullName),
-        subtitle: Text('Score: ${score.toStringAsFixed(1)} • '
-            'Farm Size: ${farmer.farmSizeHectares?.toStringAsFixed(1) ?? 'N/A'} ha • '
-            'Affiliated: ${farmer.govtAffiliated ? 'Yes' : 'No'}'),
+        subtitle: Text(
+          'Score: ${score.toStringAsFixed(1)} • '
+          'Farm Size: ${farmer.farmSizeHectares?.toStringAsFixed(1) ?? 'N/A'} ha • '
+          'Affiliated: ${farmer.govtAffiliated ? 'Yes' : 'No'}',
+        ),
         trailing: Icon(
           approved ? Icons.check_circle : Icons.cancel,
           color: approved ? Colors.green : Colors.redAccent,
