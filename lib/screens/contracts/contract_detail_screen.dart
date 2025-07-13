@@ -16,11 +16,11 @@ class ContractDetailScreen extends StatelessWidget {
             icon: const Icon(Icons.picture_as_pdf),
             tooltip: 'Export to PDF (Coming Soon)',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("PDF export coming soon..."),
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("PDF export coming soon...")),
+              );
             },
-          )
+          ),
         ],
       ),
       body: Padding(
@@ -38,9 +38,9 @@ class ContractDetailScreen extends StatelessWidget {
               icon: const Icon(Icons.share),
               label: const Text("Share Contract"),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Sharing functionality coming soon."),
-                ));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Sharing functionality coming soon.")),
+                );
               },
             ),
           ],
