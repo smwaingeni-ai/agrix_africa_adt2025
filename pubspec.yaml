@@ -9,28 +9,35 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Core Dependencies
-  qr_flutter: ^4.0.0
+  # Core Flutter Plugins
   path_provider: ^2.1.1
   uuid: ^4.1.0
   share_plus: ^7.2.1
   image_picker: ^1.0.7
   file_picker: ^6.1.1
   local_auth: ^2.1.6
+  qr_flutter: ^4.0.0
+  url_launcher: ^6.2.5
 
-  # Firebase Dependencies
+  # Firebase (Cloud Firestore)
   cloud_firestore: ^4.9.1
   firebase_core: ^2.24.2
 
-  # Linking & Navigation
-  url_launcher: ^6.2.5
+  # State management (optional, for future enhancement)
+  provider: ^6.1.2
+
+  # UI/UX Enhancements
+  flutter_svg: ^2.0.9
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/alogo.png
+    - assets/
