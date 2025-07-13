@@ -1,18 +1,23 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import '../../models/contracts/contract_application.dart';
 
 class ContractApplicationService {
-  static const String _key = 'contract_applications';
+  final String _key = 'contract_applications';
 
   Future<List<ContractApplication>> loadApplications(String offerId) async {
     final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getStringList(_key) ?? [];
-
-    return stored
-        .map((e) => ContractApplication.fromJson(json.decode(e)))
-        .where((a) => a.contractOfferId == offerId)
-        .toList();
+    final data = prefs.getStringList(_key) ?? [];
+    return data.map((e) {
+      try {
+        return ContractApplication.fromJson(json.decode(e));
+      } catch (_) {
+        return null;
+      }
+    }).whereType<ContractApplication>()
+      .where((app) => app.contractOfferId == offerId)
+      .toList();
   }
 
   Future<void> saveApplication({
@@ -20,35 +25,26 @@ class ContractApplicationService {
     required String farmerName,
     required String farmLocation,
     required String contactInfo,
-    String farmerId = '',
-    String email = '',
-    String farmSize = '',
-    String experience = '',
-    String motivation = '',
+    String notes = '',
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final existing = prefs.getStringList(_key) ?? [];
 
-    final app = ContractApplication(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+    final application = ContractApplication(
+      id: const Uuid().v4(),
       contractOfferId: offerId,
       farmerName: farmerName,
-      farmerId: farmerId,
+      farmerId: '',
       location: farmLocation,
       phoneNumber: contactInfo,
-      email: email,
-      farmSize: farmSize,
-      experience: experience,
-      motivation: motivation,
+      email: '',
+      farmSize: '',
+      experience: '',
+      motivation: notes,
       appliedAt: DateTime.now(),
     );
 
-    existing.add(json.encode(app.toJson()));
+    existing.add(json.encode(application.toJson()));
     await prefs.setStringList(_key, existing);
-  }
-
-  Future<void> clearAllApplications() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
   }
 }
