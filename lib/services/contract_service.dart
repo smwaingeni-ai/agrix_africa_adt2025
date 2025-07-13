@@ -1,97 +1,52 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/contracts/contract_offer.dart';
+import 'package:uuid/uuid.dart';
+import '../../models/contracts/contract_offer.dart';
 
 class ContractService {
-  static const String _storageKey = 'contract_offers';
+  final String _key = 'contracts';
 
-  /// 🔹 Save the full list of contract offers
-  static Future<void> saveOffers(List<ContractOffer> offers) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final encoded = jsonEncode(offers.map((e) => e.toJson()).toList());
-      await prefs.setString(_storageKey, encoded);
-      print('✅ Contract offers saved.');
-    } catch (e) {
-      print('❌ Failed to save contract offers: $e');
-    }
-  }
-
-  /// 🔹 Load all saved contract offers
-  static Future<List<ContractOffer>> loadOffers() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final raw = prefs.getString(_storageKey);
-      if (raw == null) return [];
-
-      final decoded = jsonDecode(raw) as List<dynamic>;
-      return decoded.map((e) => ContractOffer.fromJson(e)).toList();
-    } catch (e) {
-      print('❌ Failed to load contract offers: $e');
-      return [];
-    }
-  }
-
-  /// 🔹 Add a new contract offer
-  static Future<void> addOffer(ContractOffer newOffer) async {
-    try {
-      final offers = await loadOffers();
-      offers.add(newOffer);
-      await saveOffers(offers);
-      print('📄 Contract offer added: ${newOffer.id}');
-    } catch (e) {
-      print('❌ Failed to add contract offer: $e');
-    }
-  }
-
-  /// 🔹 Update an existing contract offer by ID
-  static Future<void> updateOffer(ContractOffer updatedOffer) async {
-    try {
-      final offers = await loadOffers();
-      final index = offers.indexWhere((e) => e.id == updatedOffer.id);
-      if (index != -1) {
-        offers[index] = updatedOffer;
-        await saveOffers(offers);
-        print('🔄 Contract offer updated: ${updatedOffer.id}');
-      } else {
-        print('⚠️ Offer not found: ${updatedOffer.id}');
+  Future<List<ContractOffer>> loadContracts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getStringList(_key) ?? [];
+    return data.map((e) {
+      try {
+        return ContractOffer.fromJson(json.decode(e));
+      } catch (_) {
+        return ContractOffer.empty(); // fallback if decoding fails
       }
-    } catch (e) {
-      print('❌ Failed to update contract offer: $e');
-    }
+    }).where((c) => c.id.isNotEmpty).toList(); // filter out bad entries
   }
 
-  /// 🔹 Delete a contract offer by ID
-  static Future<void> deleteOffer(String id) async {
-    try {
-      final offers = await loadOffers();
-      offers.removeWhere((e) => e.id == id);
-      await saveOffers(offers);
-      print('🗑️ Contract offer deleted: $id');
-    } catch (e) {
-      print('❌ Failed to delete contract offer: $e');
+  Future<void> saveContract(ContractOffer contract) async {
+    final prefs = await SharedPreferences.getInstance();
+    final existing = await loadContracts();
+
+    // Assign UUID if missing
+    if (contract.id.isEmpty) {
+      contract.id = const Uuid().v4();
     }
+
+    existing.add(contract);
+    final encoded = existing.map((c) => json.encode(c.toJson())).toList();
+    await prefs.setStringList(_key, encoded);
   }
 
-  /// 🔹 Retrieve a contract offer by ID
-  static Future<ContractOffer?> getOfferById(String id) async {
-    try {
-      final offers = await loadOffers();
-      return offers.firstWhere((e) => e.id == id, orElse: () => null);
-    } catch (e) {
-      print('❌ Error fetching offer by ID: $e');
-      return null;
-    }
+  Future<void> deleteContract(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final existing = await loadContracts();
+    final updated = existing.where((c) => c.id != id).toList();
+    final encoded = updated.map((c) => json.encode(c.toJson())).toList();
+    await prefs.setStringList(_key, encoded);
   }
 
-  /// 🔹 Clear all offers (for testing or reset)
-  static Future<void> clearAllOffers() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_storageKey);
-      print('🧹 All contract offers cleared.');
-    } catch (e) {
-      print('❌ Failed to clear contract offers: $e');
-    }
+  Future<void> updateContract(ContractOffer updatedContract) async {
+    final prefs = await SharedPreferences.getInstance();
+    final existing = await loadContracts();
+    final updated = existing.map((c) {
+      return c.id == updatedContract.id ? updatedContract : c;
+    }).toList();
+    final encoded = updated.map((c) => json.encode(c.toJson())).toList();
+    await prefs.setStringList(_key, encoded);
   }
 }
