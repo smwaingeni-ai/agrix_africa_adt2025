@@ -25,7 +25,7 @@ class ContractOffer {
 
   factory ContractOffer.empty() {
     return ContractOffer(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: '',
       title: '',
       parties: '',
       amount: 0.0,
@@ -66,5 +66,6 @@ class ContractOffer {
   }
 
   @override
-  String toString() => 'ContractOffer(title: $title, amount: $amount)';
+  String toString() =>
+      'ContractOffer(title: $title, amount: $amount, postedAt: $postedAt)';
 }
