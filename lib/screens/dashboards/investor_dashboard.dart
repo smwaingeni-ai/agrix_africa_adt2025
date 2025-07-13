@@ -1,5 +1,3 @@
-// ✅ investor_dashboard.dart
-// Path: lib/screens/dashboards/investor_dashboard.dart
 import 'package:flutter/material.dart';
 
 class InvestorDashboard extends StatelessWidget {
@@ -8,14 +6,26 @@ class InvestorDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Investor Dashboard'),
-      ),
-      body: const Center(
-        child: Text(
-          'Welcome to the Investor Dashboard!',
-          style: TextStyle(fontSize: 18),
-        ),
+      appBar: AppBar(title: const Text('Investor Dashboard')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          ElevatedButton.icon(
+            icon: const Icon(Icons.list),
+            label: const Text('View Investment Offers'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/investments');
+            },
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.add),
+            label: const Text('Submit New Offer'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/investment_offer_form');
+            },
+          ),
+        ],
       ),
     );
   }
