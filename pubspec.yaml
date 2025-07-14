@@ -19,20 +19,21 @@ dependencies:
   qr_flutter: ^4.0.0
   url_launcher: ^6.2.5
   shared_preferences: ^2.2.2
+  intl: ^0.18.1
   tflite: ^1.1.2
 
-  # Firebase (Cloud Firestore)
+  # Firebase
   cloud_firestore: ^4.9.1
   firebase_core: ^2.24.2
 
-  # State management (optional, for future enhancement)
+  # State Management (Optional/Future)
   provider: ^6.1.2
 
   # UI/UX Enhancements
   flutter_svg: ^2.0.9
   google_fonts: ^6.1.0
 
-  # Encryption (used for investor profiles)
+  # Encryption
   encrypt: ^5.0.1
 
 dev_dependencies:
