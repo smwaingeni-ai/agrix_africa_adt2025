@@ -1,3 +1,4 @@
+// lib/models/farmer_profile.dart
 import 'dart:convert';
 
 class FarmerProfile {
@@ -39,13 +40,11 @@ class FarmerProfile {
     this.photoPath,
   });
 
-  /// ✅ Virtual aliases for compatibility with scoring and other screens
   String get id => farmerId;
   String get name => fullName;
   bool get govtAffiliated => subsidised;
   double get farmSizeHectares => farmSize;
 
-  /// ✅ Factory for empty object
   factory FarmerProfile.empty() => FarmerProfile(
         farmerId: '',
         fullName: '',
@@ -66,7 +65,6 @@ class FarmerProfile {
         photoPath: null,
       );
 
-  /// ✅ JSON serialization
   Map<String, dynamic> toJson() => {
         'farmerId': farmerId,
         'fullName': fullName,
@@ -87,7 +85,6 @@ class FarmerProfile {
         'photoPath': photoPath,
       };
 
-  /// ✅ JSON deserialization
   factory FarmerProfile.fromJson(Map<String, dynamic> json) => FarmerProfile(
         farmerId: json['farmerId'] ?? '',
         fullName: json['fullName'] ?? '',
@@ -110,18 +107,14 @@ class FarmerProfile {
         photoPath: json['photoPath'],
       );
 
-  /// ✅ Encode single instance to raw JSON string
   String toRawJson() => jsonEncode(toJson());
 
-  /// ✅ Decode single instance from raw JSON string
   static FarmerProfile fromRawJson(String str) =>
       FarmerProfile.fromJson(jsonDecode(str));
 
-  /// ✅ Encode list of profiles
   static String encode(List<FarmerProfile> profiles) =>
       jsonEncode(profiles.map((p) => p.toJson()).toList());
 
-  /// ✅ Decode list of profiles
   static List<FarmerProfile> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((item) => FarmerProfile.fromJson(item))
