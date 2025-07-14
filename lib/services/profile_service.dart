@@ -1,22 +1,29 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../models/farmer_profile.dart';
 
 class ProfileService {
   static const String _fileName = 'farmer_profiles.json';
+  static const String _activeProfileFile = 'active_farmer_profile.json';
 
-  /// Get the profile storage file
+  /// 📂 Get file for all profiles
   static Future<File> _getFile() async {
     final directory = await getApplicationDocumentsDirectory();
     return File('${directory.path}/$_fileName');
   }
 
-  /// Save a new profile (overwrites existing list with just one profile)
+  /// 📂 Get file for active profile
+  static Future<File> _getActiveFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File('${directory.path}/$_activeProfileFile');
+  }
+
+  /// ✅ Save a new profile (overwrites existing list with one)
   static Future<void> saveProfile(FarmerProfile profile) async {
     try {
       final file = await _getFile();
-      final profiles = [profile]; // Always overwrite with single profile for simplicity
+      final profiles = [profile];
       await file.writeAsString(FarmerProfile.encode(profiles), flush: true);
       print('✅ Profile saved successfully.');
     } catch (e) {
@@ -24,7 +31,18 @@ class ProfileService {
     }
   }
 
-  /// Load the first profile (for single-user use case)
+  /// ✅ Save active profile (for quick access or login)
+  static Future<void> saveActiveProfile(FarmerProfile profile) async {
+    try {
+      final file = await _getActiveFile();
+      await file.writeAsString(jsonEncode(profile.toJson()));
+      print('✅ Active profile saved.');
+    } catch (e) {
+      print('❌ Error saving active profile: $e');
+    }
+  }
+
+  /// 🔍 Load the first profile (single-user fallback)
   static Future<FarmerProfile?> loadProfile() async {
     try {
       final file = await _getFile();
@@ -39,20 +57,47 @@ class ProfileService {
     return null;
   }
 
-  /// Delete the saved profile (clears all)
+  /// 🔍 Load active profile (login/session)
+  static Future<FarmerProfile?> loadActiveProfile() async {
+    try {
+      final file = await _getActiveFile();
+      if (await file.exists()) {
+        final jsonStr = await file.readAsString();
+        return FarmerProfile.fromRawJson(jsonStr);
+      }
+    } catch (e) {
+      print('❌ Error loading active profile: $e');
+    }
+    return null;
+  }
+
+  /// 🧼 Clear active profile only
+  static Future<void> clearActiveProfile() async {
+    try {
+      final file = await _getActiveFile();
+      if (await file.exists()) {
+        await file.delete();
+        print('🗑️ Active profile cleared.');
+      }
+    } catch (e) {
+      print('❌ Error clearing active profile: $e');
+    }
+  }
+
+  /// 🗑️ Delete all saved profiles
   static Future<void> deleteProfile() async {
     try {
       final file = await _getFile();
       if (await file.exists()) {
         await file.writeAsString('[]', flush: true);
-        print('🗑️ Profile deleted.');
+        print('🗑️ Profiles deleted.');
       }
     } catch (e) {
-      print('❌ Error deleting profile: $e');
+      print('❌ Error deleting profiles: $e');
     }
   }
 
-  /// Load all profiles (for future multi-user support)
+  /// 🔄 Load all saved profiles
   static Future<List<FarmerProfile>> loadProfiles() async {
     try {
       final file = await _getFile();
@@ -66,7 +111,7 @@ class ProfileService {
     return [];
   }
 
-  /// Clear all profiles from file
+  /// 🔁 Clear profiles file
   static Future<void> clearProfiles() async {
     try {
       final file = await _getFile();
@@ -79,7 +124,7 @@ class ProfileService {
     }
   }
 
-  /// Check if at least one profile exists
+  /// ❓ Check if any profile exists
   static Future<bool> profileExists() async {
     try {
       final profiles = await loadProfiles();
@@ -90,7 +135,7 @@ class ProfileService {
     }
   }
 
-  /// Export all profiles as JSON
+  /// 📤 Export all profiles to JSON
   static Future<String?> exportProfilesAsJson() async {
     try {
       final profiles = await loadProfiles();
@@ -101,7 +146,7 @@ class ProfileService {
     }
   }
 
-  /// Import profiles from a JSON string (overwrites file)
+  /// 📥 Import profiles from JSON (overwrites)
   static Future<void> importProfilesFromJson(String jsonStr) async {
     try {
       final profiles = FarmerProfile.decode(jsonStr);
