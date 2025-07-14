@@ -21,7 +21,7 @@ class _InvestorListScreenState extends State<InvestorListScreen> {
 
   Future<void> _loadInvestors() async {
     try {
-      final data = await InvestorService().loadEncrypted();
+      final data = await InvestorService().loadInvestors(); // 🔄 Aligned method
       setState(() {
         _investors = data;
         _loading = false;
@@ -69,7 +69,7 @@ class _InvestorListScreenState extends State<InvestorListScreen> {
           },
           itemBuilder: (context) => [
             const PopupMenuItem(value: 'Call', child: Text('Call')),
-            const PopupMenuItem(value: 'WhatsApp', child: Text('Message on WhatsApp')),
+            const PopupMenuItem(value: 'Message', child: Text('Message')),
             const PopupMenuItem(value: 'Email', child: Text('Email')),
           ],
         ),
