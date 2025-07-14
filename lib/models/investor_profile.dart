@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
-import 'package:agrix_africa_adt2025/models/investments/investor_status.dart'; // ✅ Corrected import
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
 
 /// Investor profile model
 class InvestorProfile {
@@ -26,7 +26,7 @@ class InvestorProfile {
     required this.registeredAt,
   });
 
-  /// 🧪 Factory for an empty template
+  /// 🧪 Empty template
   factory InvestorProfile.empty() => InvestorProfile(
         id: '',
         name: '',
@@ -39,7 +39,7 @@ class InvestorProfile {
         registeredAt: DateTime.now(),
       );
 
-  /// 🔁 Convert model to JSON map
+  /// 🔁 JSON encoder
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -52,7 +52,7 @@ class InvestorProfile {
         'registeredAt': registeredAt.toIso8601String(),
       };
 
-  /// 🔁 Create model from JSON map
+  /// 🔁 JSON decoder
   factory InvestorProfile.fromJson(Map<String, dynamic> json) => InvestorProfile(
         id: json['id'] ?? '',
         name: json['name'] ?? '',
@@ -74,11 +74,11 @@ class InvestorProfile {
         registeredAt: DateTime.tryParse(json['registeredAt'] ?? '') ?? DateTime.now(),
       );
 
-  /// 🔄 Encode List<InvestorProfile> into JSON string
+  /// 🔄 Encode list of investors to JSON string
   static String encode(List<InvestorProfile> investors) =>
       json.encode(investors.map((i) => i.toJson()).toList());
 
-  /// 🔄 Decode JSON string into List<InvestorProfile>
+  /// 🔄 Decode JSON string to investor list
   static List<InvestorProfile> decode(String jsonStr) =>
       (json.decode(jsonStr) as List<dynamic>)
           .map((i) => InvestorProfile.fromJson(i))
