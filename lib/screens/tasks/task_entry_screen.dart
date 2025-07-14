@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../models/tasks/task.dart';
-import '../../services/tasks/task_service.dart';
+import 'package:agrix_africa_adt2025/models/tasks/task.dart';
+import 'package:agrix_africa_adt2025/services/tasks/task_service.dart';
 
 class TaskEntryScreen extends StatefulWidget {
   const TaskEntryScreen({super.key});
