@@ -1,9 +1,8 @@
+// lib/screens/market/market_item_form.dart
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/services/profile_service.dart';
 import 'package:agrix_africa_adt2025/models/market_item.dart';
 import 'package:agrix_africa_adt2025/services/market_service.dart';
 
@@ -30,9 +29,27 @@ class _MarketItemFormState extends State<MarketItemForm> {
   File? _selectedImage;
 
   final List<String> _types = ['Sale', 'Lease', 'Barter', 'Request'];
-  final List<String> _categories = ['Crops', 'Livestock', 'Land', 'Equipment', 'Service'];
-  final List<String> _terms = ['None', 'Short-term (1-2 yrs)', 'Mid-term (3-5 yrs)', 'Long-term (>6 yrs)'];
-  final List<String> _payments = ['Cash', 'Bank Transfer', 'Mobile Money', 'QR Code', 'Loan', 'Debit Card'];
+  final List<String> _categories = [
+    'Crops',
+    'Livestock',
+    'Land',
+    'Equipment',
+    'Service'
+  ];
+  final List<String> _terms = [
+    'None',
+    'Short-term (1-2 yrs)',
+    'Mid-term (3-5 yrs)',
+    'Long-term (>6 yrs)'
+  ];
+  final List<String> _payments = [
+    'Cash',
+    'Bank Transfer',
+    'Mobile Money',
+    'QR Code',
+    'Loan',
+    'Debit Card'
+  ];
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -48,8 +65,6 @@ class _MarketItemFormState extends State<MarketItemForm> {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
 
-      final profile = await ProfileService.loadActiveProfile();
-
       final item = MarketItem(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         title: _title,
@@ -60,15 +75,15 @@ class _MarketItemFormState extends State<MarketItemForm> {
         location: _location,
         price: _price,
         imagePaths: _selectedImage != null ? [_selectedImage!.path] : [],
-        contactMethods: [profile.contact],
+        contactMethods: ['Phone'],
         paymentOptions: [_paymentOption],
         isAvailable: true,
         isLoanAccepted: _isLoanAccepted,
         isInvestmentOpen: _isInvestorOpen,
-        investmentStatus: _isInvestorOpen ? 'Open' : 'Not Open',
+        investmentStatus: 'Open',
         investmentTerm: _investmentTerm,
-        ownerName: profile.name,
-        ownerContact: profile.contact,
+        ownerName: 'Self',
+        ownerContact: '0000000000',
         postedAt: DateTime.now(),
       );
 
@@ -94,61 +109,77 @@ class _MarketItemFormState extends State<MarketItemForm> {
           child: Column(children: [
             TextFormField(
               decoration: const InputDecoration(labelText: 'Title'),
-              validator: (value) => value == null || value.isEmpty ? 'Enter title' : null,
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter title' : null,
               onSaved: (value) => _title = value!,
             ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Description'),
               maxLines: 3,
-              validator: (value) => value == null || value.isEmpty ? 'Enter description' : null,
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter description' : null,
               onSaved: (value) => _description = value!,
             ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Location'),
-              validator: (value) => value == null || value.isEmpty ? 'Enter location' : null,
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter location' : null,
               onSaved: (value) => _location = value!,
             ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Price (USD)'),
               keyboardType: TextInputType.number,
-              validator: (value) => value == null || value.isEmpty ? 'Enter price' : null,
-              onSaved: (value) => _price = double.tryParse(value ?? '0') ?? 0.0,
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter price' : null,
+              onSaved: (value) =>
+                  _price = double.tryParse(value ?? '0') ?? 0.0,
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Type'),
               value: _type,
-              items: _types.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              items: _types
+                  .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                  .toList(),
               onChanged: (value) => setState(() => _type = value!),
             ),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Category'),
               value: _category,
-              items: _categories.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              items: _categories
+                  .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                  .toList(),
               onChanged: (value) => setState(() => _category = value!),
             ),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Payment Option'),
               value: _paymentOption,
-              items: _payments.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              items: _payments
+                  .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                  .toList(),
               onChanged: (value) => setState(() => _paymentOption = value!),
             ),
             const SizedBox(height: 16),
             CheckboxListTile(
               title: const Text("Accept Loan as Payment"),
               value: _isLoanAccepted,
-              onChanged: (value) => setState(() => _isLoanAccepted = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _isLoanAccepted = value ?? false),
             ),
             CheckboxListTile(
               title: const Text("Open for Investment"),
               value: _isInvestorOpen,
-              onChanged: (value) => setState(() => _isInvestorOpen = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _isInvestorOpen = value ?? false),
             ),
             if (_isInvestorOpen)
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Preferred Investment Term'),
+                decoration:
+                    const InputDecoration(labelText: 'Preferred Investment Term'),
                 value: _investmentTerm,
-                items: _terms.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                items: _terms
+                    .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                    .toList(),
                 onChanged: (value) => setState(() => _investmentTerm = value!),
               ),
             const SizedBox(height: 12),
