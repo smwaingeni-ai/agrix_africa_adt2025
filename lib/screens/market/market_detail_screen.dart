@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../models/market_item.dart';
+import 'package:agrix_africa_adt2025/models/market_item.dart';
 
 class MarketDetailScreen extends StatelessWidget {
   final MarketItem item;
