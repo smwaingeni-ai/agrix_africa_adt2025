@@ -4,7 +4,6 @@ import '../models/chat_message.dart';
 
 class ChatService {
   static const String _chatKey = 'chat_messages';
-
   List<ChatMessage> _messages = [];
 
   /// 🔹 Public getter for chat messages
