@@ -1,4 +1,7 @@
+// lib/screens/contracts/contract_detail_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
 
 class ContractDetailScreen extends StatelessWidget {
@@ -8,16 +11,19 @@ class ContractDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter = NumberFormat.simpleCurrency();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(contract.title),
+        automaticallyImplyLeading: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
             tooltip: 'Export to PDF (Coming Soon)',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("PDF export coming soon...")),
+                const SnackBar(content: Text("🚧 PDF export feature is under development.")),
               );
             },
           ),
@@ -28,7 +34,7 @@ class ContractDetailScreen extends StatelessWidget {
         child: ListView(
           children: [
             _buildDetailTile("Parties Involved", contract.parties),
-            _buildDetailTile("Amount", "\$${contract.amount.toStringAsFixed(2)}"),
+            _buildDetailTile("Amount", currencyFormatter.format(contract.amount)),
             _buildDetailTile("Duration", contract.duration),
             _buildDetailTile("Crop/Livestock Type", contract.cropOrLivestockType),
             _buildDetailTile("Location", contract.location),
@@ -39,7 +45,7 @@ class ContractDetailScreen extends StatelessWidget {
               label: const Text("Share Contract"),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Sharing functionality coming soon.")),
+                  const SnackBar(content: Text("🚀 Sharing functionality coming soon.")),
                 );
               },
             ),
@@ -53,18 +59,22 @@ class ContractDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.green,
-            )),
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.green,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(value,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-            )),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black87,
+          ),
+        ),
         const Divider(height: 24),
       ],
     );
