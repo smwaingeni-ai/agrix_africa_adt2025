@@ -59,7 +59,7 @@ import 'screens/dashboards/investor_dashboard.dart';
 // 🔹 Contracts & Investments
 import 'screens/contracts/contract_list_screen.dart';
 import 'screens/contracts/contract_offer_form.dart';
-import 'screens/investments/investment_offer_screen.dart';
+import 'screens/investments/investment_offers_screen.dart';
 import 'screens/investments/investor_list_screen.dart';
 import 'screens/investments/investor_registration_screen.dart';
 
@@ -69,30 +69,35 @@ import 'screens/sustainability/sustainability_log_screen.dart';
 import 'screens/training/training_log_screen.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
+  // Auth
   '/': (context) => const LoginScreen(),
   '/register': (context) => const RegisterUserScreen(),
 
+  // Core
   '/landing': (context) {
     final user = ModalRoute.of(context)!.settings.arguments;
     return LandingPage(loggedInUser: user);
   },
-
   '/language-setup': (context) => const LanguageCountrySetup(),
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
   '/transactions': (context) => const TransactionScreen(),
 
+  // Profile
   '/profile': (context) => const FarmerProfileScreen(),
   '/credit-score': (context) => const CreditScoreScreen(),
 
+  // AI Advice
   '/advice': (context) => const AdviceScreen(),
   '/agrigpt': (context) => const AgriGPTScreen(),
   '/tips': (context) => const TipsScreen(),
 
+  // Diagnostics
   '/crops': (context) => const CropsScreen(),
   '/soil': (context) => const SoilScreen(),
   '/livestock': (context) => const LivestockScreen(),
 
+  // Market
   '/market': (context) => const MarketScreen(),
   '/market/detail': (context) {
     final MarketItem item = ModalRoute.of(context)!.settings.arguments as MarketItem;
@@ -101,31 +106,38 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/market/form': (context) => const MarketItemForm(),
   '/market/invite': (context) => const MarketInviteScreen(),
 
+  // Loans
   '/loan': (context) => const LoanScreen(),
   '/loan-application': (context) => const LoanApplication(),
 
+  // Officers
   '/arex-officer-dashboard': (context) => const ArexOfficerDashboard(),
   '/officer-tasks': (context) => const OfficerTasksScreen(),
   '/field-assessment': (context) => const FieldAssessmentScreen(),
 
+  // Logs
   '/logbook': (context) => const LogbookScreen(),
   '/upload': (context) => const UploadScreen(),
 
+  // Chat & Help
   '/chat': (context) => const ChatScreen(),
   '/help': (context) => const HelpScreen(),
 
+  // Dashboards
   '/officer-dashboard': (context) => const OfficerDashboard(),
   '/official-dashboard': (context) => const OfficialDashboard(),
   '/admin-panel': (context) => const AdminPanel(),
   '/trader-dashboard': (context) => const TraderDashboard(),
   '/investor-dashboard': (context) => const InvestorDashboard(),
 
+  // Contracts & Investments
   '/contracts/list': (context) => const ContractListScreen(),
   '/contracts/new': (context) => const ContractOfferFormScreen(),
   '/investments': (context) => const InvestmentOffersScreen(),
   '/investors': (context) => const InvestorListScreen(),
   '/investor/register': (context) => const InvestorRegistrationScreen(),
 
+  // Special Logs
   '/training-log': (context) => const TrainingLogScreen(),
   '/program-tracking': (context) => const ProgramTrackingScreen(),
   '/sustainability-log': (context) => const SustainabilityLogScreen(),
