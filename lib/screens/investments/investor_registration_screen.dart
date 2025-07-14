@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/investment_offer.dart';
-import 'package:agrix_africa_adt2025/services/market_service.dart';
+import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
+import 'package:agrix_africa_adt2025/models/investor_profile.dart';
+import 'package:agrix_africa_adt2025/services/investor_service.dart';
 
 class InvestorRegistrationScreen extends StatefulWidget {
   const InvestorRegistrationScreen({super.key});
@@ -53,12 +55,8 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
       spacing: 8,
       children: InvestmentHorizon.values.map((horizon) {
         final selected = _selectedHorizons.contains(horizon);
-        final label = horizon.name.replaceAll('Term', '-term').replaceAllMapped(
-              RegExp(r'([a-z])([A-Z])'),
-              (m) => '${m[1]} ${m[2]}',
-            );
         return FilterChip(
-          label: Text(label),
+          label: Text(horizon.label),
           selected: selected,
           onSelected: (bool selected) {
             setState(() {
