@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/contracts/contract_offer.dart';
+import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
 
 class ContractDetailScreen extends StatelessWidget {
   final ContractOffer contract;
