@@ -21,7 +21,7 @@ class _InvestorListScreenState extends State<InvestorListScreen> {
 
   Future<void> _loadInvestors() async {
     try {
-      final data = await InvestorService().loadInvestors(); // 🔄 Aligned method
+      final data = await InvestorService().loadInvestors();
       setState(() {
         _investors = data;
         _loading = false;
@@ -53,9 +53,13 @@ class _InvestorListScreenState extends State<InvestorListScreen> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('🌍 Location: ${investor.location}'),
-            Text('💼 Interests: ${investor.interests.join(', ')}'),
-            Text('⏳ Horizon: ${investor.preferredHorizons.map((e) => e.name).join(', ')}'),
+            if (investor.location.isNotEmpty)
+              Text('🌍 Location: ${investor.location}'),
+            if (investor.interests.isNotEmpty)
+              Text('💼 Interests: ${investor.interests.join(', ')}'),
+            if (investor.preferredHorizons.isNotEmpty)
+              Text(
+                  '⏳ Horizon: ${investor.preferredHorizons.map((e) => e.name).join(', ')}'),
             Text('📊 Status: ${investor.status.name}'),
           ],
         ),
