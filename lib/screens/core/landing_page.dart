@@ -105,8 +105,10 @@ class _LandingPageState extends State<LandingPage> {
               children: [
                 Image.asset('assets/alogo.png', height: 100),
                 const SizedBox(height: 8),
-                const Text('AgriX – Smart Economies',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                const Text(
+                  'AgriX – Smart Economies',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -123,6 +125,8 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ),
             const SizedBox(height: 16),
+
+            // Profile Card
             if (_profile != null)
               Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -201,6 +205,7 @@ class _LandingPageState extends State<LandingPage> {
                       .then((_) => _loadProfile());
                 },
               ),
+
             const SizedBox(height: 16),
             const Text(
               'Your AI-powered farming assistant.',
@@ -208,6 +213,8 @@ class _LandingPageState extends State<LandingPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
+
+            // Feature Grid
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
