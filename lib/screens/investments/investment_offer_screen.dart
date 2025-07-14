@@ -2,144 +2,118 @@ import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/investment_offer.dart';
 import 'package:agrix_africa_adt2025/services/market_service.dart';
 
-class InvestmentOfferScreen extends StatefulWidget {
-  final String listingId;
-
-  const InvestmentOfferScreen({super.key, required this.listingId});
+class InvestmentOfferForm extends StatefulWidget {
+  const InvestmentOfferForm({super.key});
 
   @override
-  State<InvestmentOfferScreen> createState() => _InvestmentOfferScreenState();
+  State<InvestmentOfferForm> createState() => _InvestmentOfferFormState();
 }
 
-class _InvestmentOfferScreenState extends State<InvestmentOfferScreen> {
+class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _messageController = TextEditingController();
-  final TextEditingController _investorIdController = TextEditingController();
-  String _currency = 'USD';
-  int _durationMonths = 12;
-  bool _submitting = false;
+
+  String _investorName = '';
+  String _contact = '';
+  double _amount = 0.0;
+  double _interestRate = 0.0;
+  String _term = 'Short-term (1-2 yrs)';
+
+  final List<String> _terms = [
+    'Short-term (1-2 yrs)',
+    'Mid-term (3-5 yrs)',
+    'Long-term (>6 yrs)'
+  ];
 
   Future<void> _submitOffer() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
 
-    final offer = InvestmentOffer(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      listingId: widget.listingId,
-      investorId: _investorIdController.text.trim(),
-      amount: double.parse(_amountController.text.trim()),
-      currency: _currency,
-      durationMonths: _durationMonths,
-      message: _messageController.text.trim(),
-      offerDate: DateTime.now(),
-      isAccepted: false,
-    );
+      final offer = InvestmentOffer(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        investorName: _investorName,
+        amount: _amount,
+        term: _term,
+        interestRate: _interestRate,
+        isAccepted: false,
+        contact: _contact,
+        timestamp: DateTime.now(),
+      );
 
-    setState(() => _submitting = true);
-    await MarketService().addOffer(offer);
-    setState(() => _submitting = false);
+      await MarketService.addOffer(offer);
 
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('✅ Investment offer submitted!')),
-    );
-    Navigator.pop(context);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("✅ Investment offer submitted!")),
+        );
+        Navigator.pop(context);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Submit Investment Offer')),
-      body: _submitting
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    Text('📌 Listing ID: ${widget.listingId}',
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _investorIdController,
-                      decoration: const InputDecoration(
-                        labelText: 'Your Investor ID',
-                        prefixIcon: Icon(Icons.perm_identity),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (val) =>
-                          val == null || val.trim().isEmpty ? 'Required' : null,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _amountController,
-                      decoration: const InputDecoration(
-                        labelText: 'Investment Amount',
-                        prefixIcon: Icon(Icons.attach_money),
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      validator: (val) => val == null || val.trim().isEmpty
-                          ? 'Required'
-                          : double.tryParse(val.trim()) == null
-                              ? 'Enter valid number'
-                              : null,
-                    ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      value: _currency,
-                      items: ['USD', 'EUR', 'ZMW', 'KES', 'NGN']
-                          .map((cur) =>
-                              DropdownMenuItem(value: cur, child: Text(cur)))
-                          .toList(),
-                      decoration: const InputDecoration(
-                        labelText: 'Currency',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (val) => setState(() {
-                        _currency = val!;
-                      }),
-                    ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<int>(
-                      value: _durationMonths,
-                      decoration: const InputDecoration(
-                        labelText: 'Duration (in months)',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: [6, 12, 24, 36, 60]
-                          .map((m) =>
-                              DropdownMenuItem(value: m, child: Text('$m')))
-                          .toList(),
-                      onChanged: (val) => setState(() {
-                        _durationMonths = val!;
-                      }),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _messageController,
-                      decoration: const InputDecoration(
-                        labelText: 'Message (optional)',
-                        prefixIcon: Icon(Icons.message),
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.send),
-                      label: const Text('Submit Offer'),
-                      onPressed: _submitOffer,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+      appBar: AppBar(title: const Text('💰 Investment Offer')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(children: [
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Investor Name'),
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter name' : null,
+              onSaved: (value) => _investorName = value!,
             ),
+            const SizedBox(height: 10),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Contact'),
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter contact' : null,
+              onSaved: (value) => _contact = value!,
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Amount (USD)'),
+              keyboardType: TextInputType.number,
+              validator: (value) =>
+                  value == null || double.tryParse(value) == null
+                      ? 'Enter valid amount'
+                      : null,
+              onSaved: (value) => _amount = double.parse(value!),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              decoration:
+                  const InputDecoration(labelText: 'Interest Rate (%)'),
+              keyboardType: TextInputType.number,
+              validator: (value) =>
+                  value == null || double.tryParse(value) == null
+                      ? 'Enter valid rate'
+                      : null,
+              onSaved: (value) => _interestRate = double.parse(value!),
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: 'Investment Term'),
+              value: _term,
+              items: _terms
+                  .map((term) => DropdownMenuItem(
+                        value: term,
+                        child: Text(term),
+                      ))
+                  .toList(),
+              onChanged: (value) => setState(() => _term = value!),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.send),
+              label: const Text('Submit Offer'),
+              onPressed: _submitOffer,
+            ),
+          ]),
+        ),
+      ),
     );
   }
 }
