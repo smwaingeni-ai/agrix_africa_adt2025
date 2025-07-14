@@ -35,9 +35,9 @@ class MarketDetailScreen extends StatelessWidget {
   void _share(BuildContext context) {
     final msg = "Check out this listing on AgriX:\n"
         "${item.title}\n${item.description}\n"
-        "📍 Location: ${item.location}\n💰 Price: \$${item.price}";
+        "📍 Location: ${item.location}\n💰 Price: \$${(item.price ?? 0.0).toStringAsFixed(2)}";
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("📤 Shared: $msg")), // Placeholder for `share_plus`
+      SnackBar(content: Text("📤 Shared: $msg")), // Placeholder for share_plus
     );
   }
 
@@ -99,7 +99,7 @@ class MarketDetailScreen extends StatelessWidget {
             _buildDetail("Category", item.category),
             _buildDetail("Type", item.type),
             _buildDetail("Location", item.location),
-            _buildDetail("Price", "\$${item.price.toStringAsFixed(2)}"),
+            _buildDetail("Price", "\$${(item.price ?? 0.0).toStringAsFixed(2)}"),
             _buildDetail("Payment", item.paymentOption),
             _buildFlag("Loan Accepted", item.isLoanAccepted),
             _buildFlag("Open for Investment", item.isInvestorOpen),
