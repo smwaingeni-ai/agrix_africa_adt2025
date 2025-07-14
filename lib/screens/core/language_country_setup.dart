@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LanguageCountrySetupScreen extends StatefulWidget {
-  const LanguageCountrySetupScreen({super.key});
+class LanguageCountrySetup extends StatefulWidget {
+  const LanguageCountrySetup({super.key});
 
   @override
-  State<LanguageCountrySetupScreen> createState() =>
-      _LanguageCountrySetupScreenState();
+  State<LanguageCountrySetup> createState() => _LanguageCountrySetupState();
 }
 
-class _LanguageCountrySetupScreenState
-    extends State<LanguageCountrySetupScreen> {
+class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
   String? _selectedLanguage;
   String? _selectedCountry;
   String? _selectedProvince;
@@ -63,7 +61,7 @@ class _LanguageCountrySetupScreenState
       const SnackBar(content: Text('✅ Setup saved successfully')),
     );
 
-    Navigator.pushReplacementNamed(context, '/home'); // or another route
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
