@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/farmer_profile.dart';
-import '../services/profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart';
 
 class MarketItemFormScreen extends StatefulWidget {
   const MarketItemFormScreen({super.key});
