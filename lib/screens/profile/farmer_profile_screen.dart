@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui; // ✅ Fix for ImageByteFormat.png
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -89,7 +91,7 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
     final dir = await getApplicationDocumentsDirectory();
     final qrPath = '${dir.path}/$farmerId-qr.png';
 
-    final picData = await painter.toImageData(300, format: ImageByteFormat.png);
+    final picData = await painter.toImageData(300, format: ui.ImageByteFormat.png); // ✅ fixed
     final buffer = picData!.buffer.asUint8List();
     await File(qrPath).writeAsBytes(buffer);
 
@@ -160,7 +162,7 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
                 decoration: const InputDecoration(labelText: 'Contact Number'),
                 onSaved: (val) => contactNumber = val ?? '',
               ),
-              DropdownButtonFormField(
+              DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Country'),
                 value: country,
                 items: countries.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
@@ -181,13 +183,13 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
                 validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                 onSaved: (val) => farmSize = double.tryParse(val!) ?? 0.0,
               ),
-              DropdownButtonFormField(
+              DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Farm Type'),
                 value: farmType,
                 items: farmTypes.map((f) => DropdownMenuItem(value: f, child: Text(f))).toList(),
                 onChanged: (val) => setState(() => farmType = val!),
               ),
-              DropdownButtonFormField(
+              DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Language'),
                 value: language,
                 items: languages.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(),
