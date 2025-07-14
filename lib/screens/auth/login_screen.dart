@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../data/dummy_users.dart';
-import '../../models/user_model.dart';
+import 'package:agrix_africa_adt2025/data/dummy_users.dart';
+import 'package:agrix_africa_adt2025/models/user_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
