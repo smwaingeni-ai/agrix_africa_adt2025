@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/farmer_profile.dart';
-import '../services/farmer_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/services/farmer_service.dart';
 
 class CreditScoreScreen extends StatefulWidget {
   const CreditScoreScreen({super.key});
