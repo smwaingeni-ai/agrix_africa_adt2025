@@ -1,3 +1,5 @@
+// lib/models/market_item.dart
+
 import 'dart:convert';
 
 class MarketItem {
@@ -5,7 +7,7 @@ class MarketItem {
   final String title;
   final String description;
   final String category;
-  final String type; // 🆕 NEW
+  final String type;
   final String listingType;
   final String location;
   final double? price;
@@ -13,9 +15,9 @@ class MarketItem {
   final List<String> contactMethods;
   final List<String> paymentOptions;
   final bool isAvailable;
-  final bool isLoanAccepted; // 🆕 NEW
+  final bool isLoanAccepted;
   final bool isInvestmentOpen;
-  final String investmentTerm; // 🆕 renamed from 'duration'
+  final String investmentTerm;
   final String investmentStatus;
   final String ownerName;
   final String ownerContact;
