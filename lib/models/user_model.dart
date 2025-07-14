@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'farmer_profile.dart'; // ✅ Make sure to import FarmerProfile
+import 'farmer_profile.dart'; // ✅ Ensure this file exists and is correctly implemented
 
 /// Represents a user in the AgriX system.
 class UserModel {
@@ -15,7 +15,7 @@ class UserModel {
     required this.passcode,
   });
 
-  /// Factory constructor for creating a UserModel from a Map
+  /// Create a UserModel from a JSON map
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] ?? '',
@@ -25,17 +25,17 @@ class UserModel {
     );
   }
 
-  /// Factory constructor for creating a UserModel from a FarmerProfile
+  /// Create a UserModel directly from a FarmerProfile instance
   factory UserModel.fromFarmer(FarmerProfile profile) {
     return UserModel(
       id: profile.idNumber ?? 'unknown_id',
       name: profile.fullName,
       role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
-      passcode: '', // Optional: Could be generated or left empty
+      passcode: '', // Optional: you can assign from elsewhere
     );
   }
 
-  /// Converts UserModel to a Map
+  /// Convert this object to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -45,14 +45,14 @@ class UserModel {
     };
   }
 
-  /// Parses a UserModel from a raw JSON string
+  /// Create from a raw JSON string
   factory UserModel.fromRawJson(String str) =>
       UserModel.fromJson(json.decode(str));
 
-  /// Converts UserModel to raw JSON string
+  /// Convert to raw JSON string
   String toRawJson() => json.encode(toJson());
 
-  /// Returns a copy with overridden fields
+  /// Copy the user with optional override values
   UserModel copyWith({
     String? id,
     String? name,
