@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/contracts/contract_offer.dart';
-import '../../services/contracts/contract_service.dart';
+import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
+import 'package:agrix_africa_adt2025/services/contracts/contract_service.dart';
 import 'contract_detail_screen.dart';
 
 class ContractListScreen extends StatefulWidget {
