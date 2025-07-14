@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/tasks/officer_assessment.dart';
-import '../../services/tasks/assessment_service.dart';
+import 'package:agrix_africa_adt2025/models/tasks/officer_assessment.dart';
+import 'package:agrix_africa_adt2025/services/tasks/assessment_service.dart';
 
 class OfficerAssessmentsScreen extends StatefulWidget {
   const OfficerAssessmentsScreen({super.key});
