@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/programs/program_log.dart';
-import '../../services/programs/program_service.dart';
+import 'package:agrix_africa_adt2025/models/programs/program_log.dart';
+import 'package:agrix_africa_adt2025/services/programs/program_service.dart';
 
 class ProgramTrackingScreen extends StatefulWidget {
   const ProgramTrackingScreen({super.key});
