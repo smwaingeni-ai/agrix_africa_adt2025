@@ -1,8 +1,10 @@
+// lib/services/market_service.dart
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../models/market_item.dart';
-import '../models/investment_offer.dart';
+import 'package:agrix_africa_adt2025/models/market_item.dart';
+import 'package:agrix_africa_adt2025/models/investment_offer.dart';
 
 class MarketService {
   static Future<File> _getMarketFile() async {
@@ -23,7 +25,7 @@ class MarketService {
       await file.writeAsString(jsonEncode(jsonList), flush: true);
       print('✅ Market items saved.');
     } catch (e) {
-      print('❌ Error saving market items: $e');
+      print('❌ Error saving market items: \$e');
     }
   }
 
@@ -36,7 +38,7 @@ class MarketService {
       final List decoded = jsonDecode(contents);
       return decoded.map((e) => MarketItem.fromJson(e)).toList();
     } catch (e) {
-      print('❌ Error loading market items: $e');
+      print('❌ Error loading market items: \$e');
       return [];
     }
   }
@@ -56,7 +58,7 @@ class MarketService {
       await file.writeAsString(jsonEncode(jsonList), flush: true);
       print('✅ Investment offers saved.');
     } catch (e) {
-      print('❌ Error saving investment offers: $e');
+      print('❌ Error saving investment offers: \$e');
     }
   }
 
@@ -69,7 +71,7 @@ class MarketService {
       final List decoded = jsonDecode(contents);
       return decoded.map((e) => InvestmentOffer.fromJson(e)).toList();
     } catch (e) {
-      print('❌ Error loading investment offers: $e');
+      print('❌ Error loading investment offers: \$e');
       return [];
     }
   }
