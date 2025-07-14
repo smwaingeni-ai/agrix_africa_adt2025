@@ -6,7 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'transaction_screen.dart';
+
+import 'package:agrix_africa_adt2025/screens/core/transaction_screen.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
