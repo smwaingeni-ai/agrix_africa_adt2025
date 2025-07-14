@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
-import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart'; // ✅ Corrected import path
 import 'package:agrix_africa_adt2025/models/investor_profile.dart';
 import 'package:agrix_africa_adt2025/services/investor_service.dart';
 
@@ -60,9 +60,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
           selected: selected,
           onSelected: (bool selected) {
             setState(() {
-              selected
-                  ? _selectedHorizons.add(horizon)
-                  : _selectedHorizons.remove(horizon);
+              selected ? _selectedHorizons.add(horizon) : _selectedHorizons.remove(horizon);
             });
           },
         );
@@ -80,9 +78,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
           selected: selected,
           onSelected: (bool selected) {
             setState(() {
-              selected
-                  ? _selectedInterests.add(interest)
-                  : _selectedInterests.remove(interest);
+              selected ? _selectedInterests.add(interest) : _selectedInterests.remove(interest);
             });
           },
         );
@@ -107,8 +103,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
-                validator: (val) =>
-                    val == null || val.trim().isEmpty ? 'Name is required' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Name is required' : null,
               ),
               const SizedBox(height: 16),
 
@@ -119,8 +114,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
-                validator: (val) =>
-                    val == null || !val.contains('@') ? 'Enter a valid email' : null,
+                validator: (val) => val == null || !val.contains('@') ? 'Enter a valid email' : null,
               ),
               const SizedBox(height: 16),
 
@@ -132,19 +126,16 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   prefixIcon: Icon(Icons.phone),
                   border: OutlineInputBorder(),
                 ),
-                validator: (val) =>
-                    val == null || val.trim().length < 8 ? 'Phone too short' : null,
+                validator: (val) => val == null || val.trim().length < 8 ? 'Phone too short' : null,
               ),
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
                 value: _selectedCountry,
-                items: _countryOptions
-                    .map((country) => DropdownMenuItem(
-                          value: country,
-                          child: Text(country),
-                        ))
-                    .toList(),
+                items: _countryOptions.map((country) => DropdownMenuItem(
+                      value: country,
+                      child: Text(country),
+                    )).toList(),
                 onChanged: (val) => setState(() => _selectedCountry = val ?? 'Zambia'),
                 decoration: const InputDecoration(
                   labelText: 'Country',
@@ -168,7 +159,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                 items: InvestorStatus.values.map((status) {
                   return DropdownMenuItem(
                     value: status,
-                    child: Text(status.name[0].toUpperCase() + status.name.substring(1)),
+                    child: Text(status.label),
                   );
                 }).toList(),
                 onChanged: (value) => setState(() => _status = value!),
