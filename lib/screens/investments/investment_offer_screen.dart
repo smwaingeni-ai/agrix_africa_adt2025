@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/investment_offer.dart';
-import '../../services/market_service.dart';
+import 'package:agrix_africa_adt2025/models/investment_offer.dart';
+import 'package:agrix_africa_adt2025/services/market_service.dart';
 
 class InvestmentOfferScreen extends StatefulWidget {
   final String listingId;
