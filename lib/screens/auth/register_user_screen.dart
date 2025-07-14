@@ -1,9 +1,9 @@
+// lib/screens/auth/register_user_screen.dart
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:agrix_africa_adt2025/models/user_model.dart';
 import 'package:agrix_africa_adt2025/models/user_model.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/services/profile_service.dart';
@@ -21,7 +21,13 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   String name = '';
   String passcode = '';
   String phone = '';
+  String idNumber = '';
   String region = '';
+  String province = '';
+  String district = '';
+  String ward = '';
+  String village = '';
+  String cell = '';
   String farmType = '';
   bool _submitted = false;
   FarmerProfile? _profile;
@@ -56,14 +62,23 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
       if (role == 'Farmer') {
         _profile = FarmerProfile(
-          id: userId,
-          name: name,
-          phone: phone,
-          region: region,
+          farmerId: userId,
+          fullName: name,
+          idNumber: idNumber,
+          country: 'Zimbabwe',
+          province: province,
+          district: district,
+          ward: ward,
+          village: village,
+          cell: cell,
+          farmSize: 1.0,
           farmType: farmType,
-          govtAffiliated: true,
-          farmSizeHectares: 1.0,
+          subsidised: true,
+          contactNumber: phone,
+          language: 'English',
+          createdAt: DateTime.now(),
           qrImagePath: '',
+          photoPath: null,
         );
         await ProfileService.saveActiveProfile(_profile!);
       }
@@ -122,6 +137,12 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     ),
                     if (role == 'Farmer')
                       TextFormField(
+                        decoration: const InputDecoration(labelText: 'ID Number'),
+                        validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                        onSaved: (val) => idNumber = val!,
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
                         decoration: const InputDecoration(labelText: 'Phone Number'),
                         keyboardType: TextInputType.phone,
                         validator: (val) => val == null || val.isEmpty ? 'Required' : null,
@@ -129,9 +150,28 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                       ),
                     if (role == 'Farmer')
                       TextFormField(
-                        decoration: const InputDecoration(labelText: 'Region'),
-                        validator: (val) => val == null || val.isEmpty ? 'Required' : null,
-                        onSaved: (val) => region = val!,
+                        decoration: const InputDecoration(labelText: 'Province'),
+                        onSaved: (val) => province = val ?? '',
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'District'),
+                        onSaved: (val) => district = val ?? '',
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Ward'),
+                        onSaved: (val) => ward = val ?? '',
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Village'),
+                        onSaved: (val) => village = val ?? '',
+                      ),
+                    if (role == 'Farmer')
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Cell'),
+                        onSaved: (val) => cell = val ?? '',
                       ),
                     if (role == 'Farmer')
                       TextFormField(
