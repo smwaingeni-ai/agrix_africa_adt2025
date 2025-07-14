@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/services/profile_service.dart';
 
-class LoanApplicationScreen extends StatefulWidget {
-  const LoanApplicationScreen({super.key});
+class LoanApplication extends StatefulWidget {
+  const LoanApplication({super.key});
 
   @override
-  State<LoanApplicationScreen> createState() => _LoanApplicationScreenState();
+  State<LoanApplication> createState() => _LoanApplicationState();
 }
 
-class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
+class _LoanApplicationState extends State<LoanApplication> {
   FarmerProfile? _selectedFarmer;
   final TextEditingController _amountController = TextEditingController();
   final Map<String, FarmerProfile> _farmerMap = {};
