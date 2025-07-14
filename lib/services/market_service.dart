@@ -1,5 +1,3 @@
-// lib/services/market_service.dart
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -17,7 +15,7 @@ class MarketService {
     return File('${dir.path}/investment_offers.json');
   }
 
-  /// 🔹 Save list of market items
+  /// 🔹 Save entire list of market items
   static Future<void> saveItems(List<MarketItem> items) async {
     try {
       final file = await _getMarketFile();
@@ -25,11 +23,11 @@ class MarketService {
       await file.writeAsString(jsonEncode(jsonList), flush: true);
       print('✅ Market items saved.');
     } catch (e) {
-      print('❌ Error saving market items: \$e');
+      print('❌ Error saving market items: $e');
     }
   }
 
-  /// 🔹 Load market items
+  /// 🔹 Load all market items
   static Future<List<MarketItem>> loadItems() async {
     try {
       final file = await _getMarketFile();
@@ -38,19 +36,24 @@ class MarketService {
       final List decoded = jsonDecode(contents);
       return decoded.map((e) => MarketItem.fromJson(e)).toList();
     } catch (e) {
-      print('❌ Error loading market items: \$e');
+      print('❌ Error loading market items: $e');
       return [];
     }
   }
 
-  /// 🔹 Add a single item
+  /// 🔹 Add a single market item to file
   static Future<void> addItem(MarketItem item) async {
     final items = await loadItems();
     items.add(item);
     await saveItems(items);
   }
 
-  /// 🔹 Save investment offers
+  /// 🔹 Save a single market item (shortcut method for compatibility)
+  static Future<void> saveItem(MarketItem item) async {
+    await addItem(item);
+  }
+
+  /// 🔹 Save entire list of investment offers
   static Future<void> saveOffers(List<InvestmentOffer> offers) async {
     try {
       final file = await _getOffersFile();
@@ -58,11 +61,11 @@ class MarketService {
       await file.writeAsString(jsonEncode(jsonList), flush: true);
       print('✅ Investment offers saved.');
     } catch (e) {
-      print('❌ Error saving investment offers: \$e');
+      print('❌ Error saving investment offers: $e');
     }
   }
 
-  /// 🔹 Load investment offers
+  /// 🔹 Load all investment offers
   static Future<List<InvestmentOffer>> loadOffers() async {
     try {
       final file = await _getOffersFile();
@@ -71,12 +74,12 @@ class MarketService {
       final List decoded = jsonDecode(contents);
       return decoded.map((e) => InvestmentOffer.fromJson(e)).toList();
     } catch (e) {
-      print('❌ Error loading investment offers: \$e');
+      print('❌ Error loading investment offers: $e');
       return [];
     }
   }
 
-  /// 🔹 Add new investment offer
+  /// 🔹 Add a single investment offer
   static Future<void> addOffer(InvestmentOffer offer) async {
     final offers = await loadOffers();
     offers.add(offer);
