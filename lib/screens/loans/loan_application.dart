@@ -1,5 +1,3 @@
-// lib/screens/loans/loan_application_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/services/profile_service.dart';
@@ -19,7 +17,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   @override
   void initState() {
     super.initState();
-    FarmerService.loadFarmers().then((farmers) {
+    ProfileService.loadFarmers().then((farmers) {
       setState(() {
         for (var farmer in farmers) {
           _farmerMap[farmer.id] = farmer;
