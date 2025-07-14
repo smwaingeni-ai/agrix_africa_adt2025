@@ -9,8 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../models/farmer_profile.dart';
-import '../services/profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart';
 
 class FarmerProfileScreen extends StatefulWidget {
   const FarmerProfileScreen({super.key});
