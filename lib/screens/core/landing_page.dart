@@ -1,4 +1,4 @@
-import 'dart:io'; 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
@@ -91,9 +91,9 @@ class _LandingPageState extends State<LandingPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
+            tooltip: 'Edit Profile',
             onPressed: () => Navigator.pushNamed(context, '/profile')
                 .then((_) => _loadProfile()),
-            tooltip: 'Edit Profile',
           ),
         ],
       ),
