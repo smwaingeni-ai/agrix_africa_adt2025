@@ -4,15 +4,17 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/services/profile_service.dart';
+import 'package:agrix_africa_adt2025/models/market/market_item.dart';
+import 'package:agrix_africa_adt2025/services/market_service.dart';
 
-class MarketItemFormScreen extends StatefulWidget {
-  const MarketItemFormScreen({super.key});
+class MarketItemForm extends StatefulWidget {
+  const MarketItemForm({super.key});
 
   @override
-  State<MarketItemFormScreen> createState() => _MarketItemFormScreenState();
+  State<MarketItemForm> createState() => _MarketItemFormState();
 }
 
-class _MarketItemFormScreenState extends State<MarketItemFormScreen> {
+class _MarketItemFormState extends State<MarketItemForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _title = '';
