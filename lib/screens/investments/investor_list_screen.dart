@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/investment_offer.dart';
-import 'package:agrix_africa_adt2025/services/market_service.dart';
+import 'package:agrix_africa_adt2025/models/investor_profile.dart';
+import 'package:agrix_africa_adt2025/services/investor_service.dart';
 
 class InvestorListScreen extends StatefulWidget {
   const InvestorListScreen({super.key});
@@ -21,7 +21,7 @@ class _InvestorListScreenState extends State<InvestorListScreen> {
 
   Future<void> _loadInvestors() async {
     try {
-      final data = await InvestorService().loadInvestors();
+      final data = await InvestorService().loadEncrypted();
       setState(() {
         _investors = data;
         _loading = false;
@@ -53,10 +53,10 @@ class _InvestorListScreenState extends State<InvestorListScreen> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('🌍 Country: ${investor.country}'),
-            Text('💼 Interest: ${investor.interestArea}'),
-            Text('⏳ Term: ${investor.term}'),
-            Text('📊 Status: ${investor.status}'),
+            Text('🌍 Location: ${investor.location}'),
+            Text('💼 Interests: ${investor.interests.join(', ')}'),
+            Text('⏳ Horizon: ${investor.preferredHorizons.map((e) => e.name).join(', ')}'),
+            Text('📊 Status: ${investor.status.name}'),
           ],
         ),
         trailing: PopupMenuButton<String>(
