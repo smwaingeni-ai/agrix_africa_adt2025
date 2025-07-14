@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../models/farmer_profile.dart';
-import '../../models/user_model.dart';
-import '../../services/profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/models/user_model.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart';
 
 class LandingPage extends StatefulWidget {
   final UserModel loggedInUser;
