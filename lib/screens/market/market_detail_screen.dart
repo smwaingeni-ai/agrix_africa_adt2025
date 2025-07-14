@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/models/market_item.dart';
@@ -118,7 +119,7 @@ class MarketDetailScreen extends StatelessWidget {
                   onPressed: () => _launchSMS(item.contact),
                 ),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.whatsapp),
+                  icon: const Icon(Icons.chat), // ✅ Replaced Icons.whatsapp
                   label: const Text("WhatsApp"),
                   onPressed: () => _launchWhatsApp(item.contact),
                 ),
