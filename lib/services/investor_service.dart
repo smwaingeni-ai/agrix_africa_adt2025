@@ -66,10 +66,13 @@ class InvestorService {
     await saveEncrypted(investors);
   }
 
-  /// 🔹 Get single investor by ID
-  Future<InvestorProfile?> getInvestorById(String id) async {
+  /// 🔹 Get single investor by ID (✅ FIXED)
+  Future<InvestorProfile> getInvestorById(String id) async {
     final investors = await loadEncrypted();
-    return investors.firstWhere((i) => i.id == id, orElse: () => null);
+    return investors.firstWhere(
+      (i) => i.id == id,
+      orElse: () => InvestorProfile.empty(), // ✅ No nulls returned
+    );
   }
 
   /// 🔹 Add or update investor profile
