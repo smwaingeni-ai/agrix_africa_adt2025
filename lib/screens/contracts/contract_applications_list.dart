@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../models/contracts/contract_offer.dart';
-import '../../models/contracts/contract_application.dart';
-import '../../services/contracts/contract_application_service.dart';
+import 'package:agrix_africa_adt2025/models/contract_offer.dart';
+import 'package:agrix_africa_adt2025/models/contract_application.dart';
+import 'package:agrix_africa_adt2025/services/contract_application_service.dart';
 
 class ContractApplicationsListScreen extends StatefulWidget {
   final ContractOffer offer;
