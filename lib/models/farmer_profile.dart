@@ -119,4 +119,47 @@ class FarmerProfile {
       (jsonDecode(jsonStr) as List)
           .map((item) => FarmerProfile.fromJson(item))
           .toList();
+
+  FarmerProfile copyWith({
+    String? farmerId,
+    String? fullName,
+    String? idNumber,
+    String? country,
+    String? province,
+    String? district,
+    String? ward,
+    String? village,
+    String? cell,
+    double? farmSize,
+    String? farmType,
+    bool? subsidised,
+    String? contactNumber,
+    String? language,
+    DateTime? createdAt,
+    String? qrImagePath,
+    String? photoPath,
+  }) {
+    return FarmerProfile(
+      farmerId: farmerId ?? this.farmerId,
+      fullName: fullName ?? this.fullName,
+      idNumber: idNumber ?? this.idNumber,
+      country: country ?? this.country,
+      province: province ?? this.province,
+      district: district ?? this.district,
+      ward: ward ?? this.ward,
+      village: village ?? this.village,
+      cell: cell ?? this.cell,
+      farmSize: farmSize ?? this.farmSize,
+      farmType: farmType ?? this.farmType,
+      subsidised: subsidised ?? this.subsidised,
+      contactNumber: contactNumber ?? this.contactNumber,
+      language: language ?? this.language,
+      createdAt: createdAt ?? this.createdAt,
+      qrImagePath: qrImagePath ?? this.qrImagePath,
+      photoPath: photoPath ?? this.photoPath,
+    );
+  }
+
+  @override
+  String toString() => 'FarmerProfile($fullName - $idNumber)';
 }
