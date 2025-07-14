@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageCountrySetup extends StatefulWidget {
@@ -66,7 +66,7 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
 
   @override
   Widget build(BuildContext context) {
-    final provinces = _selectedCountry != null
+    final List<String> provinces = _selectedCountry != null
         ? _provincesByCountry[_selectedCountry] ?? []
         : [];
 
@@ -83,7 +83,12 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
               decoration: const InputDecoration(labelText: 'Select Language'),
               value: _selectedLanguage,
               items: _languages
-                  .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
+                  .map<DropdownMenuItem<String>>(
+                    (lang) => DropdownMenuItem<String>(
+                      value: lang,
+                      child: Text(lang),
+                    ),
+                  )
                   .toList(),
               onChanged: (val) => setState(() => _selectedLanguage = val),
             ),
@@ -92,7 +97,12 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
               decoration: const InputDecoration(labelText: 'Select Country'),
               value: _selectedCountry,
               items: _countries
-                  .map((country) => DropdownMenuItem(value: country, child: Text(country)))
+                  .map<DropdownMenuItem<String>>(
+                    (country) => DropdownMenuItem<String>(
+                      value: country,
+                      child: Text(country),
+                    ),
+                  )
                   .toList(),
               onChanged: (val) => setState(() {
                 _selectedCountry = val;
@@ -104,7 +114,12 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
               decoration: const InputDecoration(labelText: 'Select Province'),
               value: _selectedProvince,
               items: provinces
-                  .map((prov) => DropdownMenuItem(value: prov, child: Text(prov)))
+                  .map<DropdownMenuItem<String>>(
+                    (prov) => DropdownMenuItem<String>(
+                      value: prov,
+                      child: Text(prov),
+                    ),
+                  )
                   .toList(),
               onChanged: (val) => setState(() => _selectedProvince = val),
             ),
@@ -113,7 +128,12 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
               decoration: const InputDecoration(labelText: 'Select Area'),
               value: _selectedArea,
               items: _areas
-                  .map((area) => DropdownMenuItem(value: area, child: Text(area)))
+                  .map<DropdownMenuItem<String>>(
+                    (area) => DropdownMenuItem<String>(
+                      value: area,
+                      child: Text(area),
+                    ),
+                  )
                   .toList(),
               onChanged: (val) => setState(() => _selectedArea = val),
             ),
