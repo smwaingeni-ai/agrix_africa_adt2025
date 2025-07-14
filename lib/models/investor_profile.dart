@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
-import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart'; // ✅ Corrected import
 
 /// Investor profile model
 class InvestorProfile {
@@ -68,7 +68,7 @@ class InvestorProfile {
             [],
         status: InvestorStatus.values.firstWhere(
           (s) => s.name == json['status'],
-          orElse: () => InvestorStatus.open,
+          orElse: () => InvestorStatus.indifferent,
         ),
         interests: List<String>.from(json['interests'] ?? []),
         registeredAt: DateTime.tryParse(json['registeredAt'] ?? '') ?? DateTime.now(),
