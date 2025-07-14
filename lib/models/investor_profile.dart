@@ -1,10 +1,6 @@
 import 'dart:convert';
-
-/// Enum for investment horizon
-enum InvestmentHorizon { shortTerm, midTerm, longTerm }
-
-/// Enum for investor openness status
-enum InvestorStatus { open, indifferent, notOpen }
+import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
 
 /// Investor profile model
 class InvestorProfile {
