@@ -129,7 +129,8 @@ class _MarketItemFormState extends State<MarketItemForm> {
             const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Price (USD)'),
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Enter price' : null,
               onSaved: (value) =>
