@@ -62,7 +62,7 @@ class _MarketScreenState extends State<MarketScreen> {
           children: [
             Text('Type: ${item.type}'),
             Text('Location: ${item.location}'),
-            Text('Price: ${item.price}'),
+            Text('Price: \$${(item.price ?? 0.0).toStringAsFixed(2)}'),
           ],
         ),
         trailing: const Icon(Icons.arrow_forward_ios),
