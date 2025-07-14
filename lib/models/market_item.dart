@@ -45,6 +45,11 @@ class MarketItem {
     required this.postedAt,
   });
 
+  // ✅ Convenience Getters for Compatibility
+  String get imagePath => imagePaths.isNotEmpty ? imagePaths.first : '';
+  String get contact => ownerContact;
+  String get paymentOption => paymentOptions.isNotEmpty ? paymentOptions.first : '';
+
   factory MarketItem.empty() => MarketItem(
         id: '',
         title: '',
