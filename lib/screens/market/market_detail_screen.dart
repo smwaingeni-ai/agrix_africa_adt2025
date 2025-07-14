@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/models/market_item.dart';
@@ -24,18 +23,21 @@ class MarketDetailScreen extends StatelessWidget {
   }
 
   void _launchWhatsApp(String phone) async {
-    final uri = Uri.parse("https://wa.me/$phone");
+    final cleanPhone = phone.replaceAll(RegExp(r'\s+'), '');
+    final uri = Uri.parse("https://wa.me/$cleanPhone");
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('⚠️ Could not launch WhatsApp for $cleanPhone');
     }
   }
 
   void _share(BuildContext context) {
     final msg = "Check out this listing on AgriX:\n"
         "${item.title}\n${item.description}\n"
-        "Location: ${item.location}\nPrice: \$${item.price}";
+        "📍 Location: ${item.location}\n💰 Price: \$${item.price}";
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Shared: $msg")), // Replace with `share_plus` in prod
+      SnackBar(content: Text("📤 Shared: $msg")), // Placeholder for `share_plus`
     );
   }
 
@@ -67,6 +69,8 @@ class MarketDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Listing Details'),
@@ -81,7 +85,7 @@ class MarketDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            if (item.imagePath.isNotEmpty && File(item.imagePath).existsSync())
+            if (imageExists)
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.file(File(item.imagePath),
@@ -119,7 +123,7 @@ class MarketDetailScreen extends StatelessWidget {
                   onPressed: () => _launchSMS(item.contact),
                 ),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.chat), // ✅ Replaced Icons.whatsapp
+                  icon: const Icon(Icons.chat),
                   label: const Text("WhatsApp"),
                   onPressed: () => _launchWhatsApp(item.contact),
                 ),
@@ -131,7 +135,7 @@ class MarketDetailScreen extends StatelessWidget {
               label: const Text("Apply for Loan or Investment"),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Loan/Investment application coming soon.")),
+                  const SnackBar(content: Text("🚧 Loan/Investment feature coming soon")),
                 );
               },
             ),
