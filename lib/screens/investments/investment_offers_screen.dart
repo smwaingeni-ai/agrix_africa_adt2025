@@ -27,50 +27,56 @@ class _InvestmentOffersScreenState extends State<InvestmentOffersScreen> {
         _loading = false;
       });
     } catch (e) {
+      debugPrint("❌ Error loading offers: $e");
       setState(() {
         _offers = [];
         _loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error loading investment offers')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('❌ Error loading investment offers')),
+        );
+      }
     }
   }
 
   Widget _buildOfferCard(InvestmentOffer offer) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
-        leading: const Icon(Icons.monetization_on, size: 36, color: Colors.green),
-        title: Text(
-          offer.investorId,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('📌 Listing ID: ${offer.listingId}'),
-              Text('💵 Amount: ${offer.amount.toStringAsFixed(2)} ${offer.currency}'),
-              Text('⏳ Term: ${offer.durationMonths} months'),
-              Text('📊 Status: ${offer.isAccepted ? "Accepted" : "Pending"}'),
-              const SizedBox(height: 6),
-              Text('📝 ${offer.message}'),
-            ],
-          ),
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.phone_forwarded, color: Colors.blue),
-          tooltip: 'Contact Investor',
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('📞 Contact feature coming soon')),
-            );
-          },
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Investor: ${offer.investorId}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 6),
+            Text('📌 Listing ID: ${offer.listingId}'),
+            Text('💵 Amount: ${offer.amount.toStringAsFixed(2)} ${offer.currency}'),
+            Text('⏳ Term: ${offer.durationMonths} months'),
+            Text('📊 Status: ${offer.isAccepted ? "✅ Accepted" : "⏳ Pending"}'),
+            if (offer.message.trim().isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text('📝 ${offer.message}'),
+              ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('📞 Contact feature coming soon')),
+                  );
+                },
+                icon: const Icon(Icons.phone_forwarded),
+                label: const Text("Contact"),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -80,7 +86,7 @@ class _InvestmentOffersScreenState extends State<InvestmentOffersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Investment Offers'),
+        title: const Text('💼 Investment Offers'),
         centerTitle: true,
       ),
       body: _loading
