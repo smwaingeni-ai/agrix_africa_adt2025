@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:path_provider/path_provider.dart';
 import 'package:agrix_africa_adt2025/models/investor_profile.dart';
@@ -44,6 +45,11 @@ class InvestorService {
       debugPrint('❌ Decryption failed: $e');
       return [];
     }
+  }
+
+  /// ✅ ALIAS METHOD – matches expected signature in UI
+  Future<List<InvestorProfile>> loadInvestors() async {
+    return await loadEncrypted();
   }
 
   /// 🔹 Add new investor
