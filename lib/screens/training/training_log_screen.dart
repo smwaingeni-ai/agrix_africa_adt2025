@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/training/training_log.dart';
-import '../../services/training/training_log_service.dart';
+import 'package:agrix_africa_adt2025/models/training/training_log.dart';
+import 'package:agrix_africa_adt2025/services/training/training_log_service.dart';
 
 class TrainingLogScreen extends StatefulWidget {
   const TrainingLogScreen({super.key});
