@@ -1,8 +1,10 @@
+// lib/services/investor_service.dart
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:path_provider/path_provider.dart';
-import '../models/investor_profile.dart';
+import 'package:agrix_africa_adt2025/models/investor_profile.dart';
 
 class InvestorService {
   static const String _fileName = 'investor_profiles_encrypted.json';
@@ -27,7 +29,7 @@ class InvestorService {
       await file.writeAsString(encryptedText);
       print('🔐 Investor profiles encrypted and saved.');
     } catch (e) {
-      print('❌ Error saving encrypted investors: $e');
+      print('❌ Error saving encrypted investors: \$e');
     }
   }
 
@@ -41,33 +43,33 @@ class InvestorService {
       final decrypted = _encrypter.decrypt64(encryptedData, iv: _iv);
       return InvestorProfile.decode(decrypted);
     } catch (e) {
-      print('❌ Decryption failed: $e');
+      print('❌ Decryption failed: \$e');
       return [];
     }
   }
 
   /// 🔹 Add one encrypted investor
-  Future<void> addInvestorEncrypted(InvestorProfile investor) async {
+  Future<void> addInvestor(InvestorProfile investor) async {
     final investors = await loadEncrypted();
     investors.add(investor);
     await saveEncrypted(investors);
   }
 
   /// 🔹 Remove investor by ID
-  Future<void> removeInvestorEncrypted(String id) async {
+  Future<void> removeInvestor(String id) async {
     final investors = await loadEncrypted();
     investors.removeWhere((i) => i.id == id);
     await saveEncrypted(investors);
   }
 
   /// 🔹 Get investor by ID
-  Future<InvestorProfile?> getInvestorByIdEncrypted(String id) async {
+  Future<InvestorProfile?> getInvestorById(String id) async {
     final investors = await loadEncrypted();
     return investors.firstWhere((i) => i.id == id, orElse: () => null);
   }
 
-  /// 🔹 Add or update an encrypted investor profile
-  Future<void> saveInvestorProfileEncrypted(InvestorProfile profile) async {
+  /// 🔹 Add or update investor profile
+  Future<void> saveInvestorProfile(InvestorProfile profile) async {
     final investors = await loadEncrypted();
     final index = investors.indexWhere((i) => i.id == profile.id);
     if (index != -1) {
