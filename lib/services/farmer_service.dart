@@ -1,7 +1,9 @@
+// lib/services/farmer_service.dart
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 
 class FarmerService {
   static const String _fileName = 'farmers.json';
@@ -21,7 +23,7 @@ class FarmerService {
       final List<dynamic> decoded = jsonDecode(content);
       return decoded.map((e) => FarmerProfile.fromJson(e)).toList();
     } catch (e) {
-      print('❌ Error loading farmers: $e');
+      print('❌ Error loading farmers: \$e');
       return [];
     }
   }
@@ -34,9 +36,28 @@ class FarmerService {
       farmers.add(profile);
       final file = File(await _getFilePath());
       await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
-      print('✅ Farmer saved: ${profile.name}');
+      print('✅ Farmer saved: \${profile.name}');
     } catch (e) {
-      print('❌ Error saving farmer: $e');
+      print('❌ Error saving farmer: \$e');
+    }
+  }
+
+  /// 🔹 Get farmer by ID
+  static Future<FarmerProfile?> getFarmerById(String id) async {
+    final farmers = await loadFarmers();
+    return farmers.firstWhere((f) => f.id == id, orElse: () => FarmerProfile.empty());
+  }
+
+  /// 🔹 Delete farmer by ID
+  static Future<void> deleteFarmer(String id) async {
+    try {
+      final farmers = await loadFarmers();
+      farmers.removeWhere((f) => f.id == id);
+      final file = File(await _getFilePath());
+      await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
+      print('🗑️ Farmer deleted: \$id');
+    } catch (e) {
+      print('❌ Error deleting farmer: \$e');
     }
   }
 }
