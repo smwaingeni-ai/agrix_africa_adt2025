@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'routes.dart';
 import 'models/farmer_profile.dart';
+import 'models/user_model.dart';
 import 'services/profile_service.dart';
 import 'screens/core/language_country_setup.dart';
 import 'screens/core/landing_page.dart';
@@ -48,7 +49,7 @@ class _StartupDeciderState extends State<StartupDecider> {
     final profile = await ProfileService.loadActiveProfile();
     setState(() {
       _initialScreen = profile != null
-          ? LandingPage(loggedInUser: profile)
+          ? LandingPage(loggedInUser: UserModel.fromFarmer(profile))
           : const LanguageCountrySetup();
     });
   }
