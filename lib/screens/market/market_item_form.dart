@@ -1,5 +1,3 @@
-// lib/screens/market/market_item_form.dart
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -80,7 +78,7 @@ class _MarketItemFormState extends State<MarketItemForm> {
         isAvailable: true,
         isLoanAccepted: _isLoanAccepted,
         isInvestmentOpen: _isInvestorOpen,
-        investmentStatus: 'Open',
+        investmentStatus: _isInvestorOpen ? 'Open' : 'Not Open',
         investmentTerm: _investmentTerm,
         ownerName: 'Self',
         ownerContact: '0000000000',
@@ -113,6 +111,7 @@ class _MarketItemFormState extends State<MarketItemForm> {
                   value == null || value.isEmpty ? 'Enter title' : null,
               onSaved: (value) => _title = value!,
             ),
+            const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Description'),
               maxLines: 3,
@@ -120,12 +119,14 @@ class _MarketItemFormState extends State<MarketItemForm> {
                   value == null || value.isEmpty ? 'Enter description' : null,
               onSaved: (value) => _description = value!,
             ),
+            const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Location'),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Enter location' : null,
               onSaved: (value) => _location = value!,
             ),
+            const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Price (USD)'),
               keyboardType: TextInputType.number,
@@ -134,32 +135,34 @@ class _MarketItemFormState extends State<MarketItemForm> {
               onSaved: (value) =>
                   _price = double.tryParse(value ?? '0') ?? 0.0,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Type'),
               value: _type,
               items: _types
-                  .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                   .toList(),
               onChanged: (value) => setState(() => _type = value!),
             ),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Category'),
               value: _category,
               items: _categories
-                  .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                   .toList(),
               onChanged: (value) => setState(() => _category = value!),
             ),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Payment Option'),
               value: _paymentOption,
               items: _payments
-                  .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                   .toList(),
               onChanged: (value) => setState(() => _paymentOption = value!),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             CheckboxListTile(
               title: const Text("Accept Loan as Payment"),
               value: _isLoanAccepted,
@@ -174,13 +177,13 @@ class _MarketItemFormState extends State<MarketItemForm> {
             ),
             if (_isInvestorOpen)
               DropdownButtonFormField<String>(
-                decoration:
-                    const InputDecoration(labelText: 'Preferred Investment Term'),
+                decoration: const InputDecoration(labelText: 'Investment Term'),
                 value: _investmentTerm,
                 items: _terms
-                    .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
-                onChanged: (value) => setState(() => _investmentTerm = value!),
+                onChanged: (value) =>
+                    setState(() => _investmentTerm = value!),
               ),
             const SizedBox(height: 12),
             _selectedImage == null
