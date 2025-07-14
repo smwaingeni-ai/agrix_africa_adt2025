@@ -77,13 +77,13 @@ final Map<String, WidgetBuilder> appRoutes = {
     return LandingPage(loggedInUser: user);
   },
 
-  '/language_setup': (context) => const LanguageCountrySetup(),
+  '/language-setup': (context) => const LanguageCountrySetup(),
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
   '/transactions': (context) => const TransactionScreen(),
 
   '/profile': (context) => const FarmerProfileScreen(),
-  '/creditScore': (context) => const CreditScoreScreen(),
+  '/credit-score': (context) => const CreditScoreScreen(),
 
   '/advice': (context) => const AdviceScreen(),
   '/agrigpt': (context) => const AgriGPTScreen(),
@@ -102,11 +102,11 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/market/invite': (context) => const MarketInviteScreen(),
 
   '/loan': (context) => const LoanScreen(),
-  '/loan/apply': (context) => const LoanApplication(),
+  '/loan-application': (context) => const LoanApplication(),
 
-  '/arex_officer_dashboard': (context) => const ArexOfficerDashboard(),
-  '/officer_tasks': (context) => const OfficerTasksScreen(),
-  '/field_assessment': (context) => const FieldAssessmentScreen(),
+  '/arex-officer-dashboard': (context) => const ArexOfficerDashboard(),
+  '/officer-tasks': (context) => const OfficerTasksScreen(),
+  '/field-assessment': (context) => const FieldAssessmentScreen(),
 
   '/logbook': (context) => const LogbookScreen(),
   '/upload': (context) => const UploadScreen(),
@@ -114,11 +114,11 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/chat': (context) => const ChatScreen(),
   '/help': (context) => const HelpScreen(),
 
-  '/officer_dashboard': (context) => const OfficerDashboard(),
-  '/official_dashboard': (context) => const OfficialDashboard(),
-  '/admin_panel': (context) => const AdminPanel(),
-  '/trader_dashboard': (context) => const TraderDashboard(),
-  '/investor_dashboard': (context) => const InvestorDashboard(),
+  '/officer-dashboard': (context) => const OfficerDashboard(),
+  '/official-dashboard': (context) => const OfficialDashboard(),
+  '/admin-panel': (context) => const AdminPanel(),
+  '/trader-dashboard': (context) => const TraderDashboard(),
+  '/investor-dashboard': (context) => const InvestorDashboard(),
 
   '/contracts/list': (context) => const ContractListScreen(),
   '/contracts/new': (context) => const ContractOfferFormScreen(),
@@ -126,7 +126,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/investors': (context) => const InvestorListScreen(),
   '/investor/register': (context) => const InvestorRegistrationScreen(),
 
-  '/training_log': (context) => const TrainingLogScreen(),
-  '/program_tracking': (context) => const ProgramTrackingScreen(),
-  '/sustainability_log': (context) => const SustainabilityLogScreen(),
+  '/training-log': (context) => const TrainingLogScreen(),
+  '/program-tracking': (context) => const ProgramTrackingScreen(),
+  '/sustainability-log': (context) => const SustainabilityLogScreen(),
 };
