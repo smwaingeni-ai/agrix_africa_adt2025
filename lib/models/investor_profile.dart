@@ -1,8 +1,14 @@
+// lib/models/investor_profile.dart
+
 import 'dart:convert';
 
+/// Enum for investment horizon
 enum InvestmentHorizon { shortTerm, midTerm, longTerm }
+
+/// Enum for investor openness status
 enum InvestorStatus { open, indifferent, notOpen }
 
+/// Investor profile model
 class InvestorProfile {
   String id;
   String name;
