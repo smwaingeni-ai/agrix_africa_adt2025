@@ -1,5 +1,3 @@
-// lib/models/investor_profile.dart
-
 import 'dart:convert';
 
 /// Enum for investment horizon
@@ -32,6 +30,7 @@ class InvestorProfile {
     required this.registeredAt,
   });
 
+  /// 🧪 Factory for an empty template
   factory InvestorProfile.empty() => InvestorProfile(
         id: '',
         name: '',
@@ -44,6 +43,7 @@ class InvestorProfile {
         registeredAt: DateTime.now(),
       );
 
+  /// 🔁 Convert model to JSON map
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -56,6 +56,7 @@ class InvestorProfile {
         'registeredAt': registeredAt.toIso8601String(),
       };
 
+  /// 🔁 Create model from JSON map
   factory InvestorProfile.fromJson(Map<String, dynamic> json) => InvestorProfile(
         id: json['id'] ?? '',
         name: json['name'] ?? '',
@@ -77,11 +78,13 @@ class InvestorProfile {
         registeredAt: DateTime.tryParse(json['registeredAt'] ?? '') ?? DateTime.now(),
       );
 
-  static List<InvestorProfile> decode(String jsonStr) =>
-      (jsonDecode(jsonStr) as List<dynamic>)
-          .map<InvestorProfile>((e) => InvestorProfile.fromJson(e))
-          .toList();
+  /// 🔄 Encode List<InvestorProfile> into JSON string
+  static String encode(List<InvestorProfile> investors) =>
+      json.encode(investors.map((i) => i.toJson()).toList());
 
-  static String encode(List<InvestorProfile> profiles) =>
-      jsonEncode(profiles.map((e) => e.toJson()).toList());
+  /// 🔄 Decode JSON string into List<InvestorProfile>
+  static List<InvestorProfile> decode(String jsonStr) =>
+      (json.decode(jsonStr) as List<dynamic>)
+          .map((i) => InvestorProfile.fromJson(i))
+          .toList();
 }
