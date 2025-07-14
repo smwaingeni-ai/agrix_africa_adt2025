@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TransactionScreen extends StatelessWidget {
   const TransactionScreen({super.key});
 
-  final List<Map<String, dynamic>> _transactions = const [
+  static const List<Map<String, dynamic>> _transactions = [
     {
       "date": "2025-07-01",
       "farmer": "Alice Mwale",
@@ -46,7 +46,8 @@ class TransactionScreen extends StatelessWidget {
                   leading: const Icon(Icons.receipt_long, color: Colors.green),
                   title: Text('${txn["type"]} • ${txn["farmer"]}'),
                   subtitle: Text(
-                      'Date: ${txn["date"]}\nAmount: \$${txn["amount"]} • Status: ${txn["status"]}'),
+                    'Date: ${txn["date"]}\nAmount: \$${txn["amount"]} • Status: ${txn["status"]}',
+                  ),
                   isThreeLine: true,
                   trailing: Icon(
                     txn["status"] == "Approved" || txn["status"] == "Completed"
