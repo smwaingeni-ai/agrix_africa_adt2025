@@ -7,7 +7,9 @@ enum InvestmentHorizon {
   longTerm,
 }
 
+/// Extension providing labels and parsing for InvestmentHorizon
 extension InvestmentHorizonExtension on InvestmentHorizon {
+  /// User-friendly label for each enum value
   String get label {
     switch (this) {
       case InvestmentHorizon.shortTerm:
@@ -19,9 +21,10 @@ extension InvestmentHorizonExtension on InvestmentHorizon {
     }
   }
 
+  /// Parses a string name into an InvestmentHorizon value
   static InvestmentHorizon fromName(String name) {
     return InvestmentHorizon.values.firstWhere(
-      (e) => e.name == name,
+      (e) => e.name.toLowerCase() == name.toLowerCase(),
       orElse: () => InvestmentHorizon.shortTerm,
     );
   }
