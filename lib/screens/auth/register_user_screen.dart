@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../models/user_model.dart';
-import '../../models/farmer_profile.dart';
-import '../../services/profile_service.dart';
+import 'package:agrix_africa_adt2025/models/user_model.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({super.key});
