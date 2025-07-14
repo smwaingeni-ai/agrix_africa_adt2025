@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'farmer_profile.dart'; // ✅ Make sure to import FarmerProfile
 
 /// Represents a user in the AgriX system.
 class UserModel {
@@ -21,6 +22,16 @@ class UserModel {
       name: json['name'] ?? '',
       role: json['role'] ?? 'Farmer',
       passcode: json['passcode'] ?? '',
+    );
+  }
+
+  /// Factory constructor for creating a UserModel from a FarmerProfile
+  factory UserModel.fromFarmer(FarmerProfile profile) {
+    return UserModel(
+      id: profile.idNumber ?? 'unknown_id',
+      name: profile.fullName,
+      role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
+      passcode: '', // Optional: Could be generated or left empty
     );
   }
 
