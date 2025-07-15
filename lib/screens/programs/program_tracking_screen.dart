@@ -20,7 +20,7 @@ class _ProgramTrackingScreenState extends State<ProgramTrackingScreen> {
 
   bool _submitting = false;
 
-  void _trackProgram() async {
+  Future<void> _trackProgram() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() => _submitting = true);
 
@@ -36,12 +36,14 @@ class _ProgramTrackingScreenState extends State<ProgramTrackingScreen> {
 
       await ProgramService().saveProgramLog(log);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ Program successfully tracked')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('✅ Program successfully tracked')),
+        );
+        Navigator.pop(context);
+      }
 
       setState(() => _submitting = false);
-      Navigator.pop(context);
     }
   }
 
@@ -66,46 +68,79 @@ class _ProgramTrackingScreenState extends State<ProgramTrackingScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              const Text('Track Agricultural Program Impact',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text(
+                'Track Agricultural Program Impact',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _programController,
-                decoration: const InputDecoration(labelText: 'Program Name', border: OutlineInputBorder()),
-                validator: (val) => val == null || val.isEmpty ? 'Enter program name' : null,
+                decoration: const InputDecoration(
+                  labelText: 'Program Name',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) => val == null || val.trim().isEmpty ? 'Enter program name' : null,
               ),
               const SizedBox(height: 12),
+
               TextFormField(
                 controller: _farmerController,
-                decoration: const InputDecoration(labelText: 'Farmer / Community', border: OutlineInputBorder()),
-                validator: (val) => val == null || val.isEmpty ? 'Enter recipient details' : null,
+                decoration: const InputDecoration(
+                  labelText: 'Farmer / Community',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) => val == null || val.trim().isEmpty ? 'Enter recipient details' : null,
               ),
               const SizedBox(height: 12),
+
               TextFormField(
                 controller: _resourceController,
-                decoration: const InputDecoration(labelText: 'Resource Distributed', border: OutlineInputBorder()),
-                validator: (val) => val == null || val.isEmpty ? 'Specify the resource' : null,
+                decoration: const InputDecoration(
+                  labelText: 'Resource Distributed',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) => val == null || val.trim().isEmpty ? 'Specify the resource' : null,
               ),
               const SizedBox(height: 12),
+
               TextFormField(
                 controller: _impactController,
-                decoration: const InputDecoration(labelText: 'Impact / Remarks', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Impact / Remarks',
+                  border: OutlineInputBorder(),
+                ),
                 maxLines: 3,
-                validator: (val) => val == null || val.isEmpty ? 'Describe the impact or remarks' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Describe the impact or remarks' : null,
               ),
               const SizedBox(height: 12),
+
               TextFormField(
                 controller: _regionController,
-                decoration: const InputDecoration(labelText: 'Region/Province', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Region/Province',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 12),
+
               TextFormField(
                 controller: _officerController,
-                decoration: const InputDecoration(labelText: 'Officer Name', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Officer Name',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 20),
+
               ElevatedButton.icon(
-                icon: _submitting ? const CircularProgressIndicator() : const Icon(Icons.track_changes),
+                icon: _submitting
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Icon(Icons.track_changes),
                 label: const Text('Track Program'),
                 onPressed: _submitting ? null : _trackProgram,
               ),
