@@ -84,8 +84,7 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              decoration:
-                  const InputDecoration(labelText: 'Interest Rate (%)'),
+              decoration: const InputDecoration(labelText: 'Interest Rate (%)'),
               keyboardType: TextInputType.number,
               validator: (value) =>
                   value == null || double.tryParse(value) == null
