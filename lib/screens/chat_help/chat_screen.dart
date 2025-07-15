@@ -14,6 +14,12 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<ChatMessage> _messages = [];
   bool _isSending = false;
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _sendMessage() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
@@ -24,18 +30,21 @@ class _ChatScreenState extends State<ChatScreen> {
       _controller.clear();
     });
 
-    final reply = await ChatService.getBotResponse(text);
-
-    setState(() {
-      _messages.add(ChatMessage(sender: 'AgriGPT', message: reply));
-      _isSending = false;
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    try {
+      final reply = await ChatService.getBotResponse(text);
+      setState(() {
+        _messages.add(ChatMessage(sender: 'AgriGPT', message: reply));
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add(ChatMessage(
+          sender: 'AgriGPT',
+          message: '⚠️ Failed to get response. Please try again.',
+        ));
+      });
+    } finally {
+      setState(() => _isSending = false);
+    }
   }
 
   Widget _buildMessageBubble(ChatMessage msg) {
@@ -43,11 +52,11 @@ class _ChatScreenState extends State<ChatScreen> {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
         decoration: BoxDecoration(
           color: isUser ? Colors.green.shade100 : Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           '${msg.sender}: ${msg.message}',
@@ -65,14 +74,14 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               itemCount: _messages.length,
               itemBuilder: (context, index) => _buildMessageBubble(_messages[index]),
             ),
           ),
           if (_isSending)
             const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+              padding: EdgeInsets.all(8.0),
               child: CircularProgressIndicator(),
             ),
           Padding(
