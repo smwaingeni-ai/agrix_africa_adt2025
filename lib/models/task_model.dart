@@ -11,6 +11,17 @@ class TaskModel {
     required this.date,
   });
 
+  /// 🔹 Empty instance for default usage (e.g. forms, drafts)
+  factory TaskModel.empty() {
+    return TaskModel(
+      title: '',
+      description: '',
+      result: '',
+      date: DateTime.now(),
+    );
+  }
+
+  /// 🔁 Convert to JSON
   Map<String, dynamic> toJson() => {
         'title': title,
         'description': description,
@@ -18,10 +29,15 @@ class TaskModel {
         'date': date.toIso8601String(),
       };
 
-  static TaskModel fromJson(Map<String, dynamic> json) => TaskModel(
+  /// 🔁 Parse from JSON with fallbacks
+  factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
         title: json['title'] ?? '',
         description: json['description'] ?? '',
         result: json['result'] ?? '',
         date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
       );
+
+  @override
+  String toString() =>
+      'TaskModel(title: $title, result: $result, date: $date)';
 }
