@@ -21,7 +21,7 @@ class _InvestmentOffersScreenState extends State<InvestmentOffersScreen> {
 
   Future<void> _loadOffers() async {
     try {
-      final data = await MarketService().loadOffers();
+      final data = await MarketService.loadOffers(); // static method in service
       setState(() {
         _offers = data;
         _loading = false;
@@ -51,19 +51,17 @@ class _InvestmentOffersScreenState extends State<InvestmentOffersScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Investor: ${offer.investorId}',
+              '👤 Investor: ${offer.investorName}',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 6),
-            Text('📌 Listing ID: ${offer.listingId}'),
-            Text('💵 Amount: ${offer.amount.toStringAsFixed(2)} ${offer.currency}'),
-            Text('⏳ Term: ${offer.durationMonths} months'),
+            Text('📞 Contact: ${offer.contact}'),
+            Text('💰 Amount: \$${offer.amount.toStringAsFixed(2)}'),
+            Text('📈 Rate: ${offer.interestRate}%'),
+            Text('⏳ Term: ${offer.term}'),
             Text('📊 Status: ${offer.isAccepted ? "✅ Accepted" : "⏳ Pending"}'),
-            if (offer.message.trim().isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text('📝 ${offer.message}'),
-              ),
+            Text('🕒 Date: ${offer.timestamp.toLocal().toString().split('.')[0]}'),
+            const SizedBox(height: 6),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(
