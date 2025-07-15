@@ -5,7 +5,7 @@ class HelpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final faqItems = [
+    final List<Map<String, String>> faqItems = [
       {
         'question': '📋 How do I register as a farmer?',
         'answer':
@@ -45,37 +45,36 @@ class HelpScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Help & FAQs'),
+        title: const Text('❓ Help & FAQs'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: ListView.separated(
         padding: const EdgeInsets.all(16),
-        child: ListView.separated(
-          itemCount: faqItems.length,
-          separatorBuilder: (_, __) => const Divider(height: 32),
-          itemBuilder: (context, index) {
-            final faq = faqItems[index];
-            return Card(
-              elevation: 2,
-              child: ExpansionTile(
-                tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                title: Text(
-                  faq['question']!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                      faq['answer']!,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ],
+        itemCount: faqItems.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final faq = faqItems[index];
+          return Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              title: Text(
+                faq['question']!,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
-            );
-          },
-        ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+                  child: Text(
+                    faq['answer']!,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
