@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui' as ui; // ✅ Fix for ImageByteFormat.png
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/services/profile_service.dart';
 
@@ -25,6 +26,7 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _uuid = const Uuid();
 
+  // Profile fields
   String fullName = '';
   String idNumber = '';
   String contactNumber = '';
@@ -42,6 +44,7 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
   String? qrImagePath;
   Uint8List? webImageBytes;
 
+  // Dropdown options
   List<String> countries = ['Zambia', 'Zimbabwe', 'Kenya'];
   List<String> farmTypes = ['Crop', 'Livestock', 'Mixed'];
   List<String> languages = ['English', 'Shona', 'Swahili'];
@@ -74,7 +77,7 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
         }
       }
     } catch (e) {
-      print('Image selection failed: $e');
+      debugPrint('Image selection failed: $e');
     }
   }
 
@@ -91,7 +94,7 @@ class _FarmerProfileScreenState extends State<FarmerProfileScreen> {
     final dir = await getApplicationDocumentsDirectory();
     final qrPath = '${dir.path}/$farmerId-qr.png';
 
-    final picData = await painter.toImageData(300, format: ui.ImageByteFormat.png); // ✅ fixed
+    final picData = await painter.toImageData(300, format: ui.ImageByteFormat.png);
     final buffer = picData!.buffer.asUint8List();
     await File(qrPath).writeAsBytes(buffer);
 
