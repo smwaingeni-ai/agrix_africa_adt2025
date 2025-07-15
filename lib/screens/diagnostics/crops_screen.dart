@@ -32,13 +32,15 @@ class _CropsScreenState extends State<CropsScreen> {
     if (picked != null) {
       setState(() {
         _image = File(picked.path);
-        _description = "🚨 Crop symptoms suggest fungal infection or nutrient stress (Simulated)";
+        _description =
+            "🚨 Crop symptoms suggest fungal infection or nutrient stress (Simulated)";
       });
     }
   }
 
   void _submitDiagnosis() {
-    final allAnswered = _answers.length == _questions.length && !_answers.containsValue(null);
+    final allAnswered =
+        _answers.length == _questions.length && !_answers.containsValue(null);
 
     if (!allAnswered) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -52,13 +54,19 @@ class _CropsScreenState extends State<CropsScreen> {
         ? '❗ Likely crop stress or disease. Recommend treatment with organic pesticide and balanced fertilization.'
         : '✅ Crops appear healthy. Maintain regular checks and irrigation.';
 
+    setState(() {
+      _description = diagnosis;
+    });
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Crop Diagnosis'),
         content: Text(diagnosis),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close')),
         ],
       ),
     );
@@ -98,7 +106,8 @@ class _CropsScreenState extends State<CropsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(question, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(question,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         Row(
           children: [
             Radio<String>(
@@ -123,7 +132,7 @@ class _CropsScreenState extends State<CropsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Crop Diagnosis')),
+      appBar: AppBar(title: const Text('🌾 Crop Diagnosis')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
@@ -138,7 +147,8 @@ class _CropsScreenState extends State<CropsScreen> {
             if (_description != null)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(_description!, style: const TextStyle(fontSize: 16)),
+                child: Text(_description!,
+                    style: const TextStyle(fontSize: 16)),
               ),
             TextField(
               controller: _noteController,
