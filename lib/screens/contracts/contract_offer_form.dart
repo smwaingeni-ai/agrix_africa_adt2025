@@ -23,13 +23,13 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
       await ContractService().saveContract(_contract);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Contract offer posted successfully!')),
+        const SnackBar(content: Text('✅ Contract offer posted successfully!')),
       );
       Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting contract: $e')),
+        SnackBar(content: Text('❌ Error submitting contract: $e')),
       );
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -39,7 +39,7 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Submit Contract Offer')),
+      appBar: AppBar(title: const Text('📝 Submit Contract Offer')),
       body: _submitting
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -59,7 +59,8 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
                     _buildTextField(
                       label: 'Amount (USD)',
                       keyboardType: TextInputType.number,
-                      onSaved: (val) => _contract.amount = double.tryParse(val ?? '0') ?? 0.0,
+                      onSaved: (val) =>
+                          _contract.amount = double.tryParse(val!.replaceAll(',', '')) ?? 0.0,
                     ),
                     _buildTextField(
                       label: 'Duration (e.g. 12 months)',
@@ -80,9 +81,10 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
                       maxLines: 4,
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.check),
+                      label: const Text('Submit Contract'),
                       onPressed: _submitting ? null : _submitForm,
-                      child: const Text('Submit Contract'),
                     ),
                   ],
                 ),
@@ -98,15 +100,21 @@ class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
     bool required = true,
     int maxLines = 1,
   }) {
-    return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      onSaved: onSaved,
-      validator: (val) {
-        if (!required) return null;
-        return (val == null || val.isEmpty) ? 'Required' : null;
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        onSaved: onSaved,
+        validator: (val) {
+          if (!required) return null;
+          return (val == null || val.trim().isEmpty) ? 'Required' : null;
+        },
+      ),
     );
   }
 }
