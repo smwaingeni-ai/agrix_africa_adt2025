@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert'; // Only needed if you're decoding raw JSON strings
 
 class ContractOffer {
   String id;
@@ -23,6 +23,7 @@ class ContractOffer {
     required this.postedAt,
   });
 
+  /// 🔹 Factory constructor for empty object
   factory ContractOffer.empty() {
     return ContractOffer(
       id: '',
@@ -37,6 +38,7 @@ class ContractOffer {
     );
   }
 
+  /// 🔹 Deserialize from JSON
   factory ContractOffer.fromJson(Map<String, dynamic> json) {
     return ContractOffer(
       id: json['id'] ?? '',
@@ -51,6 +53,7 @@ class ContractOffer {
     );
   }
 
+  /// 🔹 Serialize to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
