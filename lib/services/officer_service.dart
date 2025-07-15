@@ -5,17 +5,21 @@ import '../models/task_model.dart';
 import '../models/assessment_model.dart';
 
 class OfficerService {
+  /// 🔹 Get application document directory path
   static Future<String> _localPath() async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
+  /// 🔹 Get specific file (tasks or assessments) as File object
   static Future<File> _localFile(String fileName) async {
     final path = await _localPath();
     return File('$path/$fileName.json');
   }
 
-  /// 🔹 Save task to file
+  // ------------------- Task Management -------------------
+
+  /// 🔹 Save a single task to file
   static Future<void> saveTask(TaskModel task) async {
     try {
       final file = await _localFile('tasks');
@@ -28,7 +32,7 @@ class OfficerService {
     }
   }
 
-  /// 🔹 Load tasks
+  /// 🔹 Load all tasks from local file
   static Future<List<TaskModel>> loadTasks() async {
     try {
       final file = await _localFile('tasks');
@@ -42,7 +46,9 @@ class OfficerService {
     }
   }
 
-  /// 🔹 Save assessment
+  // ------------------- Assessment Management -------------------
+
+  /// 🔹 Save an officer assessment
   static Future<void> saveAssessment(AssessmentModel assessment) async {
     try {
       final file = await _localFile('assessments');
@@ -55,7 +61,7 @@ class OfficerService {
     }
   }
 
-  /// 🔹 Load assessments
+  /// 🔹 Load all officer assessments from local file
   static Future<List<AssessmentModel>> loadAssessments() async {
     try {
       final file = await _localFile('assessments');
