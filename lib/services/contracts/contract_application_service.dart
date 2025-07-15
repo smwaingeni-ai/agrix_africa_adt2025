@@ -6,20 +6,25 @@ import '../../models/contracts/contract_application.dart';
 class ContractApplicationService {
   final String _key = 'contract_applications';
 
+  /// Load all applications linked to a specific offer ID
   Future<List<ContractApplication>> loadApplications(String offerId) async {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getStringList(_key) ?? [];
-    return data.map((e) {
-      try {
-        return ContractApplication.fromJson(json.decode(e));
-      } catch (_) {
-        return null;
-      }
-    }).whereType<ContractApplication>()
-      .where((app) => app.contractOfferId == offerId)
-      .toList();
+
+    return data
+        .map((e) {
+          try {
+            return ContractApplication.fromJson(json.decode(e));
+          } catch (_) {
+            return null;
+          }
+        })
+        .whereType<ContractApplication>()
+        .where((app) => app.contractOfferId == offerId)
+        .toList();
   }
 
+  /// Save a new application for a contract offer
   Future<void> saveApplication({
     required String offerId,
     required String farmerName,
