@@ -14,15 +14,15 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
   String? _selectedProvince;
   String? _selectedArea;
 
+  final List<String> _languages = ['English', 'French', 'Portuguese', 'Shona'];
+  final List<String> _countries = ['Zimbabwe', 'Zambia', 'Kenya'];
+  final List<String> _areas = ['Urban', 'Rural', 'Peri-Urban'];
+
   final Map<String, List<String>> _provincesByCountry = {
     'Zimbabwe': ['Harare', 'Bulawayo', 'Manicaland', 'Mashonaland Central', 'Masvingo'],
     'Zambia': ['Lusaka', 'Copperbelt', 'Eastern', 'Northern', 'Southern'],
     'Kenya': ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Uasin Gishu'],
   };
-
-  final List<String> _languages = ['English', 'French', 'Portuguese', 'Shona'];
-  final List<String> _countries = ['Zimbabwe', 'Zambia', 'Kenya'];
-  final List<String> _areas = ['Urban', 'Rural', 'Peri-Urban'];
 
   @override
   void initState() {
@@ -82,67 +82,53 @@ class _LanguageCountrySetupState extends State<LanguageCountrySetup> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Select Language'),
               value: _selectedLanguage,
-              items: _languages
-                  .map<DropdownMenuItem<String>>(
-                    (lang) => DropdownMenuItem<String>(
-                      value: lang,
-                      child: Text(lang),
-                    ),
-                  )
-                  .toList(),
+              items: _languages.map((lang) {
+                return DropdownMenuItem(value: lang, child: Text(lang));
+              }).toList(),
               onChanged: (val) => setState(() => _selectedLanguage = val),
             ),
             const SizedBox(height: 16),
+
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Select Country'),
               value: _selectedCountry,
-              items: _countries
-                  .map<DropdownMenuItem<String>>(
-                    (country) => DropdownMenuItem<String>(
-                      value: country,
-                      child: Text(country),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (val) => setState(() {
-                _selectedCountry = val;
-                _selectedProvince = null;
-              }),
+              items: _countries.map((country) {
+                return DropdownMenuItem(value: country, child: Text(country));
+              }).toList(),
+              onChanged: (val) {
+                setState(() {
+                  _selectedCountry = val;
+                  _selectedProvince = null;
+                });
+              },
             ),
             const SizedBox(height: 16),
+
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Select Province'),
               value: _selectedProvince,
-              items: provinces
-                  .map<DropdownMenuItem<String>>(
-                    (prov) => DropdownMenuItem<String>(
-                      value: prov,
-                      child: Text(prov),
-                    ),
-                  )
-                  .toList(),
+              items: provinces.map((prov) {
+                return DropdownMenuItem(value: prov, child: Text(prov));
+              }).toList(),
               onChanged: (val) => setState(() => _selectedProvince = val),
             ),
             const SizedBox(height: 16),
+
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Select Area'),
               value: _selectedArea,
-              items: _areas
-                  .map<DropdownMenuItem<String>>(
-                    (area) => DropdownMenuItem<String>(
-                      value: area,
-                      child: Text(area),
-                    ),
-                  )
-                  .toList(),
+              items: _areas.map((area) {
+                return DropdownMenuItem(value: area, child: Text(area));
+              }).toList(),
               onChanged: (val) => setState(() => _selectedArea = val),
             ),
             const SizedBox(height: 30),
+
             ElevatedButton.icon(
               icon: const Icon(Icons.check),
               label: const Text('Save and Continue'),
               onPressed: _saveSetup,
-            )
+            ),
           ],
         ),
       ),
