@@ -5,19 +5,21 @@ import 'package:agrix_africa_adt2025/models/market_item.dart';
 import 'package:agrix_africa_adt2025/models/investment_offer.dart';
 
 class MarketService {
-  // 🔹 Get market_items.json file
+  /// 🔹 Get market_items.json file path
   static Future<File> _getMarketFile() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/market_items.json');
   }
 
-  // 🔹 Get investment_offers.json file
+  /// 🔹 Get investment_offers.json file path
   static Future<File> _getOffersFile() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/investment_offers.json');
   }
 
-  // 🔹 Save entire list of market items
+  // ------------------- Market Items -------------------
+
+  /// 🔹 Save entire list of market items
   static Future<void> saveItems(List<MarketItem> items) async {
     try {
       final file = await _getMarketFile();
@@ -29,7 +31,7 @@ class MarketService {
     }
   }
 
-  // 🔹 Load all market items
+  /// 🔹 Load all market items
   static Future<List<MarketItem>> loadItems() async {
     try {
       final file = await _getMarketFile();
@@ -43,19 +45,21 @@ class MarketService {
     }
   }
 
-  // 🔹 Add a single market item
+  /// 🔹 Add a single market item
   static Future<void> addItem(MarketItem item) async {
     final items = await loadItems();
     items.add(item);
     await saveItems(items);
   }
 
-  // 🔹 Alias for save single item
+  /// 🔹 Save one item (alias for `addItem`)
   static Future<void> saveItem(MarketItem item) async {
     await addItem(item);
   }
 
-  // 🔹 Save all investment offers
+  // ------------------- Investment Offers -------------------
+
+  /// 🔹 Save all investment offers
   static Future<void> saveOffers(List<InvestmentOffer> offers) async {
     try {
       final file = await _getOffersFile();
@@ -67,7 +71,7 @@ class MarketService {
     }
   }
 
-  // 🔹 Load all investment offers
+  /// 🔹 Load all investment offers
   static Future<List<InvestmentOffer>> loadOffers() async {
     try {
       final file = await _getOffersFile();
@@ -81,7 +85,7 @@ class MarketService {
     }
   }
 
-  // 🔹 Add a single investment offer
+  /// 🔹 Add a single investment offer
   static Future<void> addOffer(InvestmentOffer offer) async {
     final offers = await loadOffers();
     offers.add(offer);
