@@ -35,13 +35,13 @@ class _ContractApplyScreenState extends State<ContractApplyScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Application submitted successfully!")),
+        const SnackBar(content: Text("✅ Application submitted successfully!")),
       );
       Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error submitting application: $e")),
+        SnackBar(content: Text("❌ Error submitting application: $e")),
       );
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -71,27 +71,40 @@ class _ContractApplyScreenState extends State<ContractApplyScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              Text(
+                'Please fill in your details to apply for this contract.',
+                style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+              ),
+              const SizedBox(height: 16),
+
               TextFormField(
                 controller: _farmerNameController,
-                decoration: const InputDecoration(labelText: 'Farmer Name'),
+                decoration: const InputDecoration(labelText: '👤 Farmer Name'),
                 validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
               ),
+              const SizedBox(height: 12),
+
               TextFormField(
                 controller: _farmLocationController,
-                decoration: const InputDecoration(labelText: 'Farm Location'),
+                decoration: const InputDecoration(labelText: '📍 Farm Location'),
                 validator: (value) => value!.isEmpty ? 'Enter farm location' : null,
               ),
+              const SizedBox(height: 12),
+
               TextFormField(
                 controller: _contactInfoController,
-                decoration: const InputDecoration(labelText: 'Contact Info (Phone/Email)'),
+                decoration: const InputDecoration(labelText: '📞 Contact Info (Phone or Email)'),
                 validator: (value) => value!.isEmpty ? 'Provide a way to contact you' : null,
               ),
+              const SizedBox(height: 12),
+
               TextFormField(
                 controller: _notesController,
-                decoration: const InputDecoration(labelText: 'Additional Notes (Optional)'),
+                decoration: const InputDecoration(labelText: '📝 Additional Notes (Optional)'),
                 maxLines: 3,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
+
               ElevatedButton.icon(
                 icon: const Icon(Icons.send),
                 label: Text(_isSubmitting ? 'Submitting...' : 'Submit Application'),
