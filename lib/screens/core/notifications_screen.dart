@@ -21,23 +21,40 @@ class NotificationsScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: _notifications.isEmpty
-          ? const Center(child: Text('No notifications at this time.'))
+          ? const Center(
+              child: Text(
+                'No notifications at this time.',
+                style: TextStyle(fontSize: 16),
+              ),
+            )
           : ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               itemCount: _notifications.length,
-              separatorBuilder: (_, __) => const Divider(thickness: 0.6),
+              separatorBuilder: (_, __) => const Divider(thickness: 0.5),
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const Icon(Icons.notifications_active_outlined, color: Colors.green),
-                  title: Text(
-                    _notifications[index],
-                    style: const TextStyle(fontSize: 16),
+                return Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("📬 Opened: ${_notifications[index]}")),
-                    );
-                  },
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.notifications_active_outlined,
+                      color: Colors.green,
+                    ),
+                    title: Text(
+                      _notifications[index],
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("📬 Opened: ${_notifications[index]}"),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             ),
