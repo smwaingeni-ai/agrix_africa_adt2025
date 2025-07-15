@@ -26,7 +26,7 @@ class InvestorProfile {
     required this.registeredAt,
   });
 
-  /// 🧪 Empty template
+  /// 🔹 Safe empty constructor for forms/defaults
   factory InvestorProfile.empty() => InvestorProfile(
         id: '',
         name: '',
@@ -39,7 +39,7 @@ class InvestorProfile {
         registeredAt: DateTime.now(),
       );
 
-  /// 🔁 JSON encoder
+  /// 🔁 Convert to JSON map
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -52,7 +52,7 @@ class InvestorProfile {
         'registeredAt': registeredAt.toIso8601String(),
       };
 
-  /// 🔁 JSON decoder
+  /// 🔁 Create instance from JSON map
   factory InvestorProfile.fromJson(Map<String, dynamic> json) => InvestorProfile(
         id: json['id'] ?? '',
         name: json['name'] ?? '',
@@ -60,27 +60,26 @@ class InvestorProfile {
         email: json['email'] ?? '',
         location: json['location'] ?? '',
         preferredHorizons: (json['preferredHorizons'] as List<dynamic>?)
-                ?.map((e) => InvestmentHorizon.values.firstWhere(
-                      (h) => h.name == e,
-                      orElse: () => InvestmentHorizon.shortTerm,
-                    ))
+                ?.map((e) => InvestmentHorizonExtension.fromName(e.toString()))
                 .toList() ??
             [],
-        status: InvestorStatus.values.firstWhere(
-          (s) => s.name == json['status'],
-          orElse: () => InvestorStatus.indifferent,
-        ),
+        status: InvestorStatusExtension.fromName(json['status'] ?? ''),
         interests: List<String>.from(json['interests'] ?? []),
-        registeredAt: DateTime.tryParse(json['registeredAt'] ?? '') ?? DateTime.now(),
+        registeredAt:
+            DateTime.tryParse(json['registeredAt'] ?? '') ?? DateTime.now(),
       );
 
-  /// 🔄 Encode list of investors to JSON string
+  /// 🔄 Encode a list of InvestorProfiles into JSON string
   static String encode(List<InvestorProfile> investors) =>
       json.encode(investors.map((i) => i.toJson()).toList());
 
-  /// 🔄 Decode JSON string to investor list
+  /// 🔄 Decode a JSON string into a list of InvestorProfiles
   static List<InvestorProfile> decode(String jsonStr) =>
       (json.decode(jsonStr) as List<dynamic>)
           .map((i) => InvestorProfile.fromJson(i))
           .toList();
+
+  @override
+  String toString() =>
+      'InvestorProfile(name: $name, status: ${status.label}, preferred: ${preferredHorizons.map((e) => e.label).join(", ")})';
 }
