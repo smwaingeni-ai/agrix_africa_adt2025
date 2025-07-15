@@ -1,5 +1,3 @@
-// lib/models/market_item.dart
-
 import 'dart:convert';
 
 class MarketItem {
@@ -45,11 +43,16 @@ class MarketItem {
     required this.postedAt,
   });
 
-  // ✅ Convenience Getters for Compatibility
+  /// 🔹 First image for preview
   String get imagePath => imagePaths.isNotEmpty ? imagePaths.first : '';
-  String get contact => ownerContact;
+
+  /// 🔹 First payment method or default
   String get paymentOption => paymentOptions.isNotEmpty ? paymentOptions.first : '';
 
+  /// 🔹 Convenience alias
+  String get contact => ownerContact;
+
+  /// 🔹 Safe empty constructor for defaults/forms
   factory MarketItem.empty() => MarketItem(
         id: '',
         title: '',
@@ -72,6 +75,7 @@ class MarketItem {
         postedAt: DateTime.now(),
       );
 
+  /// 🔁 Serialize to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
@@ -94,6 +98,7 @@ class MarketItem {
         'postedAt': postedAt.toIso8601String(),
       };
 
+  /// 🔁 Deserialize from JSON with null-safe casting
   factory MarketItem.fromJson(Map<String, dynamic> json) => MarketItem(
         id: json['id'] ?? '',
         title: json['title'] ?? '',
@@ -102,7 +107,9 @@ class MarketItem {
         type: json['type'] ?? '',
         listingType: json['listingType'] ?? '',
         location: json['location'] ?? '',
-        price: (json['price'] as num?)?.toDouble(),
+        price: (json['price'] is num)
+            ? (json['price'] as num).toDouble()
+            : double.tryParse(json['price']?.toString() ?? '0.0'),
         imagePaths: List<String>.from(json['imagePaths'] ?? []),
         contactMethods: List<String>.from(json['contactMethods'] ?? []),
         paymentOptions: List<String>.from(json['paymentOptions'] ?? []),
@@ -116,11 +123,17 @@ class MarketItem {
         postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
       );
 
+  /// 🔄 Encode a list of MarketItems to JSON
   static String encodeList(List<MarketItem> items) =>
       json.encode(items.map((item) => item.toJson()).toList());
 
+  /// 🔄 Decode a JSON string into a list of MarketItems
   static List<MarketItem> decodeList(String jsonString) =>
       (json.decode(jsonString) as List<dynamic>)
           .map((e) => MarketItem.fromJson(e))
           .toList();
+
+  @override
+  String toString() =>
+      'MarketItem(title: $title, category: $category, available: $isAvailable)';
 }
