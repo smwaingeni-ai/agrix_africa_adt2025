@@ -1,4 +1,3 @@
-// lib/models/farmer_profile.dart
 import 'dart:convert';
 
 class FarmerProfile {
@@ -40,11 +39,13 @@ class FarmerProfile {
     this.photoPath,
   });
 
+  /// 🔹 Friendly accessors
   String get id => farmerId;
   String get name => fullName;
   bool get govtAffiliated => subsidised;
   double get farmSizeHectares => farmSize;
 
+  /// 🔹 Default empty profile
   factory FarmerProfile.empty() => FarmerProfile(
         farmerId: '',
         fullName: '',
@@ -65,6 +66,7 @@ class FarmerProfile {
         photoPath: null,
       );
 
+  /// 🔹 Convert to JSON
   Map<String, dynamic> toJson() => {
         'farmerId': farmerId,
         'fullName': fullName,
@@ -85,6 +87,7 @@ class FarmerProfile {
         'photoPath': photoPath,
       };
 
+  /// 🔹 Create from JSON
   factory FarmerProfile.fromJson(Map<String, dynamic> json) => FarmerProfile(
         farmerId: json['farmerId'] ?? '',
         fullName: json['fullName'] ?? '',
@@ -102,24 +105,30 @@ class FarmerProfile {
         subsidised: json['subsidised'] ?? false,
         contactNumber: json['contactNumber'] ?? '',
         language: json['language'] ?? 'English',
-        createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+        createdAt:
+            DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
         qrImagePath: json['qrImagePath'],
         photoPath: json['photoPath'],
       );
 
+  /// 🔹 Encode to raw JSON string
   String toRawJson() => jsonEncode(toJson());
 
+  /// 🔹 Decode from raw JSON string
   static FarmerProfile fromRawJson(String str) =>
       FarmerProfile.fromJson(jsonDecode(str));
 
+  /// 🔹 Encode a list of FarmerProfiles
   static String encode(List<FarmerProfile> profiles) =>
       jsonEncode(profiles.map((p) => p.toJson()).toList());
 
+  /// 🔹 Decode a list of FarmerProfiles
   static List<FarmerProfile> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((item) => FarmerProfile.fromJson(item))
           .toList();
 
+  /// 🔹 Create a modified copy
   FarmerProfile copyWith({
     String? farmerId,
     String? fullName,
@@ -161,5 +170,6 @@ class FarmerProfile {
   }
 
   @override
-  String toString() => 'FarmerProfile($fullName - $idNumber)';
+  String toString() =>
+      'FarmerProfile(fullName: $fullName, idNumber: $idNumber, country: $country)';
 }
