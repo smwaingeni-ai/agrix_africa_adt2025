@@ -47,7 +47,7 @@ class ChatService {
     await prefs.remove(_chatKey);
   }
 
-  /// 🔹 Simulated AgriGPT bot response (offline)
+  /// 🔹 Simulated AgriGPT bot response (offline fallback)
   static Future<String> getBotResponse(String userMessage) async {
     await Future.delayed(const Duration(milliseconds: 800));
     return '🤖 AgriGPT: You asked "$userMessage" — Please clarify or choose a category.';
