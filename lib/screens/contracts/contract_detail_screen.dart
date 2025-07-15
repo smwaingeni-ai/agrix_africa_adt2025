@@ -1,5 +1,3 @@
-// lib/screens/contracts/contract_detail_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
@@ -23,7 +21,9 @@ class ContractDetailScreen extends StatelessWidget {
             tooltip: 'Export to PDF (Coming Soon)',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("🚧 PDF export feature is under development.")),
+                const SnackBar(
+                  content: Text("🚧 PDF export feature is under development."),
+                ),
               );
             },
           ),
@@ -33,19 +33,22 @@ class ContractDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            _buildDetailTile("Parties Involved", contract.parties),
-            _buildDetailTile("Amount", currencyFormatter.format(contract.amount)),
-            _buildDetailTile("Duration", contract.duration),
-            _buildDetailTile("Crop/Livestock Type", contract.cropOrLivestockType),
-            _buildDetailTile("Location", contract.location),
-            _buildDetailTile("Contract Terms", contract.terms),
+            _buildDetailTile("📄 Contract Title", contract.title),
+            _buildDetailTile("🤝 Parties Involved", contract.parties),
+            _buildDetailTile("💵 Amount", currencyFormatter.format(contract.amount)),
+            _buildDetailTile("⏳ Duration", contract.duration),
+            _buildDetailTile("🌱 Crop/Livestock Type", contract.cropOrLivestockType),
+            _buildDetailTile("📍 Location", contract.location),
+            _buildDetailTile("📑 Terms & Conditions", contract.terms),
             const SizedBox(height: 30),
             ElevatedButton.icon(
               icon: const Icon(Icons.share),
               label: const Text("Share Contract"),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("🚀 Sharing functionality coming soon.")),
+                  const SnackBar(
+                    content: Text("🚀 Sharing functionality coming soon."),
+                  ),
                 );
               },
             ),
@@ -56,27 +59,30 @@ class ContractDetailScreen extends StatelessWidget {
   }
 
   Widget _buildDetailTile(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.green,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.green,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+            ),
           ),
-        ),
-        const Divider(height: 24),
-      ],
+          const Divider(height: 24),
+        ],
+      ),
     );
   }
 }
