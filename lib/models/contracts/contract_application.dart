@@ -27,6 +27,25 @@ class ContractApplication {
     this.status = 'Pending',
   });
 
+  /// 🔹 Empty template for initial use (e.g., forms)
+  factory ContractApplication.empty() {
+    return ContractApplication(
+      id: '',
+      contractOfferId: '',
+      farmerName: '',
+      farmerId: '',
+      location: '',
+      phoneNumber: '',
+      email: '',
+      farmSize: '',
+      experience: '',
+      motivation: '',
+      appliedAt: DateTime.now(),
+      status: 'Pending',
+    );
+  }
+
+  /// 🔹 JSON Deserialization
   factory ContractApplication.fromJson(Map<String, dynamic> json) {
     return ContractApplication(
       id: json['id'] ?? '',
@@ -44,6 +63,7 @@ class ContractApplication {
     );
   }
 
+  /// 🔹 JSON Serialization
   Map<String, dynamic> toJson() {
     return {
       'id': id,
