@@ -27,6 +27,25 @@ class ContractApplication {
     this.status = 'Pending',
   });
 
+  /// 🔹 Empty constructor for safe form defaults
+  factory ContractApplication.empty() {
+    return ContractApplication(
+      id: '',
+      contractOfferId: '',
+      farmerName: '',
+      farmerId: '',
+      location: '',
+      phoneNumber: '',
+      email: '',
+      farmSize: '',
+      experience: '',
+      motivation: '',
+      appliedAt: DateTime.now(),
+      status: 'Pending',
+    );
+  }
+
+  /// 🔹 Deserialize from JSON with fallbacks
   factory ContractApplication.fromJson(Map<String, dynamic> json) {
     return ContractApplication(
       id: json['id'] ?? '',
@@ -44,6 +63,7 @@ class ContractApplication {
     );
   }
 
+  /// 🔹 Convert to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -60,4 +80,8 @@ class ContractApplication {
       'status': status,
     };
   }
+
+  @override
+  String toString() =>
+      'ContractApplication(farmer: $farmerName, status: $status, appliedAt: $appliedAt)';
 }
