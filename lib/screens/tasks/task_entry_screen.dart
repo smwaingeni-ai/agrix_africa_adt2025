@@ -59,7 +59,7 @@ class _TaskEntryScreenState extends State<TaskEntryScreen> {
                   labelText: 'Task Title',
                   border: OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
