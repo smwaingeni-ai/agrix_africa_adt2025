@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+class OfficerTask {
+  final String title;
+  final String description;
+  String status;
+
+  OfficerTask({
+    required this.title,
+    required this.description,
+    this.status = 'Pending',
+  });
+}
+
 class OfficerTasksScreen extends StatefulWidget {
   const OfficerTasksScreen({super.key});
 
@@ -8,33 +20,33 @@ class OfficerTasksScreen extends StatefulWidget {
 }
 
 class _OfficerTasksScreenState extends State<OfficerTasksScreen> {
-  final List<Map<String, String>> _tasks = [
-    {
-      'title': '🧪 Inspect Field in Region A',
-      'description': 'Check maize crop progress and pest control.',
-      'status': 'Pending',
-    },
-    {
-      'title': '🐄 Monitor Livestock Health',
-      'description': 'Review cattle health reports from Farm B.',
-      'status': 'In Progress',
-    },
-    {
-      'title': '📦 Verify Input Distribution',
-      'description': 'Ensure fertilizer delivery was completed.',
-      'status': 'Completed',
-    },
+  final List<OfficerTask> _tasks = [
+    OfficerTask(
+      title: '🧪 Inspect Field in Region A',
+      description: 'Check maize crop progress and pest control.',
+      status: 'Pending',
+    ),
+    OfficerTask(
+      title: '🐄 Monitor Livestock Health',
+      description: 'Review cattle health reports from Farm B.',
+      status: 'In Progress',
+    ),
+    OfficerTask(
+      title: '📦 Verify Input Distribution',
+      description: 'Ensure fertilizer delivery was completed.',
+      status: 'Completed',
+    ),
   ];
 
   void _markTaskAsCompleted(int index) {
     setState(() {
-      _tasks[index]['status'] = 'Completed';
+      _tasks[index].status = 'Completed';
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '✅ Task "${_tasks[index]['title']}" marked as completed.',
+          '✅ Task "${_tasks[index].title}" marked as completed.',
         ),
         duration: const Duration(seconds: 2),
       ),
@@ -76,15 +88,15 @@ class _OfficerTasksScreenState extends State<OfficerTasksScreen> {
         itemCount: _tasks.length,
         itemBuilder: (context, index) {
           final task = _tasks[index];
-          final status = task['status'] ?? 'Pending';
+          final status = task.status;
 
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             elevation: 2,
             child: ListTile(
               leading: Icon(_getStatusIcon(status), color: _getStatusColor(status)),
-              title: Text(task['title'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(task['description'] ?? ''),
+              title: Text(task.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(task.description),
               trailing: Text(
                 status,
                 style: TextStyle(
