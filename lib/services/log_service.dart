@@ -4,12 +4,13 @@ import 'package:path_provider/path_provider.dart';
 import '../models/log_entry.dart';
 
 class LogService {
+  /// 🔹 Get reference to the logbook file
   static Future<File> _getLogFile() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/logbook.json');
   }
 
-  /// 🔹 Load log entries
+  /// 🔹 Load log entries from file
   static Future<List<LogEntry>> loadLogs() async {
     try {
       final file = await _getLogFile();
