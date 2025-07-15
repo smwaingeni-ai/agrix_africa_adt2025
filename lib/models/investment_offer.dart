@@ -23,6 +23,20 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
+  /// 🔹 Create a default empty offer for UI forms or drafts
+  factory InvestmentOffer.empty() => InvestmentOffer(
+        id: '',
+        listingId: '',
+        investorId: '',
+        amount: 0.0,
+        currency: 'USD',
+        durationMonths: 0,
+        message: '',
+        offerDate: DateTime.now(),
+        isAccepted: false,
+      );
+
+  /// 🔹 JSON deserialization with safety
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     return InvestmentOffer(
       id: json['id'] ?? '',
@@ -37,30 +51,32 @@ class InvestmentOffer {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'listingId': listingId,
-      'investorId': investorId,
-      'amount': amount,
-      'currency': currency,
-      'durationMonths': durationMonths,
-      'message': message,
-      'offerDate': offerDate.toIso8601String(),
-      'isAccepted': isAccepted,
-    };
-  }
+  /// 🔹 Convert to JSON
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'listingId': listingId,
+        'investorId': investorId,
+        'amount': amount,
+        'currency': currency,
+        'durationMonths': durationMonths,
+        'message': message,
+        'offerDate': offerDate.toIso8601String(),
+        'isAccepted': isAccepted,
+      };
 
+  /// 🔹 Encode a list to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
+  /// 🔹 Decode list from JSON string
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List<dynamic>)
           .map<InvestmentOffer>((e) => InvestmentOffer.fromJson(e))
           .toList();
 
   @override
-  String toString() => 'InvestmentOffer(id: $id, listingId: $listingId, investorId: $investorId)';
+  String toString() =>
+      'InvestmentOffer(id: $id, listingId: $listingId, investorId: $investorId, accepted: $isAccepted)';
 
   @override
   bool operator ==(Object other) =>
