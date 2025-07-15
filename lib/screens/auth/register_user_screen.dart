@@ -1,4 +1,3 @@
-// lib/screens/auth/register_user_screen.dart
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ class RegisterUserScreen extends StatefulWidget {
 
 class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final _formKey = GlobalKey<FormState>();
+
   String role = 'Farmer';
   String name = '';
   String passcode = '';
@@ -29,6 +29,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   String village = '';
   String cell = '';
   String farmType = '';
+
   bool _submitted = false;
   FarmerProfile? _profile;
 
@@ -37,14 +38,9 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final userId = DateTime.now().millisecondsSinceEpoch.toString();
 
-      final user = UserModel(
-        id: userId,
-        role: role,
-        name: name,
-        passcode: passcode,
-      );
+      final userId = DateTime.now().millisecondsSinceEpoch.toString();
+      final user = UserModel(id: userId, role: role, name: name, passcode: passcode);
 
       final dir = await getApplicationDocumentsDirectory();
       final file = File('${dir.path}/registered_users.json');
@@ -60,6 +56,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       users.add(user.toJson());
       await file.writeAsString(jsonEncode(users));
 
+      // Special handling for Farmer profiles
       if (role == 'Farmer') {
         _profile = FarmerProfile(
           farmerId: userId,
@@ -96,7 +93,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     return QrImageView(
       data: encoded,
       version: QrVersions.auto,
-      size: 200.0,
+      size: 220,
     );
   }
 
@@ -110,13 +107,16 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('QR Code Generated:', style: TextStyle(fontSize: 16)),
-                  const SizedBox(height: 20),
+                  const Text('🎉 Registration Complete!', style: TextStyle(fontSize: 18)),
+                  const SizedBox(height: 12),
+                  const Text('📲 Scan this QR to identify the farmer:', style: TextStyle(fontSize: 14)),
+                  const SizedBox(height: 16),
                   _buildQRCode(),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.home),
+                    label: const Text('Back to Home'),
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Back to Home'),
                   ),
                 ],
               )
@@ -135,49 +135,43 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                       validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                       onSaved: (val) => name = val!,
                     ),
-                    if (role == 'Farmer')
+                    if (role == 'Farmer') ...[
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'ID Number'),
                         validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                         onSaved: (val) => idNumber = val!,
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Phone Number'),
                         keyboardType: TextInputType.phone,
                         validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                         onSaved: (val) => phone = val!,
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Province'),
                         onSaved: (val) => province = val ?? '',
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'District'),
                         onSaved: (val) => district = val ?? '',
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Ward'),
                         onSaved: (val) => ward = val ?? '',
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Village'),
                         onSaved: (val) => village = val ?? '',
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Cell'),
                         onSaved: (val) => cell = val ?? '',
                       ),
-                    if (role == 'Farmer')
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Farm Type (e.g. Crops, Livestock)'),
                         onSaved: (val) => farmType = val ?? '',
                       ),
+                    ],
                     TextFormField(
                       decoration: const InputDecoration(labelText: 'Passcode'),
                       obscureText: true,
@@ -185,9 +179,10 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                       onSaved: (val) => passcode = val!,
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.check_circle),
+                      label: const Text('Register'),
                       onPressed: _registerUser,
-                      child: const Text('Register'),
                     ),
                   ],
                 ),
