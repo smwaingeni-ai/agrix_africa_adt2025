@@ -38,7 +38,8 @@ class _LivestockScreenState extends State<LivestockScreen> {
   }
 
   void _submitDiagnosis() {
-    final allAnswered = _answers.length == _questions.length && !_answers.containsValue(null);
+    final allAnswered =
+        _answers.length == _questions.length && !_answers.containsValue(null);
 
     if (!allAnswered) {
       ScaffoldMessenger.of(context).showSnackBar(
