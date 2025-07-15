@@ -14,14 +14,20 @@ class LocalGeocoder {
     },
   };
 
-  /// 🔹 Reverse geocode using dummy offline coordinates
+  /// 🔹 Reverse geocode using dummy offline data
   static Map<String, String> reverseGeocode(double lat, double lng, String countryCode) {
     final key = "${lat.toStringAsFixed(1)},${lng.toStringAsFixed(1)}";
-    if (dummyGeocodeData[countryCode]?.containsKey(key) ?? false) {
-      final result = dummyGeocodeData[countryCode]![key]!;
+    final countryData = dummyGeocodeData[countryCode];
+
+    if (countryData != null && countryData.containsKey(key)) {
+      final result = countryData[key]!;
       final parts = result.split(", ");
-      return {'locality': parts[0], 'district': parts[1]};
+      return {
+        'locality': parts[0],
+        'district': parts.length > 1 ? parts[1] : 'Unknown',
+      };
     }
+
     return {'locality': 'Unknown', 'district': 'Unknown'};
   }
 }
