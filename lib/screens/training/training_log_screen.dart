@@ -92,11 +92,11 @@ class _TrainingLogScreenState extends State<TrainingLogScreen> {
             icon: const Icon(Icons.download),
             tooltip: 'Export to CSV',
             onPressed: () {
-              // Trigger export via backend or external share
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('📤 Export will be available via system backend')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('📤 Export will be available via system backend')),
+              );
             },
-          )
+          ),
         ],
       ),
       body: ListView(
@@ -116,17 +116,20 @@ class _TrainingLogScreenState extends State<TrainingLogScreen> {
                   decoration: const InputDecoration(labelText: 'Training Topic'),
                   validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                 ),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _trainerController,
                   decoration: const InputDecoration(labelText: 'Trainer Name'),
                   validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                 ),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _participantsController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(labelText: 'No. of Participants'),
                   validator: (val) => val == null || val.isEmpty ? 'Required' : null,
                 ),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _regionController,
                   decoration: const InputDecoration(labelText: 'Region'),
