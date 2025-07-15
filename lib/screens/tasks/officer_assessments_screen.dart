@@ -33,9 +33,9 @@ class _OfficerAssessmentsScreenState extends State<OfficerAssessmentsScreen> {
       _formKey.currentState!.save();
 
       final newAssessment = OfficerAssessment(
-        activity: _activity,
-        impact: _impact,
-        recommendation: _recommendation,
+        activity: _activity.trim(),
+        impact: _impact.trim(),
+        recommendation: _recommendation.trim(),
         date: DateTime.now(),
       );
 
@@ -65,6 +65,7 @@ class _OfficerAssessmentsScreenState extends State<OfficerAssessmentsScreen> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 4),
             Text("📍 Impact: ${a.impact}"),
             Text("📝 Recommendation: ${a.recommendation}"),
             Text("📅 Date: ${a.date.toLocal().toString().split(' ')[0]}"),
@@ -96,19 +97,30 @@ class _OfficerAssessmentsScreenState extends State<OfficerAssessmentsScreen> {
               child: Column(
                 children: [
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Activity Observed'),
+                    decoration: const InputDecoration(
+                      labelText: 'Activity Observed',
+                      border: OutlineInputBorder(),
+                    ),
                     onSaved: (val) => _activity = val ?? '',
-                    validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+                    validator: (val) => (val == null || val.trim().isEmpty) ? 'Required' : null,
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Observed Impact'),
+                    decoration: const InputDecoration(
+                      labelText: 'Observed Impact',
+                      border: OutlineInputBorder(),
+                    ),
                     onSaved: (val) => _impact = val ?? '',
-                    validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+                    validator: (val) => (val == null || val.trim().isEmpty) ? 'Required' : null,
                   ),
+                  const SizedBox(height: 10),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Recommendation'),
+                    decoration: const InputDecoration(
+                      labelText: 'Recommendation',
+                      border: OutlineInputBorder(),
+                    ),
                     onSaved: (val) => _recommendation = val ?? '',
-                    validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+                    validator: (val) => (val == null || val.trim().isEmpty) ? 'Required' : null,
                   ),
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
