@@ -32,8 +32,8 @@ class TipsScreen extends StatelessWidget {
           title: const Text('📘 AgriX Farming Tips'),
           centerTitle: true,
           bottom: TabBar(
-            tabs: tabs.map((e) => Tab(text: e)).toList(),
-            labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+            tabs: tabs.map((label) => Tab(text: label)).toList(),
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             indicatorColor: Colors.white,
           ),
         ),
@@ -45,13 +45,15 @@ class TipsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               itemCount: items.length,
               itemBuilder: (context, index) {
+                final tip = items[index];
+
                 return Card(
                   elevation: 2,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
                     leading: const Icon(Icons.lightbulb, color: Colors.green),
                     title: Text(
-                      items[index],
+                      tip,
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
