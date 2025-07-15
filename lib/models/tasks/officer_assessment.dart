@@ -11,6 +11,17 @@ class OfficerAssessment {
     required this.date,
   });
 
+  /// 🔹 Empty constructor for form initialization or placeholders
+  factory OfficerAssessment.empty() {
+    return OfficerAssessment(
+      activity: '',
+      impact: '',
+      recommendation: '',
+      date: DateTime.now(),
+    );
+  }
+
+  /// 🔹 Parse from JSON with fallbacks
   factory OfficerAssessment.fromJson(Map<String, dynamic> json) {
     return OfficerAssessment(
       activity: json['activity'] ?? '',
@@ -20,6 +31,7 @@ class OfficerAssessment {
     );
   }
 
+  /// 🔹 Convert to JSON
   Map<String, dynamic> toJson() {
     return {
       'activity': activity,
@@ -28,4 +40,8 @@ class OfficerAssessment {
       'date': date.toIso8601String(),
     };
   }
+
+  @override
+  String toString() =>
+      'OfficerAssessment(activity: $activity, impact: $impact, recommendation: $recommendation, date: $date)';
 }
