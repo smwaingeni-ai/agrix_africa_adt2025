@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+// 🔹 Models
+import 'models/user_model.dart';
+import 'models/market_item.dart';
+
 // 🔹 Authentication
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_user_screen.dart';
@@ -26,7 +30,6 @@ import 'screens/diagnostics/soil_screen.dart';
 import 'screens/diagnostics/livestock_screen.dart';
 
 // 🔹 Market
-import 'models/market_item.dart';
 import 'screens/market/market_screen.dart';
 import 'screens/market/market_detail_screen.dart';
 import 'screens/market/market_item_form.dart';
@@ -34,7 +37,7 @@ import 'screens/market/market_invite_screen.dart';
 
 // 🔹 Loans
 import 'screens/loans/loan_screen.dart';
-import 'screens/loans/loan_application.dart';
+import 'screens/loans/loan_application.dart'; // ✅ Should define LoanApplicationScreen
 
 // 🔹 Officers
 import 'screens/officers/arex_officer_dashboard.dart';
@@ -75,13 +78,20 @@ final Map<String, WidgetBuilder> appRoutes = {
 
   // Core
   '/landing': (context) {
-    final user = ModalRoute.of(context)!.settings.arguments;
-    return LandingPage(loggedInUser: user);
+    final args = ModalRoute.of(context)?.settings.arguments;
+    return LandingPage(
+      loggedInUser: args != null && args is UserModel ? args : UserModel.empty(),
+    );
   },
   '/language-setup': (context) => const LanguageCountrySetup(),
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
-  '/transactions': (context) => const TransactionScreen(),
+  '/transactions': (context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    return TransactionScreen(
+      result: args != null && args is String ? args : null,
+    );
+  },
 
   // Profile
   '/profile': (context) => const FarmerProfileScreen(),
@@ -100,15 +110,17 @@ final Map<String, WidgetBuilder> appRoutes = {
   // Market
   '/market': (context) => const MarketScreen(),
   '/market/detail': (context) {
-    final MarketItem item = ModalRoute.of(context)!.settings.arguments as MarketItem;
-    return MarketDetailScreen(item: item);
+    final args = ModalRoute.of(context)?.settings.arguments;
+    return MarketDetailScreen(
+      item: args != null && args is MarketItem ? args : MarketItem.empty(),
+    );
   },
   '/market/form': (context) => const MarketItemForm(),
   '/market/invite': (context) => const MarketInviteScreen(),
 
   // Loans
   '/loan': (context) => const LoanScreen(),
-  '/loan-application': (context) => const LoanApplication(),
+  '/loan-application': (context) => const LoanApplicationScreen(), // ✅ FIXED
 
   // Officers
   '/arex-officer-dashboard': (context) => const ArexOfficerDashboard(),
