@@ -37,10 +37,12 @@ import 'screens/market/market_invite_screen.dart';
 
 // 🔹 Loans
 import 'screens/loans/loan_screen.dart';
-import 'screens/loans/loan_application.dart'; // ✅ Should define LoanApplicationScreen
+import 'screens/loans/loan_application.dart';
 
 // 🔹 Officers
 import 'screens/officers/arex_officer_dashboard.dart';
+import 'screens/officers/officer_tasks_screen.dart';
+import 'screens/officers/field_assessment_screen.dart';
 import 'screens/officers/officer_tasks_screen.dart';
 import 'screens/officers/field_assessment_screen.dart';
 
@@ -120,7 +122,7 @@ final Map<String, WidgetBuilder> appRoutes = {
 
   // Loans
   '/loan': (context) => const LoanScreen(),
-  '/loan-application': (context) => const LoanApplicationScreen(), // ✅ FIXED
+  '/loan-application': (context) => const LoanApplicationScreen(),
 
   // Officers
   '/arex-officer-dashboard': (context) => const ArexOfficerDashboard(),
@@ -153,4 +155,10 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/training-log': (context) => const TrainingLogScreen(),
   '/program-tracking': (context) => const ProgramTrackingScreen(),
   '/sustainability-log': (context) => const SustainabilityLogScreen(),
+
+  // Optional: Redundant aliases (requested)
+  '/officer/tasks': (context) => const OfficerTasksScreen(),
+  '/officer/assessments': (context) => const FieldAssessmentScreen(),
+  '/program_tracking': (context) => const ProgramTrackingScreen(),
+  '/sustainability_logs': (context) => const SustainabilityLogScreen(),
 };
