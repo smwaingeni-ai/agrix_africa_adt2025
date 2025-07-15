@@ -48,34 +48,32 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _navigateToRoleScreen(UserModel user) {
-    switch (user.role) {
-      case 'Farmer':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => LandingPage(loggedInUser: user),
-          ),
-        );
-        break;
-      case 'AREX Officer':
-        Navigator.pushReplacementNamed(context, '/officer_dashboard', arguments: user);
-        break;
-      case 'Government Official':
-        Navigator.pushReplacementNamed(context, '/official_dashboard', arguments: user);
-        break;
-      case 'Admin':
-        Navigator.pushReplacementNamed(context, '/admin_panel', arguments: user);
-        break;
-      case 'Trader':
-        Navigator.pushReplacementNamed(context, '/trader_dashboard', arguments: user);
-        break;
-      case 'Investor':
-        Navigator.pushReplacementNamed(context, '/investor_dashboard', arguments: user);
-        break;
-      default:
+    final role = user.role;
+
+    if (role == 'Farmer') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => LandingPage(loggedInUser: user),
+        ),
+      );
+    } else {
+      final routeMap = {
+        'AREX Officer': '/officer_dashboard',
+        'Government Official': '/official_dashboard',
+        'Admin': '/admin_panel',
+        'Trader': '/trader_dashboard',
+        'Investor': '/investor_dashboard',
+      };
+
+      final route = routeMap[role];
+      if (route != null) {
+        Navigator.pushReplacementNamed(context, route, arguments: user);
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unknown user role.')),
+          const SnackBar(content: Text('⚠️ Unknown role. Contact admin.')),
         );
+      }
     }
   }
 
@@ -91,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const Text(
                 '🔐 Login to AgriX',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
@@ -122,11 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _validateLogin,
               ),
               const SizedBox(height: 10),
-              TextButton(
+              TextButton.icon(
+                icon: const Icon(Icons.person_add_alt),
                 onPressed: () {
                   Navigator.pushNamed(context, '/register');
                 },
-                child: const Text('Create New Account'),
+                label: const Text('Create New Account'),
               ),
             ],
           ),
