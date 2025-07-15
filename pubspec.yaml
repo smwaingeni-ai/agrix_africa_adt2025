@@ -10,7 +10,7 @@ dependencies:
     sdk: flutter
 
   # Core Flutter Plugins
-  path_provider: ^2.1.1
+  path_provider: ^2.1.2
   uuid: ^4.1.0
   share_plus: ^7.2.1
   image_picker: ^1.0.7
@@ -35,6 +35,9 @@ dependencies:
 
   # Encryption
   encrypt: ^5.0.1
+
+  # Secure Storage (used by PIN auth service)
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
