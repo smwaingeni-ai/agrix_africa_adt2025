@@ -32,13 +32,14 @@ class _SustainabilityLogScreenState extends State<SustainabilityLogScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final log = SustainabilityLog(
-      activity: _activityController.text,
-      impact: _impactController.text,
-      region: _regionController.text,
+      activity: _activityController.text.trim(),
+      impact: _impactController.text.trim(),
+      region: _regionController.text.trim(),
       date: DateTime.now(),
     );
 
     await SustainabilityService().saveLog(log);
+
     _activityController.clear();
     _impactController.clear();
     _regionController.clear();
@@ -68,24 +69,34 @@ class _SustainabilityLogScreenState extends State<SustainabilityLogScreen> {
             Form(
               key: _formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Log a New Activity',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
                   TextFormField(
                     controller: _activityController,
-                    decoration: const InputDecoration(labelText: 'Activity'),
-                    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                    decoration: const InputDecoration(labelText: 'Activity', border: OutlineInputBorder()),
+                    validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
+
                   TextFormField(
                     controller: _impactController,
-                    decoration: const InputDecoration(labelText: 'Impact'),
-                    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                    decoration: const InputDecoration(labelText: 'Impact', border: OutlineInputBorder()),
+                    validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
+
                   TextFormField(
                     controller: _regionController,
-                    decoration: const InputDecoration(labelText: 'Region / Officer'),
+                    decoration: const InputDecoration(labelText: 'Region / Officer', border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
+
                   ElevatedButton.icon(
                     onPressed: _saveLog,
                     icon: const Icon(Icons.save),
@@ -94,13 +105,15 @@ class _SustainabilityLogScreenState extends State<SustainabilityLogScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+
+            const SizedBox(height: 24),
             const Divider(),
             const Text(
-              '📘 Log History',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              '📘 Sustainability Log History',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 10),
+
             Expanded(
               child: _logs.isEmpty
                   ? const Center(child: Text('📭 No logs yet.'))
