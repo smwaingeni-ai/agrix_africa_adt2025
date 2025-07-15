@@ -92,8 +92,7 @@ class _LandingPageState extends State<LandingPage> {
           IconButton(
             icon: const Icon(Icons.settings),
             tooltip: 'Edit Profile',
-            onPressed: () => Navigator.pushNamed(context, '/profile')
-                .then((_) => _loadProfile()),
+            onPressed: () => Navigator.pushNamed(context, '/profile').then((_) => _loadProfile()),
           ),
         ],
       ),
@@ -101,6 +100,7 @@ class _LandingPageState extends State<LandingPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            // Logo and title
             Column(
               children: [
                 Image.asset('assets/alogo.png', height: 100),
@@ -112,6 +112,8 @@ class _LandingPageState extends State<LandingPage> {
               ],
             ),
             const SizedBox(height: 20),
+
+            // Greeting
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -126,15 +128,14 @@ class _LandingPageState extends State<LandingPage> {
             ),
             const SizedBox(height: 16),
 
-            // Profile Card
+            // Farmer profile display
             if (_profile != null)
               Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 elevation: 2,
                 child: Column(
                   children: [
-                    if (_profile!.photoPath != null &&
-                        File(_profile!.photoPath!).existsSync()) ...[
+                    if (_profile!.photoPath != null && File(_profile!.photoPath!).existsSync()) ...[
                       const SizedBox(height: 10),
                       const Text('📷 Farmer Photo',
                           style: TextStyle(fontWeight: FontWeight.bold)),
@@ -153,16 +154,14 @@ class _LandingPageState extends State<LandingPage> {
                       leading: const Icon(Icons.person, color: Colors.green),
                       title: Text(_profile!.fullName),
                       subtitle: Text(
-                          '${_profile!.country}, ${_profile!.province}\nFarm Type: ${_profile!.farmType} • Subsidised: ${_profile!.subsidised ? 'Yes' : 'No'}'),
+                        '${_profile!.country}, ${_profile!.province}\nFarm Type: ${_profile!.farmType} • Subsidised: ${_profile!.subsidised ? "Yes" : "No"}',
+                      ),
                     ),
                     if (_profile!.qrImagePath != null &&
                         File(_profile!.qrImagePath!).existsSync())
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Image.file(
-                          File(_profile!.qrImagePath!),
-                          height: 100,
-                        ),
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Image.file(File(_profile!.qrImagePath!), height: 100),
                       ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -173,8 +172,7 @@ class _LandingPageState extends State<LandingPage> {
                             icon: const Icon(Icons.edit),
                             label: const Text("Edit"),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/profile')
-                                  .then((_) => _loadProfile());
+                              Navigator.pushNamed(context, '/profile').then((_) => _loadProfile());
                             },
                           ),
                           ElevatedButton.icon(
@@ -201,8 +199,7 @@ class _LandingPageState extends State<LandingPage> {
                 icon: const Icon(Icons.person_add),
                 label: const Text('Create Farmer Profile'),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/profile')
-                      .then((_) => _loadProfile());
+                  Navigator.pushNamed(context, '/profile').then((_) => _loadProfile());
                 },
               ),
 
@@ -214,15 +211,14 @@ class _LandingPageState extends State<LandingPage> {
             ),
             const SizedBox(height: 24),
 
-            // Feature Grid
+            // Grid of features
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 children: buttons
-                    .map((btn) =>
-                        buildGridButton(btn['label']!, btn['route']!))
+                    .map((btn) => buildGridButton(btn['label']!, btn['route']!))
                     .toList(),
               ),
             ),
