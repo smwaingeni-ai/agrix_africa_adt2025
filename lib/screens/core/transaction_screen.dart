@@ -27,6 +27,30 @@ class TransactionScreen extends StatelessWidget {
     },
   ];
 
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Approved':
+      case 'Completed':
+        return Colors.green;
+      case 'Pending':
+        return Colors.orangeAccent;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status) {
+      case 'Approved':
+      case 'Completed':
+        return Icons.check_circle;
+      case 'Pending':
+        return Icons.pending_actions;
+      default:
+        return Icons.info_outline;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,27 +59,35 @@ class TransactionScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: _transactions.isEmpty
-          ? const Center(child: Text('No transactions recorded yet.'))
+          ? const Center(
+              child: Text(
+                'No transactions recorded yet.',
+                style: TextStyle(fontSize: 16),
+              ),
+            )
           : ListView.separated(
               padding: const EdgeInsets.all(12),
               itemCount: _transactions.length,
-              separatorBuilder: (_, __) => const Divider(thickness: 0.8),
+              separatorBuilder: (_, __) => const Divider(thickness: 0.7),
               itemBuilder: (context, index) {
                 final txn = _transactions[index];
-                return ListTile(
-                  leading: const Icon(Icons.receipt_long, color: Colors.green),
-                  title: Text('${txn["type"]} • ${txn["farmer"]}'),
-                  subtitle: Text(
-                    'Date: ${txn["date"]}\nAmount: \$${txn["amount"]} • Status: ${txn["status"]}',
+                return Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  isThreeLine: true,
-                  trailing: Icon(
-                    txn["status"] == "Approved" || txn["status"] == "Completed"
-                        ? Icons.check_circle
-                        : Icons.pending,
-                    color: txn["status"] == "Approved" || txn["status"] == "Completed"
-                        ? Colors.green
-                        : Colors.orangeAccent,
+                  child: ListTile(
+                    leading: Icon(Icons.receipt_long, color: Colors.green.shade700),
+                    title: Text('${txn["type"]} • ${txn["farmer"]}'),
+                    subtitle: Text(
+                      '📅 ${txn["date"]}\n💵 \$${txn["amount"].toStringAsFixed(2)} • 🟢 Status: ${txn["status"]}',
+                    ),
+                    isThreeLine: true,
+                    trailing: Icon(
+                      _getStatusIcon(txn["status"]),
+                      color: _getStatusColor(txn["status"]),
+                      size: 28,
+                    ),
                   ),
                 );
               },
