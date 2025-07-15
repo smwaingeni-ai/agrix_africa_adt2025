@@ -7,7 +7,7 @@ enum InvestorStatus {
 
 /// Extension for readable labels and utility methods for InvestorStatus.
 extension InvestorStatusExtension on InvestorStatus {
-  /// Returns a human-readable label for each enum value.
+  /// Human-readable label for display in UI
   String get label {
     switch (this) {
       case InvestorStatus.open:
@@ -19,11 +19,27 @@ extension InvestorStatusExtension on InvestorStatus {
     }
   }
 
-  /// Parses a string name into the corresponding enum value.
+  /// Short name/code for storage or transmission
+  String get code => name; // e.g. 'open', 'indifferent', 'notOpen'
+
+  /// Parses a code or name into InvestorStatus (e.g. from DB/API)
   static InvestorStatus fromName(String name) {
     return InvestorStatus.values.firstWhere(
-      (e) => e.name == name,
+      (e) => e.name.toLowerCase() == name.toLowerCase(),
       orElse: () => InvestorStatus.indifferent,
     );
+  }
+
+  /// Parses from label (more user-friendly UI fallback)
+  static InvestorStatus fromLabel(String label) {
+    switch (label.trim().toLowerCase()) {
+      case 'open to investment':
+        return InvestorStatus.open;
+      case 'not open':
+        return InvestorStatus.notOpen;
+      case 'indifferent':
+      default:
+        return InvestorStatus.indifferent;
+    }
   }
 }
