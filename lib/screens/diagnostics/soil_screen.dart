@@ -165,8 +165,7 @@ class _SoilScreenState extends State<SoilScreen> {
                 label: const Text('Escalate to AgriX'),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('📨 Sent to AgriX support')),
+                    const SnackBar(content: Text('📨 Sent to AgriX support')),
                   );
                 },
               ),
