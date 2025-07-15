@@ -11,6 +11,17 @@ class SustainabilityLog {
     required this.date,
   });
 
+  /// 🔹 Safe empty instance (e.g., for forms or default init)
+  factory SustainabilityLog.empty() {
+    return SustainabilityLog(
+      activity: '',
+      impact: '',
+      region: '',
+      date: DateTime.now(),
+    );
+  }
+
+  /// 🔹 Safe JSON parsing
   factory SustainabilityLog.fromJson(Map<String, dynamic> json) {
     return SustainabilityLog(
       activity: json['activity'] ?? '',
@@ -20,6 +31,7 @@ class SustainabilityLog {
     );
   }
 
+  /// 🔹 Convert to JSON
   Map<String, dynamic> toJson() {
     return {
       'activity': activity,
@@ -28,4 +40,8 @@ class SustainabilityLog {
       'date': date.toIso8601String(),
     };
   }
+
+  @override
+  String toString() =>
+      'SustainabilityLog(activity: $activity, impact: $impact, region: $region, date: $date)';
 }
