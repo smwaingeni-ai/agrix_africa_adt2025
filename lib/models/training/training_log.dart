@@ -13,14 +13,18 @@ class TrainingLog {
     required this.date,
   });
 
-  Map<String, dynamic> toJson() => {
-        'topic': topic,
-        'trainer': trainer,
-        'participants': participants,
-        'region': region,
-        'date': date.toIso8601String(),
-      };
+  /// 🔹 Empty constructor for default/form use
+  factory TrainingLog.empty() {
+    return TrainingLog(
+      topic: '',
+      trainer: '',
+      participants: 0,
+      region: '',
+      date: DateTime.now(),
+    );
+  }
 
+  /// 🔹 Safe JSON deserialization
   factory TrainingLog.fromJson(Map<String, dynamic> json) {
     return TrainingLog(
       topic: json['topic'] ?? '',
@@ -30,4 +34,17 @@ class TrainingLog {
       date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
     );
   }
+
+  /// 🔹 Serialize to JSON
+  Map<String, dynamic> toJson() => {
+        'topic': topic,
+        'trainer': trainer,
+        'participants': participants,
+        'region': region,
+        'date': date.toIso8601String(),
+      };
+
+  @override
+  String toString() =>
+      'TrainingLog(topic: $topic, trainer: $trainer, participants: $participants, region: $region, date: $date)';
 }
