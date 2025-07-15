@@ -21,8 +21,7 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
 
   Future<void> _loadFarmers() async {
     final farmers = await FarmerService.loadFarmers();
-    farmers.sort((a, b) =>
-        _calculateScore(b).compareTo(_calculateScore(a))); // sort by score
+    farmers.sort((a, b) => _calculateScore(b).compareTo(_calculateScore(a)));
     setState(() {
       _farmers = farmers;
       _loading = false;
@@ -30,8 +29,9 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
   }
 
   double _calculateScore(FarmerProfile farmer) {
-    double score = (farmer.farmSizeHectares ?? 0.0) * (farmer.govtAffiliated ? 1.5 : 1.0);
-    return score.clamp(0, 100);
+    final size = farmer.farmSizeHectares ?? 0.0;
+    final bonus = farmer.govtAffiliated ? 1.5 : 1.0;
+    return (size * bonus).clamp(0, 100);
   }
 
   Widget _buildScoreCard(FarmerProfile farmer) {
@@ -44,7 +44,10 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: approved ? Colors.green : Colors.redAccent,
-          child: Text(score.toInt().toString()),
+          child: Text(
+            score.toInt().toString(),
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
         title: Text(farmer.fullName),
         subtitle: Text(
@@ -67,12 +70,14 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _farmers.isEmpty
-              ? const Center(child: Text('No farmers found'))
-              : ListView.builder(
-                  itemCount: _farmers.length,
-                  itemBuilder: (context, index) {
-                    return _buildScoreCard(_farmers[index]);
-                  },
+              ? const Center(child: Text('📭 No farmers found'))
+              : RefreshIndicator(
+                  onRefresh: _loadFarmers,
+                  child: ListView.builder(
+                    itemCount: _farmers.length,
+                    itemBuilder: (context, index) =>
+                        _buildScoreCard(_farmers[index]),
+                  ),
                 ),
     );
   }
