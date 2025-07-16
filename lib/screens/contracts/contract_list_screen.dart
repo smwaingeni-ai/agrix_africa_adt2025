@@ -22,11 +22,20 @@ class _ContractListScreenState extends State<ContractListScreen> {
   }
 
   Future<void> _loadContracts() async {
-    final contracts = await ContractService().loadOffers(); // ✅ Correct method
-    setState(() {
-      _contracts = contracts;
-      _loading = false;
-    });
+    try {
+      final contracts = await ContractService.loadOffers(); // ✅ Static call
+      if (mounted) {
+        setState(() {
+          _contracts = contracts;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('❌ Error loading contracts: $e');
+      if (mounted) {
+        setState(() => _loading = false);
+      }
+    }
   }
 
   void _viewDetails(ContractOffer offer) {
