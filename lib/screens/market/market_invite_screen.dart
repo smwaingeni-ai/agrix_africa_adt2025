@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MarketInviteScreen extends StatefulWidget {
@@ -106,7 +107,7 @@ class _MarketInviteScreenState extends State<MarketInviteScreen> {
                   onPressed: _inviteViaSMS,
                 ),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.whatsapp),
+                  icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
                   label: const Text("Send WhatsApp"),
                   onPressed: _inviteViaWhatsApp,
                 ),
