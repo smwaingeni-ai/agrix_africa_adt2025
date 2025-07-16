@@ -10,17 +10,30 @@ class InvestorRegistrationScreen extends StatefulWidget {
 
 class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-  String name = '';
-  String email = '';
-  String phoneNumber = '';
-  String country = '';
-  String contact = '';
-  List<String> selectedHorizons = [];
-  List<String> selectedInterests = [];
-  String status = 'Open';
 
-  final List<String> horizons = ['Short-Term', 'Medium-Term', 'Long-Term'];
-  final List<String> interests = ['Crops', 'Livestock', 'Soil', 'Technology'];
+  // Controllers for text fields
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _contactController = TextEditingController();
+
+  List<String> _selectedHorizons = [];
+  List<String> _selectedInterests = [];
+  String _selectedStatus = 'Open';
+
+  final List<String> _horizons = ['Short-Term', 'Medium-Term', 'Long-Term'];
+  final List<String> _interests = ['Crops', 'Livestock', 'Soil', 'Technology'];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _locationController.dispose();
+    _contactController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,43 +46,43 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
           child: ListView(
             children: [
               TextFormField(
+                controller: _nameController,
                 decoration: InputDecoration(labelText: 'Full Name'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
-                onSaved: (value) => name = value!,
               ),
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
-                onSaved: (value) => email = value!,
               ),
               TextFormField(
+                controller: _phoneController,
                 decoration: InputDecoration(labelText: 'Phone Number'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
-                onSaved: (value) => phoneNumber = value!,
               ),
               TextFormField(
+                controller: _locationController,
                 decoration: InputDecoration(labelText: 'Country'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
-                onSaved: (value) => country = value!,
               ),
               TextFormField(
+                controller: _contactController,
                 decoration: InputDecoration(labelText: 'Preferred Contact Method (e.g. WhatsApp)'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
-                onSaved: (value) => contact = value!,
               ),
               SizedBox(height: 16),
               Text("Investment Horizon"),
               Wrap(
                 spacing: 8,
-                children: horizons.map((h) {
+                children: _horizons.map((h) {
                   return ChoiceChip(
                     label: Text(h),
-                    selected: selectedHorizons.contains(h),
+                    selected: _selectedHorizons.contains(h),
                     onSelected: (selected) {
                       setState(() {
                         selected
-                            ? selectedHorizons.add(h)
-                            : selectedHorizons.remove(h);
+                            ? _selectedHorizons.add(h)
+                            : _selectedHorizons.remove(h);
                       });
                     },
                   );
@@ -79,15 +92,15 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
               Text("Investment Interest"),
               Wrap(
                 spacing: 8,
-                children: interests.map((i) {
+                children: _interests.map((i) {
                   return FilterChip(
                     label: Text(i),
-                    selected: selectedInterests.contains(i),
+                    selected: _selectedInterests.contains(i),
                     onSelected: (selected) {
                       setState(() {
                         selected
-                            ? selectedInterests.add(i)
-                            : selectedInterests.remove(i);
+                            ? _selectedInterests.add(i)
+                            : _selectedInterests.remove(i);
                       });
                     },
                   );
@@ -96,8 +109,8 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
               SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: 'Investment Status'),
-                value: status,
-                onChanged: (value) => setState(() => status = value!),
+                value: _selectedStatus,
+                onChanged: (value) => setState(() => _selectedStatus = value!),
                 items: ['Open', 'Indifferent', 'Not Open']
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
@@ -107,18 +120,16 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                 child: Text('Register'),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-
                     final newInvestor = InvestorProfile(
                       id: Uuid().v4(),
-                      name: name,
-                      email: email,
-                      contactNumber: phoneNumber,
-                      contact: contact,
-                      location: country,
-                      preferredHorizons: selectedHorizons,
-                      interests: selectedInterests,
-                      status: status,
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      contactNumber: _phoneController.text,
+                      contact: _contactController.text, // ✅ Required field
+                      location: _locationController.text,
+                      preferredHorizons: _selectedHorizons,
+                      interests: _selectedInterests,
+                      status: _selectedStatus,
                       registeredAt: DateTime.now(),
                     );
 
