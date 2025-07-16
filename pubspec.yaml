@@ -26,25 +26,25 @@ dependencies:
   cloud_firestore: ^4.9.1
   firebase_core: ^2.24.2
 
-  # State Management (Optional/Future)
+  # State Management
   provider: ^6.1.2
 
   # UI/UX Enhancements
   flutter_svg: ^2.0.9
   google_fonts: ^6.1.0
-  font_awesome_flutter: ^10.7.0 # ✅ Added for WhatsApp icon
+  font_awesome_flutter: ^10.7.0 # ✅ For WhatsApp icon
 
   # Encryption
   encrypt: ^5.0.1
 
-  # Secure Storage (used by PIN auth service)
+  # Secure Storage
   flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  flutter_launcher_icons: ^0.13.1 # ✅ Added for launcher icon generation
+  flutter_launcher_icons: ^0.13.1 # ✅ For launcher icon generation
 
 flutter:
   uses-material-design: true
@@ -53,7 +53,7 @@ flutter:
     - assets/alogo.png
     - assets/
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/alogo.png"  # ✅ the project logo
+  image_path: "assets/alogo.png"
