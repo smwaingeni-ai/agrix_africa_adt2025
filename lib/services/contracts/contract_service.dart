@@ -70,6 +70,7 @@ class ContractService {
         contact: '+260971234567',
         isActive: true,
         postedAt: DateTime.now(),
+        parties: ['Farmer A', 'Buyer B'], // ✅ added
       ),
       ContractOffer(
         id: const Uuid().v4(),
@@ -81,6 +82,37 @@ class ContractService {
         contact: '+260976543210',
         isActive: true,
         postedAt: DateTime.now(),
+        parties: ['Farmer C', 'Vendor D'], // ✅ added
+      ),
+    ];
+  }
+
+  /// Example usage: Get contracts linked to a farmer
+  List<ContractOffer> getContractsForFarmer(String farmerId) {
+    return [
+      ContractOffer(
+        id: '001',
+        title: 'Maize Supply Contract',
+        description: 'Supply 1000kg of maize monthly',
+        location: 'Eastern Province',
+        duration: '6 months',
+        paymentTerms: 'Quarterly',
+        contact: '+260971111111',
+        isActive: true,
+        postedAt: DateTime.now(),
+        parties: ['Farmer John', 'Zambia Agro Ltd'],
+      ),
+      ContractOffer(
+        id: '002',
+        title: 'Groundnuts Agreement',
+        description: 'Deliver 500kg of groundnuts at harvest',
+        location: 'Central Province',
+        duration: '8 months',
+        paymentTerms: 'On delivery',
+        contact: '+260972222222',
+        isActive: true,
+        postedAt: DateTime.now(),
+        parties: ['Farmer Jane', 'PeanutCo'],
       ),
     ];
   }
