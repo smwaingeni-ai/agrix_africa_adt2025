@@ -17,13 +17,22 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   @override
   void initState() {
     super.initState();
-    ProfileService.loadFarmers().then((farmers) {
-      setState(() {
-        for (var farmer in farmers) {
-          _farmerMap[farmer.id] = farmer;
-        }
-      });
-    });
+    _loadFarmers();
+  }
+
+  Future<void> _loadFarmers() async {
+    try {
+      final farmers = await ProfileService.loadFarmers();
+      if (mounted) {
+        setState(() {
+          for (var farmer in farmers) {
+            _farmerMap[farmer.id] = farmer;
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('❌ Error loading farmers: $e');
+    }
   }
 
   double _scoreFarmer(FarmerProfile f) {
@@ -83,8 +92,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 );
               }).toList(),
               onChanged: (value) => setState(() => _selectedFarmer = value),
-              validator: (value) =>
-                  value == null ? 'Please select a farmer' : null,
+              validator: (value) => value == null ? 'Please select a farmer' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
