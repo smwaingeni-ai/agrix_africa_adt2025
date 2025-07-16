@@ -52,6 +52,9 @@ class MarketItem {
   /// 🔹 Convenience alias
   String get contact => ownerContact;
 
+  /// ✅ Added: Alias for investment open flag used in detail screens
+  bool get isInvestorOpen => isInvestmentOpen;
+
   /// 🔹 Safe empty constructor for defaults/forms
   factory MarketItem.empty() => MarketItem(
         id: '',
