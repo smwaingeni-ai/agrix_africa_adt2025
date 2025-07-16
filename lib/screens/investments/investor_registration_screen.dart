@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
-import 'package:agrix_africa_adt2025/models/investments/investor_status.dart'; // ✅ Corrected import path
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
 import 'package:agrix_africa_adt2025/models/investor_profile.dart';
 import 'package:agrix_africa_adt2025/services/investor_service.dart';
 
@@ -45,8 +46,23 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('✅ Investor registered successfully')),
         );
+        _launchWhatsApp(newInvestor.contactNumber, newInvestor.name);
         Navigator.pop(context);
       }
+    }
+  }
+
+  Future<void> _launchWhatsApp(String phone, String name) async {
+    final cleanPhone = phone.replaceAll(RegExp(r'\D'), ''); // Remove non-digits
+    final message = Uri.encodeComponent("Hello $name, thank you for registering as an investor on AgriX.");
+    final url = Uri.parse("https://wa.me/$cleanPhone?text=$message");
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('❌ Could not launch WhatsApp')),
+      );
     }
   }
 
