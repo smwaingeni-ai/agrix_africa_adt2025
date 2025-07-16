@@ -3,67 +3,40 @@ import 'dart:convert';
 class ContractOffer {
   String id;
   String title;
-  String parties;
-  double amount;
-  String duration;
-  String cropOrLivestockType;
-  String location;
-  String terms;
-  DateTime postedAt;
   String description;
+  String location;
+  String duration;
   String paymentTerms;
   String contact;
+  DateTime postedAt;
   bool isActive;
+  List<String> parties;
 
   ContractOffer({
     required this.id,
     required this.title,
-    required this.parties,
-    required this.amount,
-    required this.duration,
-    required this.cropOrLivestockType,
-    required this.location,
-    required this.terms,
-    required this.postedAt,
     required this.description,
+    required this.location,
+    required this.duration,
     required this.paymentTerms,
     required this.contact,
+    required this.postedAt,
     required this.isActive,
+    required this.parties,
   });
-
-  factory ContractOffer.empty() {
-    return ContractOffer(
-      id: '',
-      title: '',
-      parties: '',
-      amount: 0.0,
-      duration: '',
-      cropOrLivestockType: '',
-      location: '',
-      terms: '',
-      postedAt: DateTime.now(),
-      description: '',
-      paymentTerms: '',
-      contact: '',
-      isActive: false,
-    );
-  }
 
   factory ContractOffer.fromJson(Map<String, dynamic> json) {
     return ContractOffer(
       id: json['id'] ?? '',
       title: json['title'] ?? '',
-      parties: json['parties'] ?? '',
-      amount: (json['amount'] ?? 0).toDouble(),
-      duration: json['duration'] ?? '',
-      cropOrLivestockType: json['cropOrLivestockType'] ?? '',
-      location: json['location'] ?? '',
-      terms: json['terms'] ?? '',
-      postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
       description: json['description'] ?? '',
+      location: json['location'] ?? '',
+      duration: json['duration'] ?? '',
       paymentTerms: json['paymentTerms'] ?? '',
       contact: json['contact'] ?? '',
+      postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
       isActive: json['isActive'] ?? false,
+      parties: List<String>.from(json['parties'] ?? []),
     );
   }
 
@@ -71,21 +44,29 @@ class ContractOffer {
     return {
       'id': id,
       'title': title,
-      'parties': parties,
-      'amount': amount,
-      'duration': duration,
-      'cropOrLivestockType': cropOrLivestockType,
-      'location': location,
-      'terms': terms,
-      'postedAt': postedAt.toIso8601String(),
       'description': description,
+      'location': location,
+      'duration': duration,
       'paymentTerms': paymentTerms,
       'contact': contact,
+      'postedAt': postedAt.toIso8601String(),
       'isActive': isActive,
+      'parties': parties,
     };
   }
 
-  @override
-  String toString() =>
-      'ContractOffer(title: $title, amount: $amount, postedAt: $postedAt, description: $description)';
+  static ContractOffer empty() {
+    return ContractOffer(
+      id: '',
+      title: '',
+      description: '',
+      location: '',
+      duration: '',
+      paymentTerms: '',
+      contact: '',
+      postedAt: DateTime.now(),
+      isActive: false,
+      parties: [],
+    );
+  }
 }
