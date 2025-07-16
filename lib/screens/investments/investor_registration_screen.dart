@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:agrix_africa_adt2025/models/investor_profile.dart';
 import 'package:agrix_africa_adt2025/services/investor_service.dart';
 
@@ -13,6 +14,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
   String email = '';
   String phoneNumber = '';
   String country = '';
+  String contact = '';
   List<String> selectedHorizons = [];
   List<String> selectedInterests = [];
   String status = 'Open';
@@ -49,6 +51,11 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                 decoration: InputDecoration(labelText: 'Country'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
                 onSaved: (value) => country = value!,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Preferred Contact Method (e.g. WhatsApp)'),
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+                onSaved: (value) => contact = value!,
               ),
               SizedBox(height: 16),
               Text("Investment Horizon"),
@@ -103,14 +110,16 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                     _formKey.currentState!.save();
 
                     final newInvestor = InvestorProfile(
+                      id: Uuid().v4(),
                       name: name,
                       email: email,
-                      country: country,
-                      phoneNumber: phoneNumber,
-                      investmentHorizon: selectedHorizons,
-                      investmentInterest: selectedInterests,
+                      contactNumber: phoneNumber,
+                      contact: contact,
+                      location: country,
+                      preferredHorizons: selectedHorizons,
+                      interests: selectedInterests,
                       status: status,
-                      contact: phoneNumber, // ✅ Now included to fix error
+                      registeredAt: DateTime.now(),
                     );
 
                     InvestorService().saveInvestor(newInvestor);
