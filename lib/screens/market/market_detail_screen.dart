@@ -71,6 +71,16 @@ class MarketDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
 
+    final bool investmentFlag =
+        // Safely access the getter in case the field isn’t present in some data cases
+        (() {
+          try {
+            return item.isInvestorOpen;
+          } catch (_) {
+            return false;
+          }
+        })();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Listing Details'),
@@ -102,8 +112,8 @@ class MarketDetailScreen extends StatelessWidget {
             _buildDetail("Price", "\$${(item.price ?? 0.0).toStringAsFixed(2)}"),
             _buildDetail("Payment", item.paymentOption),
             _buildFlag("Loan Accepted", item.isLoanAccepted),
-            _buildFlag("Open for Investment", item.isInvestorOpen),
-            if (item.isInvestorOpen)
+            _buildFlag("Open for Investment", investmentFlag),
+            if (investmentFlag)
               _buildDetail("Investment Term", item.investmentTerm),
             const Divider(height: 30),
             const Text("Contact Seller", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
