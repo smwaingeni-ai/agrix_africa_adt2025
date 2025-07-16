@@ -70,7 +70,7 @@ class ContractService {
         contact: '+260971234567',
         isActive: true,
         postedAt: DateTime.now(),
-        parties: ['Farmer A', 'Buyer B'], // ✅ required field
+        parties: ['Farmer A', 'Buyer B'],
       ),
       ContractOffer(
         id: const Uuid().v4(),
@@ -82,7 +82,7 @@ class ContractService {
         contact: '+260976543210',
         isActive: true,
         postedAt: DateTime.now(),
-        parties: ['Farmer C', 'Vendor D'], // ✅ required field
+        parties: ['Farmer C', 'Vendor D'],
       ),
     ];
   }
@@ -100,7 +100,7 @@ class ContractService {
         contact: '+260971111111',
         isActive: true,
         postedAt: DateTime.now(),
-        parties: ['Farmer John', 'Zambia Agro Ltd'], // ✅ required field
+        parties: ['Farmer John', 'Zambia Agro Ltd'],
       ),
       ContractOffer(
         id: '002',
@@ -112,7 +112,7 @@ class ContractService {
         contact: '+260972222222',
         isActive: true,
         postedAt: DateTime.now(),
-        parties: ['Farmer Jane', 'PeanutCo'], // ✅ required field
+        parties: ['Farmer Jane', 'PeanutCo'],
       ),
     ];
   }
