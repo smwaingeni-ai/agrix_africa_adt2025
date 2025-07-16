@@ -7,6 +7,7 @@ class InvestorProfile {
   String id;
   String name;
   String contactNumber;
+  String contact; // ✅ New field
   String email;
   String location;
   List<InvestmentHorizon> preferredHorizons;
@@ -18,6 +19,7 @@ class InvestorProfile {
     required this.id,
     required this.name,
     required this.contactNumber,
+    required this.contact, // ✅ Added to constructor
     required this.email,
     required this.location,
     required this.preferredHorizons,
@@ -31,6 +33,7 @@ class InvestorProfile {
         id: '',
         name: '',
         contactNumber: '',
+        contact: '',
         email: '',
         location: '',
         preferredHorizons: [],
@@ -44,6 +47,7 @@ class InvestorProfile {
         'id': id,
         'name': name,
         'contactNumber': contactNumber,
+        'contact': contact, // ✅ Included in JSON
         'email': email,
         'location': location,
         'preferredHorizons': preferredHorizons.map((e) => e.name).toList(),
@@ -57,6 +61,7 @@ class InvestorProfile {
         id: json['id'] ?? '',
         name: json['name'] ?? '',
         contactNumber: json['contactNumber'] ?? '',
+        contact: json['contact'] ?? '', // ✅ Load from JSON
         email: json['email'] ?? '',
         location: json['location'] ?? '',
         preferredHorizons: (json['preferredHorizons'] as List<dynamic>?)
@@ -81,5 +86,5 @@ class InvestorProfile {
 
   @override
   String toString() =>
-      'InvestorProfile(name: $name, status: ${status.label}, preferred: ${preferredHorizons.map((e) => e.label).join(", ")})';
+      'InvestorProfile(name: $name, contact: $contact, status: ${status.label}, preferred: ${preferredHorizons.map((e) => e.label).join(", ")})';
 }
