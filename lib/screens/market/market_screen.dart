@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/market_item.dart';
 import 'package:agrix_africa_adt2025/services/market_service.dart';
-import 'market_item_form.dart';
+import 'market_item_form.dart'; // This must define MarketItemForm class
 import 'market_detail_screen.dart';
 import 'market_invite_screen.dart';
 
@@ -33,7 +33,7 @@ class _MarketScreenState extends State<MarketScreen> {
   void _goToCreateItem() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const MarketItemFormScreen()),
+      MaterialPageRoute(builder: (_) => const MarketItemForm()), // ✅ FIXED
     );
     _loadItems();
   }
