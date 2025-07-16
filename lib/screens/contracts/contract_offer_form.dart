@@ -47,13 +47,12 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
         duration: _durationController.text.trim(),
         paymentTerms: _paymentTermsController.text.trim(),
         contact: _contactController.text.trim(),
+        parties: _partiesController.text.trim(), // as plain String
         isActive: _isActive,
         postedAt: DateTime.now(),
-        parties: _partiesController.text
-            .split(',')
-            .map((s) => s.trim())
-            .where((s) => s.isNotEmpty)
-            .toList(),
+        amount: 0.0, // Add a default or a UI control if needed
+        cropOrLivestockType: '', // Add a dropdown or leave blank if optional
+        terms: '', // Add a form field later if needed
       );
 
       await _contractService.saveContract(newContract);
