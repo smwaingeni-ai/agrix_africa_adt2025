@@ -12,6 +12,11 @@ class ContractApplication {
   DateTime appliedAt;
   String status;
 
+  // ✅ Newly added fields
+  String farmLocation;
+  String contactInfo;
+  String notes;
+
   ContractApplication({
     required this.id,
     required this.contractOfferId,
@@ -25,6 +30,9 @@ class ContractApplication {
     required this.motivation,
     required this.appliedAt,
     this.status = 'Pending',
+    this.farmLocation = '',
+    this.contactInfo = '',
+    this.notes = '',
   });
 
   /// 🔹 Empty template for initial use (e.g., forms)
@@ -42,6 +50,9 @@ class ContractApplication {
       motivation: '',
       appliedAt: DateTime.now(),
       status: 'Pending',
+      farmLocation: '',
+      contactInfo: '',
+      notes: '',
     );
   }
 
@@ -60,6 +71,9 @@ class ContractApplication {
       motivation: json['motivation'] ?? '',
       appliedAt: DateTime.tryParse(json['appliedAt'] ?? '') ?? DateTime.now(),
       status: json['status'] ?? 'Pending',
+      farmLocation: json['farmLocation'] ?? '',
+      contactInfo: json['contactInfo'] ?? '',
+      notes: json['notes'] ?? '',
     );
   }
 
@@ -78,6 +92,9 @@ class ContractApplication {
       'motivation': motivation,
       'appliedAt': appliedAt.toIso8601String(),
       'status': status,
+      'farmLocation': farmLocation,
+      'contactInfo': contactInfo,
+      'notes': notes,
     };
   }
 }
