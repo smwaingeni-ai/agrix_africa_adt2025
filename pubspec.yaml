@@ -32,7 +32,7 @@ dependencies:
   # UI/UX Enhancements
   flutter_svg: ^2.0.9
   google_fonts: ^6.1.0
-  font_awesome_flutter: ^10.7.0 # ✅ For WhatsApp icon
+  font_awesome_flutter: ^10.7.0 # ✅ For WhatsApp icon support
 
   # Encryption
   encrypt: ^5.0.1
@@ -44,7 +44,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  flutter_launcher_icons: ^0.13.1 # ✅ For launcher icon generation
+  flutter_launcher_icons: ^0.13.1 # ✅ Modern icon generator
 
 flutter:
   uses-material-design: true
