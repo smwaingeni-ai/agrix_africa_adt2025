@@ -56,4 +56,32 @@ class ContractService {
     final encoded = updated.map((c) => json.encode(c.toJson())).toList();
     await prefs.setStringList(_key, encoded);
   }
+
+  /// 🔹 Dummy list for fallback or test usage
+  static Future<List<ContractOffer>> loadOffers() async {
+    return [
+      ContractOffer(
+        id: const Uuid().v4(),
+        title: 'Maize Production Contract',
+        description: 'Farmer required to produce 10 tons of maize by June 2026.',
+        location: 'Chisamba, Zambia',
+        duration: '6 months',
+        paymentTerms: '50% upfront, 50% on delivery',
+        contact: '+260971234567',
+        isActive: true,
+        postedAt: DateTime.now(),
+      ),
+      ContractOffer(
+        id: const Uuid().v4(),
+        title: 'Tomato Supply Contract',
+        description: 'Ongoing tomato supply for Lusaka market vendors.',
+        location: 'Lusaka Rural',
+        duration: '12 months',
+        paymentTerms: 'Monthly settlement',
+        contact: '+260976543210',
+        isActive: true,
+        postedAt: DateTime.now(),
+      ),
+    ];
+  }
 }
