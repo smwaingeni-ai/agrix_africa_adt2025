@@ -3,7 +3,7 @@ import 'dart:convert';
 class ContractOffer {
   String id;
   String title;
-  String parties; // Keep as String per your usage
+  List<String> parties; // ✅ Corrected to List<String>
   double amount;
   String duration;
   String cropOrLivestockType;
@@ -35,7 +35,7 @@ class ContractOffer {
     return ContractOffer(
       id: '',
       title: '',
-      parties: '',
+      parties: [],
       amount: 0.0,
       duration: '',
       cropOrLivestockType: '',
@@ -53,7 +53,7 @@ class ContractOffer {
     return ContractOffer(
       id: json['id'] ?? '',
       title: json['title'] ?? '',
-      parties: json['parties'] ?? '',
+      parties: List<String>.from(json['parties'] ?? []),
       amount: (json['amount'] ?? 0).toDouble(),
       duration: json['duration'] ?? '',
       cropOrLivestockType: json['cropOrLivestockType'] ?? '',
