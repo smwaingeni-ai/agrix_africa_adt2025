@@ -111,6 +111,11 @@ class ProfileService {
     return [];
   }
 
+  /// ✅ Added method for use in other modules (alias for loadProfiles)
+  static Future<List<FarmerProfile>> loadFarmers() async {
+    return await loadProfiles();
+  }
+
   /// 🔁 Clear profiles file
   static Future<void> clearProfiles() async {
     try {
