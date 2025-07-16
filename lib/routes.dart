@@ -43,8 +43,6 @@ import 'screens/loans/loan_application.dart';
 import 'screens/officers/arex_officer_dashboard.dart';
 import 'screens/officers/officer_tasks_screen.dart';
 import 'screens/officers/field_assessment_screen.dart';
-import 'screens/officers/officer_tasks_screen.dart';
-import 'screens/officers/field_assessment_screen.dart';
 
 // 🔹 Logs
 import 'screens/logs/logbook_screen.dart';
@@ -74,15 +72,15 @@ import 'screens/sustainability/sustainability_log_screen.dart';
 import 'screens/training/training_log_screen.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
-  // Auth
+  // 🔐 Authentication
   '/': (context) => const LoginScreen(),
   '/register': (context) => const RegisterUserScreen(),
 
-  // Core
+  // 🔧 Core Navigation
   '/landing': (context) {
     final args = ModalRoute.of(context)?.settings.arguments;
     return LandingPage(
-      loggedInUser: args != null && args is UserModel ? args : UserModel.empty(),
+      loggedInUser: args is UserModel ? args : UserModel.empty(),
     );
   },
   '/language-setup': (context) => const LanguageCountrySetup(),
@@ -90,73 +88,71 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/notifications': (context) => const NotificationsScreen(),
   '/transactions': (context) {
     final args = ModalRoute.of(context)?.settings.arguments;
-    return TransactionScreen(
-      result: args != null && args is String ? args : null,
-    );
+    return TransactionScreen(result: args is String ? args : null);
   },
 
-  // Profile
+  // 👤 Profile
   '/profile': (context) => const FarmerProfileScreen(),
   '/credit-score': (context) => const CreditScoreScreen(),
 
-  // AI Advice
+  // 🤖 AI Advice
   '/advice': (context) => const AdviceScreen(),
   '/agrigpt': (context) => const AgriGPTScreen(),
   '/tips': (context) => const TipsScreen(),
 
-  // Diagnostics
+  // 🧪 Diagnostics
   '/crops': (context) => const CropsScreen(),
   '/soil': (context) => const SoilScreen(),
   '/livestock': (context) => const LivestockScreen(),
 
-  // Market
+  // 🛒 Market
   '/market': (context) => const MarketScreen(),
   '/market/detail': (context) {
     final args = ModalRoute.of(context)?.settings.arguments;
     return MarketDetailScreen(
-      item: args != null && args is MarketItem ? args : MarketItem.empty(),
+      item: args is MarketItem ? args : MarketItem.empty(),
     );
   },
   '/market/form': (context) => const MarketItemForm(),
   '/market/invite': (context) => const MarketInviteScreen(),
 
-  // Loans
+  // 💰 Loans
   '/loan': (context) => const LoanScreen(),
   '/loan-application': (context) => const LoanApplicationScreen(),
 
-  // Officers
+  // 👨‍🌾 Officers
   '/arex-officer-dashboard': (context) => const ArexOfficerDashboard(),
   '/officer-tasks': (context) => const OfficerTasksScreen(),
   '/field-assessment': (context) => const FieldAssessmentScreen(),
 
-  // Logs
+  // 📓 Logs
   '/logbook': (context) => const LogbookScreen(),
   '/upload': (context) => const UploadScreen(),
 
-  // Chat & Help
+  // 💬 Chat & Help
   '/chat': (context) => const ChatScreen(),
   '/help': (context) => const HelpScreen(),
 
-  // Dashboards
+  // 📊 Dashboards
   '/officer-dashboard': (context) => const OfficerDashboard(),
   '/official-dashboard': (context) => const OfficialDashboard(),
   '/admin-panel': (context) => const AdminPanel(),
   '/trader-dashboard': (context) => const TraderDashboard(),
   '/investor-dashboard': (context) => const InvestorDashboard(),
 
-  // Contracts & Investments
+  // 📃 Contracts & 💼 Investments
   '/contracts/list': (context) => const ContractListScreen(),
   '/contracts/new': (context) => const ContractOfferFormScreen(),
   '/investments': (context) => const InvestmentOffersScreen(),
   '/investors': (context) => const InvestorListScreen(),
   '/investor/register': (context) => const InvestorRegistrationScreen(),
 
-  // Special Logs
+  // 🌱 Special Logs
   '/training-log': (context) => const TrainingLogScreen(),
   '/program-tracking': (context) => const ProgramTrackingScreen(),
   '/sustainability-log': (context) => const SustainabilityLogScreen(),
 
-  // Optional: Redundant aliases (requested)
+  // 🧭 Optional Aliases
   '/officer/tasks': (context) => const OfficerTasksScreen(),
   '/officer/assessments': (context) => const FieldAssessmentScreen(),
   '/program_tracking': (context) => const ProgramTrackingScreen(),
