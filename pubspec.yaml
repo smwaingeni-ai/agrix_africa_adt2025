@@ -32,6 +32,7 @@ dependencies:
   # UI/UX Enhancements
   flutter_svg: ^2.0.9
   google_fonts: ^6.1.0
+  font_awesome_flutter: ^10.7.0 # ✅ Added for WhatsApp icon
 
   # Encryption
   encrypt: ^5.0.1
