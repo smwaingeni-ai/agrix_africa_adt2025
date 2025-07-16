@@ -70,7 +70,7 @@ class ContractService {
         contact: '+260971234567',
         isActive: true,
         postedAt: DateTime.now(),
-        parties: ['Farmer A', 'Buyer B'], // ✅ added
+        parties: ['Farmer A', 'Buyer B'],
       ),
       ContractOffer(
         id: const Uuid().v4(),
@@ -82,7 +82,7 @@ class ContractService {
         contact: '+260976543210',
         isActive: true,
         postedAt: DateTime.now(),
-        parties: ['Farmer C', 'Vendor D'], // ✅ added
+        parties: ['Farmer C', 'Vendor D'],
       ),
     ];
   }
