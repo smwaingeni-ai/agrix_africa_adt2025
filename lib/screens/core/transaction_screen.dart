@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class TransactionScreen extends StatelessWidget {
   final String? result;
+  final String? timestamp; // ✅ NEW
 
-  const TransactionScreen({super.key, this.result});
+  const TransactionScreen({
+    Key? key,
+    this.result,
+    this.timestamp, // ✅ ADD
+  }) : super(key: key);
 
   static const List<Map<String, dynamic>> _transactions = [
     {
@@ -62,12 +67,33 @@ class TransactionScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          if (result != null) // 🟢 Show result if passed
+          if (result != null || timestamp != null) // ✅ Show banner if either present
             Padding(
               padding: const EdgeInsets.all(12),
               child: MaterialBanner(
                 backgroundColor: Colors.lightGreen.shade50,
-                content: Text(result!, style: const TextStyle(fontSize: 16)),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (result != null)
+                      Text(
+                        result!,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    if (timestamp != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          '🕒 Timestamp: $timestamp',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
