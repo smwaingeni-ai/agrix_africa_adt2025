@@ -1,119 +1,136 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
-import 'package:agrix_africa_adt2025/services/contracts/contract_service.dart';
+import 'package:uuid/uuid.dart';
+import '../../models/contracts/contract_offer.dart';
+import '../../services/contracts/contract_service.dart';
 
-class ContractOfferFormScreen extends StatefulWidget {
-  const ContractOfferFormScreen({super.key});
+class ContractOfferForm extends StatefulWidget {
+  const ContractOfferForm({super.key});
 
   @override
-  State<ContractOfferFormScreen> createState() => _ContractOfferFormScreenState();
+  State<ContractOfferForm> createState() => _ContractOfferFormState();
 }
 
-class _ContractOfferFormScreenState extends State<ContractOfferFormScreen> {
+class _ContractOfferFormState extends State<ContractOfferForm> {
   final _formKey = GlobalKey<FormState>();
-  final _contract = ContractOffer.empty();
-  bool _submitting = false;
+  final _contractService = ContractService();
 
-  Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
+  // Controllers
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
+  final TextEditingController _paymentTermsController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _partiesController = TextEditingController(); // comma-separated input
 
-    setState(() => _submitting = true);
-    try {
-      await ContractService().saveContract(_contract);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ Contract offer posted successfully!')),
+  bool _isActive = true;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _locationController.dispose();
+    _durationController.dispose();
+    _paymentTermsController.dispose();
+    _contactController.dispose();
+    _partiesController.dispose();
+    super.dispose();
+  }
+
+  void _submit() async {
+    if (_formKey.currentState!.validate()) {
+      final newContract = ContractOffer(
+        id: const Uuid().v4(),
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        location: _locationController.text.trim(),
+        duration: _durationController.text.trim(),
+        paymentTerms: _paymentTermsController.text.trim(),
+        contact: _contactController.text.trim(),
+        isActive: _isActive,
+        postedAt: DateTime.now(),
+        parties: _partiesController.text
+            .split(',')
+            .map((s) => s.trim())
+            .where((s) => s.isNotEmpty)
+            .toList(),
       );
-      Navigator.pop(context);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('❌ Error submitting contract: $e')),
-      );
-    } finally {
-      if (mounted) setState(() => _submitting = false);
+
+      await _contractService.saveContract(newContract);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Contract offer saved successfully')),
+        );
+        Navigator.pop(context);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('📝 Submit Contract Offer')),
-      body: _submitting
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    _buildTextField(
-                      label: 'Contract Title',
-                      onSaved: (val) => _contract.title = val ?? '',
-                    ),
-                    _buildTextField(
-                      label: 'Parties Involved',
-                      onSaved: (val) => _contract.parties = val ?? '',
-                    ),
-                    _buildTextField(
-                      label: 'Amount (USD)',
-                      keyboardType: TextInputType.number,
-                      onSaved: (val) =>
-                          _contract.amount = double.tryParse(val!.replaceAll(',', '')) ?? 0.0,
-                    ),
-                    _buildTextField(
-                      label: 'Duration (e.g. 12 months)',
-                      onSaved: (val) => _contract.duration = val ?? '',
-                      required: false,
-                    ),
-                    _buildTextField(
-                      label: 'Crop or Livestock Type',
-                      onSaved: (val) => _contract.cropOrLivestockType = val ?? '',
-                    ),
-                    _buildTextField(
-                      label: 'Location',
-                      onSaved: (val) => _contract.location = val ?? '',
-                    ),
-                    _buildTextField(
-                      label: 'Contract Terms / Description',
-                      onSaved: (val) => _contract.terms = val ?? '',
-                      maxLines: 4,
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.check),
-                      label: const Text('Submit Contract'),
-                      onPressed: _submitting ? null : _submitForm,
-                    ),
-                  ],
-                ),
+      appBar: AppBar(title: const Text('Create Contract Offer')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Title'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Title is required' : null,
               ),
-            ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String label,
-    TextInputType keyboardType = TextInputType.text,
-    required void Function(String?) onSaved,
-    bool required = true,
-    int maxLines = 1,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Description is required' : null,
+              ),
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(labelText: 'Location'),
+              ),
+              TextFormField(
+                controller: _durationController,
+                decoration: const InputDecoration(labelText: 'Duration'),
+              ),
+              TextFormField(
+                controller: _paymentTermsController,
+                decoration: const InputDecoration(labelText: 'Payment Terms'),
+              ),
+              TextFormField(
+                controller: _contactController,
+                decoration: const InputDecoration(labelText: 'Contact'),
+              ),
+              TextFormField(
+                controller: _partiesController,
+                decoration: const InputDecoration(
+                  labelText: 'Parties (comma-separated)',
+                ),
+                validator: (value) => value!.isEmpty
+                    ? 'At least one party is required'
+                    : null,
+              ),
+              SwitchListTile(
+                title: const Text('Is Active?'),
+                value: _isActive,
+                onChanged: (val) {
+                  setState(() {
+                    _isActive = val;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submit,
+                child: const Text('Save Contract'),
+              ),
+            ],
+          ),
         ),
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        onSaved: onSaved,
-        validator: (val) {
-          if (!required) return null;
-          return (val == null || val.trim().isEmpty) ? 'Required' : null;
-        },
       ),
     );
   }
