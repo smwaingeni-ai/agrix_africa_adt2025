@@ -10,7 +10,10 @@ class ContractOffer {
   String location;
   String terms;
   DateTime postedAt;
-  String description; // ✅ NEW FIELD
+  String description;
+  String paymentTerms;
+  String contact;
+  bool isActive;
 
   ContractOffer({
     required this.id,
@@ -22,7 +25,10 @@ class ContractOffer {
     required this.location,
     required this.terms,
     required this.postedAt,
-    required this.description, // ✅ NEW PARAM
+    required this.description,
+    required this.paymentTerms,
+    required this.contact,
+    required this.isActive,
   });
 
   factory ContractOffer.empty() {
@@ -36,7 +42,10 @@ class ContractOffer {
       location: '',
       terms: '',
       postedAt: DateTime.now(),
-      description: '', // ✅ NEW DEFAULT
+      description: '',
+      paymentTerms: '',
+      contact: '',
+      isActive: false,
     );
   }
 
@@ -51,7 +60,10 @@ class ContractOffer {
       location: json['location'] ?? '',
       terms: json['terms'] ?? '',
       postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
-      description: json['description'] ?? '', // ✅ NEW FIELD
+      description: json['description'] ?? '',
+      paymentTerms: json['paymentTerms'] ?? '',
+      contact: json['contact'] ?? '',
+      isActive: json['isActive'] ?? false,
     );
   }
 
@@ -66,7 +78,10 @@ class ContractOffer {
       'location': location,
       'terms': terms,
       'postedAt': postedAt.toIso8601String(),
-      'description': description, // ✅ NEW FIELD
+      'description': description,
+      'paymentTerms': paymentTerms,
+      'contact': contact,
+      'isActive': isActive,
     };
   }
 
