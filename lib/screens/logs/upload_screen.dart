@@ -57,13 +57,17 @@ class _UploadScreenState extends State<UploadScreen> {
       threshold: 0.3,
     );
 
+    if (!mounted) return;
+
     setState(() {
       _loading = false;
       if (output != null && output.isNotEmpty) {
         final label = output[0]['label'];
         final confidence = (output[0]['confidence'] * 100).toStringAsFixed(1);
         _result = '🌿 Diagnosis: $label\n📊 Confidence: $confidence%';
-        _navigateToTransactionScreen();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _navigateToTransactionScreen();
+        });
       } else {
         _result = '⚠️ No disease or issue detected.';
       }
@@ -92,6 +96,7 @@ class _UploadScreenState extends State<UploadScreen> {
     logs.add(entry);
     await file.writeAsString(json.encode(logs));
 
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('✅ Result saved to Logbook')),
     );
@@ -104,10 +109,9 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   void _navigateToTransactionScreen() {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => TransactionScreen(
+        builder: (ctx) => TransactionScreen(
           result: _result!,
           timestamp: DateTime.now().toIso8601String(),
         ),
@@ -167,7 +171,11 @@ class _UploadScreenState extends State<UploadScreen> {
               if (_loading)
                 const CircularProgressIndicator()
               else if (_result != null)
-                Text(_result!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18)),
+                Text(
+                  _result!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18),
+                ),
               const SizedBox(height: 20),
               if (!_loading && _result != null) _buildActionButtons(),
             ],
