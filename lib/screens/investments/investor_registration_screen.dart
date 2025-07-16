@@ -53,6 +53,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
               SizedBox(height: 16),
               Text("Investment Horizon"),
               Wrap(
+                spacing: 8,
                 children: horizons.map((h) {
                   return ChoiceChip(
                     label: Text(h),
@@ -70,6 +71,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
               SizedBox(height: 16),
               Text("Investment Interest"),
               Wrap(
+                spacing: 8,
                 children: interests.map((i) {
                   return FilterChip(
                     label: Text(i),
@@ -108,12 +110,14 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                       investmentHorizon: selectedHorizons,
                       investmentInterest: selectedInterests,
                       status: status,
-                      contact: phoneNumber, // ✅ required field
+                      contact: phoneNumber, // ✅ Now included to fix error
                     );
 
                     InvestorService().saveInvestor(newInvestor);
 
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Investor Registered!')));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Investor Registered!')),
+                    );
                     Navigator.pop(context);
                   }
                 },
