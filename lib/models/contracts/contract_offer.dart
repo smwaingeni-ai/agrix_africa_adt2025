@@ -1,4 +1,4 @@
-import 'dart:convert'; // Only needed if you're decoding raw JSON strings
+import 'dart:convert';
 
 class ContractOffer {
   String id;
@@ -10,6 +10,7 @@ class ContractOffer {
   String location;
   String terms;
   DateTime postedAt;
+  String description; // ✅ NEW FIELD
 
   ContractOffer({
     required this.id,
@@ -21,9 +22,9 @@ class ContractOffer {
     required this.location,
     required this.terms,
     required this.postedAt,
+    required this.description, // ✅ NEW PARAM
   });
 
-  /// 🔹 Factory constructor for empty object
   factory ContractOffer.empty() {
     return ContractOffer(
       id: '',
@@ -35,10 +36,10 @@ class ContractOffer {
       location: '',
       terms: '',
       postedAt: DateTime.now(),
+      description: '', // ✅ NEW DEFAULT
     );
   }
 
-  /// 🔹 Deserialize from JSON
   factory ContractOffer.fromJson(Map<String, dynamic> json) {
     return ContractOffer(
       id: json['id'] ?? '',
@@ -50,10 +51,10 @@ class ContractOffer {
       location: json['location'] ?? '',
       terms: json['terms'] ?? '',
       postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
+      description: json['description'] ?? '', // ✅ NEW FIELD
     );
   }
 
-  /// 🔹 Serialize to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -65,10 +66,11 @@ class ContractOffer {
       'location': location,
       'terms': terms,
       'postedAt': postedAt.toIso8601String(),
+      'description': description, // ✅ NEW FIELD
     };
   }
 
   @override
   String toString() =>
-      'ContractOffer(title: $title, amount: $amount, postedAt: $postedAt)';
+      'ContractOffer(title: $title, amount: $amount, postedAt: $postedAt, description: $description)';
 }
