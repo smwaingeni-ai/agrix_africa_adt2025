@@ -9,42 +9,42 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Core Flutter Plugins
-  path_provider: ^2.1.2
-  uuid: ^4.1.0
-  share_plus: ^7.2.1
-  image_picker: ^1.0.7
-  file_picker: ^6.1.1
-  local_auth: ^2.1.6
-  qr_flutter: ^4.0.0
-  url_launcher: ^6.2.5
-  shared_preferences: ^2.2.2
-  intl: ^0.18.1
-  tflite: ^1.1.2
+  # Core Functionality
+  image_picker: ^1.0.7           # Updated for camera/gallery access
+  tflite: ^1.1.2                 # For on-device ML
+  path_provider: ^2.1.2          # For file paths
+  file_picker: ^6.1.1            # General file picker
+  uuid: ^4.1.0                   # Unique ID generation
+  share_plus: ^7.2.1             # Sharing images/files
+  intl: ^0.18.1                  # Date/time formatting
+  url_launcher: ^6.2.5           # For launching WhatsApp and other URLs
+  shared_preferences: ^2.2.2     # Local storage (e.g., farmer data)
+  flutter_secure_storage: ^9.0.0 # Secure storage (e.g., auth)
 
-  # Firebase
-  cloud_firestore: ^4.9.1
+  # UI/UX Enhancements
+  flutter_svg: ^2.0.9            # For SVG icon support
+  google_fonts: ^6.1.0           # Custom fonts
+  font_awesome_flutter: ^10.7.0 # ✅ WhatsApp icon and more
+
+  # QR and Biometrics
+  qr_flutter: ^4.0.0             # QR code generation
+  local_auth: ^2.1.6             # Biometric auth (fingerprint, face ID)
+
+  # Firebase Core (if needed later)
   firebase_core: ^2.24.2
+  cloud_firestore: ^4.9.1        # For remote document DB
 
   # State Management
   provider: ^6.1.2
 
-  # UI/UX Enhancements
-  flutter_svg: ^2.0.9
-  google_fonts: ^6.1.0
-  font_awesome_flutter: ^10.7.0 # ✅ For WhatsApp icon support
-
   # Encryption
   encrypt: ^5.0.1
-
-  # Secure Storage
-  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  flutter_launcher_icons: ^0.13.1 # ✅ Modern icon generator
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
