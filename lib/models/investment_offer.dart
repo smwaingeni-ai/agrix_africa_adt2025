@@ -14,6 +14,7 @@ class InvestmentOffer {
   final String message;
   final DateTime offerDate;
   final bool isAccepted;
+  final DateTime timestamp; // ✅ Tracks creation time
 
   const InvestmentOffer({
     required this.id,
@@ -28,10 +29,11 @@ class InvestmentOffer {
     required this.interestRate,
     required this.message,
     required this.offerDate,
+    required this.timestamp,
     this.isAccepted = false,
   });
 
-  /// 🔹 Create a default empty offer for UI forms or drafts
+  /// ✅ Empty factory for drafts or forms
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
         listingId: '',
@@ -45,11 +47,13 @@ class InvestmentOffer {
         interestRate: 0.0,
         message: '',
         offerDate: DateTime.now(),
+        timestamp: DateTime.now(),
         isAccepted: false,
       );
 
-  /// 🔹 JSON deserialization with safety
+  /// ✅ JSON deserialization
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
+    final now = DateTime.now();
     return InvestmentOffer(
       id: json['id'] ?? '',
       listingId: json['listingId'] ?? '',
@@ -62,12 +66,13 @@ class InvestmentOffer {
       term: json['term'] ?? '',
       interestRate: (json['interestRate'] ?? 0).toDouble(),
       message: json['message'] ?? '',
-      offerDate: DateTime.tryParse(json['offerDate'] ?? '') ?? DateTime.now(),
+      offerDate: DateTime.tryParse(json['offerDate'] ?? '') ?? now,
+      timestamp: DateTime.tryParse(json['timestamp'] ?? '') ?? now,
       isAccepted: json['isAccepted'] ?? false,
     );
   }
 
-  /// 🔹 Convert to JSON
+  /// ✅ JSON serialization
   Map<String, dynamic> toJson() => {
         'id': id,
         'listingId': listingId,
@@ -81,28 +86,27 @@ class InvestmentOffer {
         'interestRate': interestRate,
         'message': message,
         'offerDate': offerDate.toIso8601String(),
+        'timestamp': timestamp.toIso8601String(),
         'isAccepted': isAccepted,
       };
 
-  /// 🔹 Encode a list to JSON string
+  /// ✅ Batch encode to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// 🔹 Decode list from JSON string
+  /// ✅ Batch decode from JSON string
   static List<InvestmentOffer> decode(String jsonStr) =>
-      (jsonDecode(jsonStr) as List<dynamic>)
-          .map<InvestmentOffer>((e) => InvestmentOffer.fromJson(e))
+      (jsonDecode(jsonStr) as List)
+          .map((e) => InvestmentOffer.fromJson(e))
           .toList();
 
   @override
-  String toString() =>
-      'InvestmentOffer(id: $id, name: $investorName, contact: $contact, accepted: $isAccepted)';
+  String toString() => 'InvestmentOffer(id: $id, investor: $investorName, contact: $contact)';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is InvestmentOffer &&
-          runtimeType == other.runtimeType &&
           id == other.id &&
           listingId == other.listingId &&
           investorId == other.investorId &&
@@ -115,6 +119,7 @@ class InvestmentOffer {
           interestRate == other.interestRate &&
           message == other.message &&
           offerDate == other.offerDate &&
+          timestamp == other.timestamp &&
           isAccepted == other.isAccepted;
 
   @override
@@ -131,5 +136,6 @@ class InvestmentOffer {
       interestRate.hashCode ^
       message.hashCode ^
       offerDate.hashCode ^
+      timestamp.hashCode ^
       isAccepted.hashCode;
 }
