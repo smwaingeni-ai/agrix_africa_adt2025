@@ -41,11 +41,13 @@ class ContractDetailScreen extends StatelessWidget {
             _buildDetailTile("🌱 Crop/Livestock Type", contract.cropOrLivestockType),
             _buildDetailTile("📍 Location", contract.location),
             _buildDetailTile("📑 Terms & Conditions", contract.terms),
+            _buildDetailTile("📞 Contact Info", contract.contact),
             const SizedBox(height: 30),
             ElevatedButton.icon(
               icon: const Icon(Icons.share),
               label: const Text("Share Contract"),
               onPressed: () {
+                // You can later integrate url_launcher or share_plus here.
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("🚀 Sharing functionality coming soon."),
@@ -75,7 +77,7 @@ class ContractDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            value,
+            value.isNotEmpty ? value : "N/A",
             style: const TextStyle(
               fontSize: 16,
               color: Colors.black87,
