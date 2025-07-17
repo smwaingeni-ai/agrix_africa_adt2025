@@ -7,7 +7,7 @@ enum InvestmentHorizon {
 
 /// Extension providing labels and parsing for InvestmentHorizon
 extension InvestmentHorizonExtension on InvestmentHorizon {
-  /// ✅ Human-readable label
+  /// ✅ Human-readable label (for UI)
   String get label {
     switch (this) {
       case InvestmentHorizon.shortTerm:
@@ -19,14 +19,14 @@ extension InvestmentHorizonExtension on InvestmentHorizon {
     }
   }
 
-  /// ✅ Short string value (for storage or API use)
+  /// ✅ Enum name (e.g., for API or DB storage)
   String get code {
-    return name; // Dart >=2.15: enum.name
+    return name; // Dart >= 2.15
   }
 
-  /// ✅ Parse from label (safe fallback)
+  /// ✅ Parse from human-readable label (fallback-safe)
   static InvestmentHorizon fromLabel(String label) {
-    switch (label.toLowerCase()) {
+    switch (label.trim().toLowerCase()) {
       case 'short term':
         return InvestmentHorizon.shortTerm;
       case 'mid term':
@@ -34,15 +34,24 @@ extension InvestmentHorizonExtension on InvestmentHorizon {
       case 'long term':
         return InvestmentHorizon.longTerm;
       default:
-        return InvestmentHorizon.shortTerm;
+        return InvestmentHorizon.shortTerm; // fallback
     }
   }
 
-  /// ✅ Parse from raw enum name (e.g. from API/DB)
+  /// ✅ Parse from enum name string (API/DB input)
   static InvestmentHorizon fromName(String name) {
     return InvestmentHorizon.values.firstWhere(
-      (e) => e.name.toLowerCase() == name.toLowerCase(),
+      (e) => e.name.toLowerCase() == name.trim().toLowerCase(),
       orElse: () => InvestmentHorizon.shortTerm,
     );
+  }
+
+  /// ✅ Convenience: Parse from either label or name
+  static InvestmentHorizon fromString(String value) {
+    try {
+      return fromLabel(value);
+    } catch (_) {
+      return fromName(value);
+    }
   }
 }
