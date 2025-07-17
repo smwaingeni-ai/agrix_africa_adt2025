@@ -10,29 +10,29 @@ dependencies:
     sdk: flutter
 
   # Core Functionality
-  image_picker: ^1.0.7           # Updated for camera/gallery access
-  tflite: ^1.1.2                 # For on-device ML
-  path_provider: ^2.1.2          # For file paths
-  file_picker: ^6.1.1            # General file picker
-  uuid: ^4.1.0                   # Unique ID generation
-  share_plus: ^7.2.1             # Sharing images/files
+  image_picker: ^1.0.7           # Camera/gallery access
+  tflite: ^1.1.2                 # On-device ML
+  path_provider: ^2.1.2          # File paths
+  file_picker: ^6.1.1            # File picker
+  uuid: ^4.1.0                   # Unique IDs
+  share_plus: ^7.2.1             # Share content
   intl: ^0.18.1                  # Date/time formatting
-  url_launcher: ^6.2.5           # For launching WhatsApp and other URLs
-  shared_preferences: ^2.2.2     # Local storage (e.g., farmer data)
-  flutter_secure_storage: ^9.0.0 # Secure storage (e.g., auth)
+  url_launcher: ^6.2.5           # Open WhatsApp or browser
+  shared_preferences: ^2.2.2     # Persistent local storage
+  flutter_secure_storage: ^9.0.0 # Encrypted secure storage
 
   # UI/UX Enhancements
-  flutter_svg: ^2.0.9            # For SVG icon support
-  google_fonts: ^6.1.0           # Custom fonts
-  font_awesome_flutter: ^10.7.0 # ✅ WhatsApp icon and more
+  flutter_svg: ^2.0.9            # SVG support
+  google_fonts: ^6.1.0           # Font customization
+  font_awesome_flutter: ^10.7.0 # ✅ WhatsApp and social icons
 
   # QR and Biometrics
-  qr_flutter: ^4.0.0             # QR code generation
-  local_auth: ^2.1.6             # Biometric auth (fingerprint, face ID)
+  qr_flutter: ^4.0.0             # QR generation
+  local_auth: ^2.1.6             # Biometrics
 
-  # Firebase Core (if needed later)
+  # Firebase (if needed)
   firebase_core: ^2.24.2
-  cloud_firestore: ^4.9.1        # For remote document DB
+  cloud_firestore: ^4.9.1
 
   # State Management
   provider: ^6.1.2
