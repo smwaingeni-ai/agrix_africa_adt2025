@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:agrix_africa_adt2025/models/investor_profile.dart';
 import 'package:agrix_africa_adt2025/services/investor_service.dart';
-import 'package:agrix_africa_adt2025/models/investment_horizon.dart'; // <-- Import your enum + extension
+import 'package:agrix_africa_adt2025/models/investment_horizon.dart';
 
 class InvestorRegistrationScreen extends StatefulWidget {
   @override
@@ -131,9 +131,9 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                       location: _locationController.text,
                       preferredHorizons: _selectedHorizons
                           .map((e) => InvestmentHorizonExtension.fromLabel(e))
-                          .toList(), // ✅ Conversion to enum
+                          .toList(),
                       interests: _selectedInterests,
-                      status: _selectedStatus,
+                      status: InvestorStatusExtension.fromString(_selectedStatus),
                       registeredAt: DateTime.now(),
                     );
 
