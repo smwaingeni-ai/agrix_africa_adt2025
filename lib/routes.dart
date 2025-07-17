@@ -142,10 +142,10 @@ final Map<String, WidgetBuilder> appRoutes = {
 
   // 📃 Contracts & 💼 Investments
   '/contracts/list': (context) => const ContractListScreen(),
-  '/contracts/new': (context) => ContractOfferFormScreen(), // 👈 const removed
+  '/contracts/new': (context) => ContractOfferFormScreen(), // ✅ const removed
   '/investments': (context) => const InvestmentOffersScreen(),
   '/investors': (context) => const InvestorListScreen(),
-  '/investor/register': (context) => const InvestorRegistrationScreen(),
+  '/investor/register': (context) => InvestorRegistrationScreen(), // ✅ const removed
 
   // 🌱 Special Logs
   '/training-log': (context) => const TrainingLogScreen(),
