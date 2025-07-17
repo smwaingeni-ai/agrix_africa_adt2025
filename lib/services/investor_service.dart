@@ -87,4 +87,9 @@ class InvestorService {
     }
     await saveEncrypted(investors);
   }
+
+  /// ✅ ALIASED METHOD TO FIX MISSING saveInvestor() ERROR
+  Future<void> saveInvestor(InvestorProfile investor) async {
+    await saveInvestorProfile(investor); // internally calls secure logic
+  }
 }
