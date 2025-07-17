@@ -3,7 +3,7 @@ import 'dart:convert';
 class ContractOffer {
   String id;
   String title;
-  List<String> parties; // ✅ Corrected to List<String>
+  List<String> parties; // Multiple parties involved
   double amount;
   String duration;
   String cropOrLivestockType;
