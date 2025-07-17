@@ -1,59 +1,50 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../models/contracts/contract_offer.dart';
 
 class ContractService {
+  static const String _fileName = 'contract_offers.json';
+
   static Future<String> _getFilePath() async {
     final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/contract_offers.json';
+    return '${directory.path}/$_fileName';
   }
 
-  static Future<List<ContractOffer>> loadContractOffers() async {
+  static Future<List<ContractOffer>> loadOffers() async {
     try {
-      final filePath = await _getFilePath();
-      final file = File(filePath);
-
+      final path = await _getFilePath();
+      final file = File(path);
       if (!await file.exists()) return [];
-
       final contents = await file.readAsString();
       final List<dynamic> jsonData = json.decode(contents);
-      return jsonData.map((json) => ContractOffer.fromJson(json)).toList();
+      return jsonData.map((e) => ContractOffer.fromJson(e)).toList();
     } catch (e) {
       print('Error loading contract offers: $e');
       return [];
     }
   }
 
-  static Future<void> saveContractOffers(List<ContractOffer> offers) async {
+  static Future<void> saveOffers(List<ContractOffer> offers) async {
     try {
-      final filePath = await _getFilePath();
-      final file = File(filePath);
-      final jsonData = offers.map((offer) => offer.toJson()).toList();
+      final path = await _getFilePath();
+      final file = File(path);
+      final jsonData = offers.map((e) => e.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
     } catch (e) {
       print('Error saving contract offers: $e');
     }
   }
 
-  static Future<void> addContractOffer(ContractOffer offer) async {
-    final offers = await loadContractOffers();
+  static Future<void> addOffer(ContractOffer offer) async {
+    final offers = await loadOffers();
     offers.add(offer);
-    await saveContractOffers(offers);
+    await saveOffers(offers);
   }
 
-  static Future<void> deleteContractOffer(String id) async {
-    final offers = await loadContractOffers();
+  static Future<void> deleteOffer(String id) async {
+    final offers = await loadOffers();
     offers.removeWhere((offer) => offer.id == id);
-    await saveContractOffers(offers);
-  }
-
-  static Future<void> updateContractOffer(ContractOffer updatedOffer) async {
-    final offers = await loadContractOffers();
-    final index = offers.indexWhere((offer) => offer.id == updatedOffer.id);
-    if (index != -1) {
-      offers[index] = updatedOffer;
-      await saveContractOffers(offers);
-    }
+    await saveOffers(offers);
   }
 }
