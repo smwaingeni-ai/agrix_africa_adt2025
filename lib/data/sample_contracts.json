@@ -1,0 +1,24 @@
+[
+  {
+    "title": "Maize Supply Contract",
+    "description": "Agreement for supply of 100 metric tons of maize.",
+    "parties": "GreenHarvest Ltd & Zed Farmers Cooperative",
+    "amount": 50000.00,
+    "duration": "6 months",
+    "cropOrLivestockType": "Maize",
+    "location": "Mkushi, Central Province",
+    "terms": "Payment within 30 days after delivery. Quality to follow ZABS standards.",
+    "contact": "info@greenharvest.com"
+  },
+  {
+    "title": "Livestock Grazing Agreement",
+    "description": "Seasonal contract for grazing 200 cattle on leased land.",
+    "parties": "Zambezi Agro & Mwinilunga Ranchers",
+    "amount": 35000.00,
+    "duration": "1 year",
+    "cropOrLivestockType": "Cattle",
+    "location": "Mwinilunga, North-Western Province",
+    "terms": "Lessee responsible for water and basic veterinary support.",
+    "contact": "zambezi.agro@outlook.com"
+  }
+]
