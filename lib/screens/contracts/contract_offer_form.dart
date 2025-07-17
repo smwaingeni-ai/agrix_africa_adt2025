@@ -12,16 +12,16 @@ class ContractOfferForm extends StatefulWidget {
 
 class _ContractOfferFormState extends State<ContractOfferForm> {
   final _formKey = GlobalKey<FormState>();
-  final _contractService = ContractService();
-
-  // Controllers
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _paymentTermsController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _partiesController = TextEditingController(); // comma-separated input
+  final TextEditingController _partiesController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _cropTypeController = TextEditingController();
+  final TextEditingController _termsController = TextEditingController();
 
   bool _isActive = true;
 
@@ -34,12 +34,15 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
     _paymentTermsController.dispose();
     _contactController.dispose();
     _partiesController.dispose();
+    _amountController.dispose();
+    _cropTypeController.dispose();
+    _termsController.dispose();
     super.dispose();
   }
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      final newContract = ContractOffer(
+      final offer = ContractOffer(
         id: const Uuid().v4(),
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
@@ -47,22 +50,21 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
         duration: _durationController.text.trim(),
         paymentTerms: _paymentTermsController.text.trim(),
         contact: _contactController.text.trim(),
-        parties: _partiesController.text.trim(), // as plain String
+        parties: _partiesController.text.trim(),
+        amount: double.tryParse(_amountController.text.trim()) ?? 0.0,
+        cropOrLivestockType: _cropTypeController.text.trim(),
+        terms: _termsController.text.trim(),
         isActive: _isActive,
         postedAt: DateTime.now(),
-        amount: 0.0, // Add a default or a UI control if needed
-        cropOrLivestockType: '', // Add a dropdown or leave blank if optional
-        terms: '', // Add a form field later if needed
       );
 
-      await _contractService.saveContract(newContract);
+      await ContractService.addContractOffer(offer);
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Contract offer saved successfully')),
-        );
-        Navigator.pop(context);
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Contract offer saved successfully')),
+      );
+      Navigator.pop(context);
     }
   }
 
@@ -103,24 +105,34 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
               TextFormField(
                 controller: _contactController,
                 decoration: const InputDecoration(labelText: 'Contact'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Contact is required' : null,
               ),
               TextFormField(
                 controller: _partiesController,
                 decoration: const InputDecoration(
-                  labelText: 'Parties (comma-separated)',
-                ),
-                validator: (value) => value!.isEmpty
-                    ? 'At least one party is required'
-                    : null,
+                    labelText: 'Parties (comma-separated)'),
+                validator: (value) =>
+                    value!.isEmpty ? 'At least one party is required' : null,
+              ),
+              TextFormField(
+                controller: _amountController,
+                decoration: const InputDecoration(labelText: 'Amount'),
+                keyboardType: TextInputType.number,
+              ),
+              TextFormField(
+                controller: _cropTypeController,
+                decoration:
+                    const InputDecoration(labelText: 'Crop/Livestock Type'),
+              ),
+              TextFormField(
+                controller: _termsController,
+                decoration: const InputDecoration(labelText: 'Contract Terms'),
               ),
               SwitchListTile(
                 title: const Text('Is Active?'),
                 value: _isActive,
-                onChanged: (val) {
-                  setState(() {
-                    _isActive = val;
-                  });
-                },
+                onChanged: (val) => setState(() => _isActive = val),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
