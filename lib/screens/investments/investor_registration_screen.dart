@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:agrix_africa_adt2025/models/investor_profile.dart';
 import 'package:agrix_africa_adt2025/services/investor_service.dart';
+import 'package:agrix_africa_adt2025/models/investment_horizon.dart'; // <-- Import your enum + extension
 
 class InvestorRegistrationScreen extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
   List<String> _selectedInterests = [];
   String _selectedStatus = 'Open';
 
-  final List<String> _horizons = ['Short-Term', 'Medium-Term', 'Long-Term'];
+  final List<String> _horizons = ['Short Term', 'Mid Term', 'Long Term'];
   final List<String> _interests = ['Crops', 'Livestock', 'Soil', 'Technology'];
 
   @override
@@ -117,7 +118,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
-                icon: const Icon(FontAwesomeIcons.whatsapp), // ✅ WhatsApp icon fixed
+                icon: const Icon(FontAwesomeIcons.whatsapp),
                 label: const Text('Register'),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -128,7 +129,9 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                       contactNumber: _phoneController.text,
                       contact: _contactController.text,
                       location: _locationController.text,
-                      preferredHorizons: _selectedHorizons,
+                      preferredHorizons: _selectedHorizons
+                          .map((e) => InvestmentHorizonExtension.fromLabel(e))
+                          .toList(), // ✅ Conversion to enum
                       interests: _selectedInterests,
                       status: _selectedStatus,
                       registeredAt: DateTime.now(),
