@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/models/market_item.dart';
 
@@ -71,15 +72,13 @@ class MarketDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
 
-    final bool investmentFlag =
-        // Safely access the getter in case the field isn’t present in some data cases
-        (() {
-          try {
-            return item.isInvestorOpen;
-          } catch (_) {
-            return false;
-          }
-        })();
+    final bool investmentFlag = (() {
+      try {
+        return item.isInvestorOpen;
+      } catch (_) {
+        return false;
+      }
+    })();
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +132,7 @@ class MarketDetailScreen extends StatelessWidget {
                   onPressed: () => _launchSMS(item.contact),
                 ),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.chat),
+                  icon: const Icon(FontAwesomeIcons.whatsapp),
                   label: const Text("WhatsApp"),
                   onPressed: () => _launchWhatsApp(item.contact),
                 ),
