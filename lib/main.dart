@@ -47,6 +47,7 @@ class _StartupDeciderState extends State<StartupDecider> {
 
   Future<void> _checkProfileAndNavigate() async {
     final profile = await ProfileService.loadActiveProfile();
+
     setState(() {
       _initialScreen = profile != null
           ? LandingPage(loggedInUser: UserModel.fromFarmer(profile))
