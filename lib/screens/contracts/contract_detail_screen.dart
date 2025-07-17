@@ -34,6 +34,7 @@ class ContractDetailScreen extends StatelessWidget {
         child: ListView(
           children: [
             _buildDetailTile("📄 Contract Title", contract.title),
+            _buildDetailTile("📝 Description", contract.description),
             _buildDetailTile("🤝 Parties Involved", contract.parties),
             _buildDetailTile("💵 Amount", currencyFormatter.format(contract.amount)),
             _buildDetailTile("⏳ Duration", contract.duration),
