@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ContractOffer {
   final String id;
   final String title;
@@ -63,5 +65,10 @@ class ContractOffer {
       'cropOrLivestockType': cropOrLivestockType,
       'terms': terms,
     };
+  }
+
+  static List<ContractOffer> listFromJson(String jsonString) {
+    final data = json.decode(jsonString) as List<dynamic>;
+    return data.map((e) => ContractOffer.fromJson(e)).toList();
   }
 }
