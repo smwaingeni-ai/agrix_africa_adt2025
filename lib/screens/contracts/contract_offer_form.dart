@@ -50,7 +50,12 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
         duration: _durationController.text.trim(),
         paymentTerms: _paymentTermsController.text.trim(),
         contact: _contactController.text.trim(),
-        parties: _partiesController.text.trim(),
+        parties: _partiesController.text
+            .trim()
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(),
         amount: double.tryParse(_amountController.text.trim()) ?? 0.0,
         cropOrLivestockType: _cropTypeController.text.trim(),
         terms: _termsController.text.trim(),
