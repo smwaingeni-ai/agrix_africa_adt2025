@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
-
 class ContractOffer {
   final String id;
   final String title;
-  final String description; // ✅ ADD THIS
+  final String description;
   final String location;
   final String duration;
   final String paymentTerms;
@@ -18,7 +16,7 @@ class ContractOffer {
   ContractOffer({
     required this.id,
     required this.title,
-    required this.description, // ✅ ADD THIS
+    required this.description,
     required this.location,
     required this.duration,
     required this.paymentTerms,
@@ -35,7 +33,7 @@ class ContractOffer {
     return ContractOffer(
       id: json['id'],
       title: json['title'],
-      description: json['description'] ?? '', // ✅ ADD THIS
+      description: json['description'],
       location: json['location'],
       duration: json['duration'],
       paymentTerms: json['paymentTerms'],
@@ -44,8 +42,8 @@ class ContractOffer {
       isActive: json['isActive'],
       postedAt: DateTime.parse(json['postedAt']),
       amount: (json['amount'] as num).toDouble(),
-      cropOrLivestockType: json['cropOrLivestockType'],
-      terms: json['terms'],
+      cropOrLivestockType: json['cropOrLivestockType'] ?? '',
+      terms: json['terms'] ?? '',
     );
   }
 
@@ -53,7 +51,7 @@ class ContractOffer {
     return {
       'id': id,
       'title': title,
-      'description': description, // ✅ ADD THIS
+      'description': description,
       'location': location,
       'duration': duration,
       'paymentTerms': paymentTerms,
