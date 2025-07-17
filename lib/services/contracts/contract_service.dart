@@ -42,9 +42,23 @@ class ContractService {
     await saveOffers(offers);
   }
 
+  static Future<void> updateOffer(String id, ContractOffer updatedOffer) async {
+    final offers = await loadOffers();
+    final index = offers.indexWhere((offer) => offer.id == id);
+    if (index != -1) {
+      offers[index] = updatedOffer;
+      await saveOffers(offers);
+    }
+  }
+
   static Future<void> deleteOffer(String id) async {
     final offers = await loadOffers();
     offers.removeWhere((offer) => offer.id == id);
     await saveOffers(offers);
+  }
+
+  static Future<ContractOffer?> getOfferById(String id) async {
+    final offers = await loadOffers();
+    return offers.firstWhere((offer) => offer.id == id, orElse: () => null);
   }
 }
