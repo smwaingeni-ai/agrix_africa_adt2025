@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class InvestmentOffer {
   final String id;
-  final String listingId; // ✅ Required field
+  final String listingId;
   final String investorId;
   final String investorName;
   final String contact;
@@ -13,8 +13,8 @@ class InvestmentOffer {
   final double interestRate;
   final String message;
   final DateTime offerDate;
-  final bool isAccepted;
   final DateTime timestamp;
+  final bool isAccepted;
 
   const InvestmentOffer({
     required this.id,
@@ -33,7 +33,6 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// ✅ Empty factory for drafts or forms
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
         listingId: '',
@@ -51,7 +50,6 @@ class InvestmentOffer {
         isAccepted: false,
       );
 
-  /// ✅ JSON deserialization
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
     return InvestmentOffer(
@@ -72,7 +70,6 @@ class InvestmentOffer {
     );
   }
 
-  /// ✅ JSON serialization
   Map<String, dynamic> toJson() => {
         'id': id,
         'listingId': listingId,
@@ -90,24 +87,22 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// ✅ Batch encode to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// ✅ Batch decode from JSON string
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
           .toList();
 
   @override
-  String toString() =>
-      'InvestmentOffer(id: $id, listingId: $listingId, investor: $investorName, contact: $contact)';
+  String toString() => 'InvestmentOffer($id, $listingId, $investorName, $amount $currency)';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is InvestmentOffer &&
+          runtimeType == other.runtimeType &&
           id == other.id &&
           listingId == other.listingId &&
           investorId == other.investorId &&
