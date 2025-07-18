@@ -5,7 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/models/market/market_item.dart';
 
 class MarketDetailScreen extends StatelessWidget {
-  const MarketDetailScreen({super.key});
+  final MarketItem item;
+
+  const MarketDetailScreen({required this.item, Key? key}) : super(key: key);
 
   void _launchPhone(String phone) async {
     final uri = Uri.parse("tel:$phone");
@@ -68,8 +70,6 @@ class MarketDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MarketItem item = ModalRoute.of(context)!.settings.arguments as MarketItem;
-
     final bool imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
     final bool investmentFlag = item.isInvestorOpen ?? false;
 
