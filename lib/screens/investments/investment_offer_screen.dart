@@ -23,15 +23,17 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
     if (_formKey.currentState!.validate() && _selectedHorizon != null) {
       _formKey.currentState!.save();
 
+      final now = DateTime.now();
       final offer = InvestmentOffer(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: now.millisecondsSinceEpoch.toString(),
+        listingId: 'listing_${now.millisecondsSinceEpoch}', // ✅ Required field
         investorName: _investorName,
         amount: _amount,
-        term: _selectedHorizon!.code, // ✅ Save as enum code
+        term: _selectedHorizon!.code,
         interestRate: _interestRate,
         isAccepted: false,
         contact: _contact,
-        timestamp: DateTime.now(),
+        timestamp: now,
       );
 
       await MarketService.addOffer(offer);
@@ -79,8 +81,7 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              decoration:
-                  const InputDecoration(labelText: 'Interest Rate (%)'),
+              decoration: const InputDecoration(labelText: 'Interest Rate (%)'),
               keyboardType: TextInputType.number,
               validator: (value) =>
                   value == null || double.tryParse(value) == null
