@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:agrix_africa_adt2025/models/chat_message.dart';
+import 'package:agrix_africa_adt2025/models/chat_message.dart' as model;
 
 class ChatService {
   static const String _chatKey = 'chat_messages';
-  List<ChatMessage> _messages = [];
+  List<model.ChatMessage> _messages = [];
 
   /// 🔹 Public getter for chat messages
-  List<ChatMessage> get messages => List.unmodifiable(_messages);
+  List<model.ChatMessage> get messages => List.unmodifiable(_messages);
 
   /// 🔹 Load chat history from SharedPreferences
   Future<void> loadMessages() async {
@@ -16,7 +16,9 @@ class ChatService {
       final jsonString = prefs.getString(_chatKey);
       if (jsonString != null) {
         final List<dynamic> decoded = jsonDecode(jsonString);
-        _messages = decoded.map((msg) => ChatMessage.fromJson(msg)).toList();
+        _messages = decoded
+            .map((msg) => model.ChatMessage.fromJson(msg as Map<String, dynamic>))
+            .toList();
       }
     } catch (e) {
       print('❌ Failed to load messages: $e');
@@ -27,7 +29,9 @@ class ChatService {
   Future<void> saveMessages() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final jsonString = jsonEncode(_messages.map((msg) => msg.toJson()).toList());
+      final jsonString = jsonEncode(
+        _messages.map((msg) => msg.toJson()).toList(),
+      );
       await prefs.setString(_chatKey, jsonString);
     } catch (e) {
       print('❌ Failed to save messages: $e');
@@ -35,7 +39,7 @@ class ChatService {
   }
 
   /// 🔹 Add a new message and persist it
-  Future<void> addMessage(ChatMessage message) async {
+  Future<void> addMessage(model.ChatMessage message) async {
     _messages.add(message);
     await saveMessages();
   }
