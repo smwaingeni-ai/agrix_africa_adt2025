@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // reverted to
+
+// Alias to distinguish between model and service
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
+import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart' as service;
 
 class FarmerProfileScreen extends StatelessWidget {
   const FarmerProfileScreen({super.key});
@@ -21,8 +23,8 @@ class FarmerProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<FarmerProfile?>(
-      future: FarmerProfileService.loadActiveProfile(),
+    return FutureBuilder<model.FarmerProfile?>(
+      future: service.FarmerProfileService.loadActiveProfile(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
