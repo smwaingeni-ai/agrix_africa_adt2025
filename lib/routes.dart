@@ -10,7 +10,7 @@ import 'screens/core/sync_screen.dart';
 import 'screens/core/notifications_screen.dart';
 import 'screens/core/transaction_screen.dart';
 
-import 'screens/auth/register_user_screen.dart';
+import 'screens/auth/register_user_screen.dart'; // ✅ Fixed path
 import 'screens/profile/farmer_profile_screen.dart';
 
 import 'screens/loans/loan_application.dart';
