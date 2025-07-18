@@ -1,8 +1,8 @@
 /// Enum indicating an investor's openness to invest.
 enum InvestorStatus {
   open,
-  indifferent,
   notOpen,
+  indifferent,
 }
 
 /// Extension for readable labels and utility methods for InvestorStatus.
@@ -12,17 +12,17 @@ extension InvestorStatusExtension on InvestorStatus {
     switch (this) {
       case InvestorStatus.open:
         return 'Open';
-      case InvestorStatus.indifferent:
-        return 'Indifferent';
       case InvestorStatus.notOpen:
         return 'Not Open';
+      case InvestorStatus.indifferent:
+        return 'Indifferent';
     }
   }
 
   /// ✅ Short name/code for storage or transmission
-  String get code => name; // e.g. 'open', 'indifferent', 'notOpen'
+  String get code => name; // e.g. 'open', 'notOpen', 'indifferent'
 
-  /// ✅ Parse from raw enum name (e.g. from DB/API)
+  /// ✅ Parse from enum name string (e.g. from DB/API)
   static InvestorStatus fromName(String name) {
     return InvestorStatus.values.firstWhere(
       (e) => e.name.toLowerCase() == name.toLowerCase(),
@@ -30,7 +30,7 @@ extension InvestorStatusExtension on InvestorStatus {
     );
   }
 
-  /// ✅ Parse from user-friendly label (UI fallback)
+  /// ✅ Parse from user-friendly label (fallback for UI selection)
   static InvestorStatus fromLabel(String label) {
     switch (label.trim().toLowerCase()) {
       case 'open':
@@ -44,12 +44,12 @@ extension InvestorStatusExtension on InvestorStatus {
     }
   }
 
-  /// ✅ Parse from dynamic string input (label or code)
+  /// ✅ General parsing from either label or name
   static InvestorStatus fromString(String value) {
     try {
-      return fromLabel(value); // Try label first
+      return fromLabel(value);
     } catch (_) {
-      return fromName(value); // Fallback to code
+      return fromName(value);
     }
   }
 }
