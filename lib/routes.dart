@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // Models
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
-import 'models/investments/investor_profile.dart';
+import 'models/investments/investor_profile.dart'; // ✅ Correct
 
 // Core Screens
 import 'screens/core/landing_screen.dart';
@@ -93,7 +93,7 @@ Map<String, WidgetBuilder> appRoutes = {
   '/market/invite': (context) => const MarketInviteScreen(),
 
   // Investments
-  '/investments/new': (context) => const InvestmentOfferForm(), // ✅ Corrected screen
+  '/investments/new': (context) => const InvestmentOfferForm(), // ✅ Correct screen name
   '/investments/list': (context) => const InvestmentOffersScreen(),
   '/investors': (context) => const InvestorListScreen(),
   '/investors/new': (context) => const InvestorRegistrationScreen(),
