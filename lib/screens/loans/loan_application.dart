@@ -78,6 +78,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DropdownButtonFormField<FarmerProfile>(
               isExpanded: true,
@@ -108,7 +109,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               onPressed: _submitLoanApplication,
               icon: const Icon(Icons.check),
               label: const Text('Submit Loan'),
-              style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+              ),
             ),
           ],
         ),
