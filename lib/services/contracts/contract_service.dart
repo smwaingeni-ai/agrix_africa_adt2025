@@ -6,11 +6,13 @@ import 'package:path_provider/path_provider.dart';
 class ContractService {
   static const String _fileName = 'contract_offers.json';
 
+  /// 🔧 Helper to get local storage file path
   static Future<String> _getFilePath() async {
     final directory = await getApplicationDocumentsDirectory();
     return '${directory.path}/$_fileName';
   }
 
+  /// 📥 Load all saved contract offers
   static Future<List<ContractOffer>> loadOffers() async {
     try {
       final path = await _getFilePath();
@@ -25,6 +27,7 @@ class ContractService {
     }
   }
 
+  /// 💾 Save all offers to local storage
   static Future<void> saveOffers(List<ContractOffer> offers) async {
     try {
       final path = await _getFilePath();
@@ -36,12 +39,12 @@ class ContractService {
     }
   }
 
-  /// ✅ NEW: Method to directly add a single contract offer
+  /// ➕ Add a single contract offer (ensures defaults)
   static Future<void> addContractOffer(ContractOffer offer) async {
     try {
       final offers = await loadOffers();
 
-      // Provide fallback/default for required fields if needed
+      // ⛑️ Optional: Provide fallback/default values
       if (offer.amount == null) {
         offer = offer.copyWith(amount: 0.0);
       }
@@ -53,11 +56,12 @@ class ContractService {
     }
   }
 
-  /// ✅ Legacy method retained for compatibility
+  /// 🧱 Compatibility alias for addContractOffer()
   static Future<void> addOffer(ContractOffer offer) async {
-    await addContractOffer(offer); // Delegate to new method
+    await addContractOffer(offer); // Delegate to main logic
   }
 
+  /// 🔄 Update an existing offer by ID
   static Future<void> updateOffer(String id, ContractOffer updatedOffer) async {
     try {
       final offers = await loadOffers();
@@ -71,6 +75,7 @@ class ContractService {
     }
   }
 
+  /// ❌ Remove an offer by ID
   static Future<void> deleteOffer(String id) async {
     try {
       final offers = await loadOffers();
@@ -81,6 +86,7 @@ class ContractService {
     }
   }
 
+  /// 🔍 Retrieve offer by ID
   static Future<ContractOffer?> getOfferById(String id) async {
     try {
       final offers = await loadOffers();
