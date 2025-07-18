@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const StartupDecider(),
       routes: appRoutes,
+      onGenerateRoute: onGenerateRoute, // ✅ This enables argument-based routing (e.g., /landing)
     );
   }
 }
@@ -52,8 +53,7 @@ class _StartupDeciderState extends State<StartupDecider> {
 
   Future<void> _checkProfileAndNavigate() async {
     try {
-      final FarmerProfile? profile =
-          await ProfileService.loadActiveProfile();
+      final FarmerProfile? profile = await ProfileService.loadActiveProfile();
 
       setState(() {
         _initialScreen = (profile != null)
