@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -71,33 +70,12 @@ class FarmerProfileService {
   static const String _fileName = 'farmer_profiles.json';
   static const String _activeFileName = 'active_farmer_profile.json';
 
-  /// Pick image from camera or gallery
   static Future<String?> pickProfileImage({bool camera = false}) async {
     final picker = ImagePicker();
     final XFile? file = camera
         ? await picker.pickImage(source: ImageSource.camera)
         : await picker.pickImage(source: ImageSource.gallery);
     return file?.path;
-  }
-
-  /// Render profile image safely across platforms
-  static Widget buildProfileImage(String? imagePath,
-      {double width = 150, double height = 150}) {
-    if (imagePath == null || imagePath.isEmpty) {
-      return Container(
-        width: width,
-        height: height,
-        color: Colors.grey[300],
-        child: const Icon(Icons.person, size: 50, color: Colors.white),
-      );
-    }
-    if (kIsWeb) {
-      return Image.network(imagePath,
-          width: width, height: height, fit: BoxFit.cover);
-    } else {
-      return Image.file(io.File(imagePath),
-          width: width, height: height, fit: BoxFit.cover);
-    }
   }
 
   static Future<io.File> _getProfileFile() async {
@@ -114,7 +92,6 @@ class FarmerProfileService {
     try {
       final file = await _getProfileFile();
       await file.writeAsString(FarmerProfile.encode([profile]), flush: true);
-      debugPrint('✅ Profile saved successfully.');
     } catch (e) {
       debugPrint('❌ Error saving profile: $e');
     }
@@ -127,7 +104,6 @@ class FarmerProfileService {
       farmers.add(profile);
       final file = await _getProfileFile();
       await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
-      debugPrint('✅ Farmer saved: ${profile.name}');
     } catch (e) {
       debugPrint('❌ Error saving farmer: $e');
     }
@@ -140,7 +116,6 @@ class FarmerProfileService {
       farmers.add(profile);
       final file = await _getProfileFile();
       await file.writeAsString(FarmerProfile.encode(farmers), flush: true);
-      debugPrint('✅ Farmer updated: ${profile.name}');
     } catch (e) {
       debugPrint('❌ Error updating farmer: $e');
     }
@@ -176,7 +151,6 @@ class FarmerProfileService {
     try {
       final file = await _getActiveFile();
       await file.writeAsString(jsonEncode(profile.toJson()));
-      debugPrint('✅ Active profile saved.');
     } catch (e) {
       debugPrint('❌ Error saving active profile: $e');
     }
@@ -187,7 +161,6 @@ class FarmerProfileService {
       final file = await _getActiveFile();
       if (await file.exists()) {
         await file.delete();
-        debugPrint('🗑️ Active profile cleared.');
       }
     } catch (e) {
       debugPrint('❌ Error clearing active profile: $e');
@@ -199,7 +172,6 @@ class FarmerProfileService {
       final file = await _getProfileFile();
       if (await file.exists()) {
         await file.writeAsString('[]', flush: true);
-        debugPrint('🗑️ All profiles deleted.');
       }
     } catch (e) {
       debugPrint('❌ Error deleting profiles: $e');
@@ -212,7 +184,6 @@ class FarmerProfileService {
       farmers.removeWhere((f) => f.id == id);
       final file = await _getProfileFile();
       await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
-      debugPrint('🗑️ Farmer deleted: $id');
     } catch (e) {
       debugPrint('❌ Error deleting farmer: $e');
     }
@@ -243,7 +214,6 @@ class FarmerProfileService {
       final profiles = FarmerProfile.decode(jsonStr);
       final file = await _getProfileFile();
       await file.writeAsString(FarmerProfile.encode(profiles), flush: true);
-      debugPrint('📥 Profiles imported successfully.');
     } catch (e) {
       debugPrint('❌ Error importing profiles: $e');
     }
