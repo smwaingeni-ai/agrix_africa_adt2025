@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/chat_message.dart';
+import 'package:agrix_africa_adt2025/models/chat_message.dart';
 
 class ChatService {
   static const String _chatKey = 'chat_messages';
