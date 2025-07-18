@@ -3,6 +3,8 @@ import 'routes.dart';
 import 'models/farmer_profile.dart';
 import 'models/user_model.dart';
 import 'services/profile_service.dart';
+
+// Initial Screens
 import 'screens/core/language_country_setup.dart';
 import 'screens/core/landing_page.dart';
 
@@ -23,8 +25,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const StartupDecider(), // Initial screen is decided dynamically
-      routes: appRoutes,
+      home: const StartupDecider(), // Initial screen is chosen dynamically
+      routes: appRoutes, // ✅ All static routes are now included here
     );
   }
 }
@@ -46,13 +48,21 @@ class _StartupDeciderState extends State<StartupDecider> {
   }
 
   Future<void> _checkProfileAndNavigate() async {
-    final profile = await ProfileService.loadActiveProfile();
+    try {
+      final FarmerProfile? profile = await ProfileService.loadActiveProfile();
 
-    setState(() {
-      _initialScreen = profile != null
-          ? LandingPage(loggedInUser: UserModel.fromFarmer(profile))
-          : const LanguageCountrySetup();
-    });
+      setState(() {
+        _initialScreen = (profile != null)
+            ? LandingPage(loggedInUser: UserModel.fromFarmer(profile))
+            : const LanguageCountrySetup();
+      });
+    } catch (e) {
+      // In case of failure, fallback to language setup
+      debugPrint('Error loading profile: $e');
+      setState(() {
+        _initialScreen = const LanguageCountrySetup();
+      });
+    }
   }
 
   @override
