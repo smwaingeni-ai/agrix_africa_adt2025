@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'farmer_profile.dart'; // ✅ Ensure this exists and matches your FarmerProfile
+import 'farmer_profile.dart'; // Ensure this file exists and exports FarmerProfile
 
 /// Represents a user in the AgriX system.
 class UserModel {
