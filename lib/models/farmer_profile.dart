@@ -41,12 +41,18 @@ class FarmerProfile {
     this.qrImagePath,
   });
 
+  // ✅ Aliases for external consistency
+  String get id => farmerId;
+  String get name => fullName;
+  bool get govtAffiliated => subsidised;
+  double get farmSizeHectares => farmSize;
+
   factory FarmerProfile.fromJson(Map<String, dynamic> json) {
     return FarmerProfile(
       farmerId: json['farmerId'],
       fullName: json['fullName'],
       idNumber: json['idNumber'],
-      contact: json['contact'] ?? '', // Prevents null
+      contact: json['contact'] ?? '',
       country: json['country'],
       province: json['province'],
       district: json['district'],
@@ -92,7 +98,7 @@ class FarmerProfile {
       farmerId: user['farmerId'] ?? '',
       fullName: user['fullName'] ?? '',
       idNumber: user['idNumber'] ?? '',
-      contact: user['contact'] ?? '', // Ensured here
+      contact: user['contact'] ?? '',
       country: user['country'] ?? '',
       province: user['province'] ?? '',
       district: user['district'] ?? '',
@@ -115,7 +121,7 @@ class FarmerProfile {
       farmerId: '',
       fullName: '',
       idNumber: '',
-      contact: '', // Required placeholder
+      contact: '',
       country: '',
       province: '',
       district: '',
