@@ -17,7 +17,7 @@ dependencies:
   uuid: ^4.1.0                   # Unique IDs
   share_plus: ^7.2.1             # Share content
   intl: ^0.18.1                  # Date/time formatting
-  url_launcher: ^6.2.5           # Open WhatsApp or browser
+  url_launcher: ^6.2.5           # ✅ Launch tel:, sms:, mailto:, https:
   shared_preferences: ^2.2.2     # Persistent local storage
   flutter_secure_storage: ^9.0.0 # Encrypted secure storage
 
@@ -30,7 +30,7 @@ dependencies:
   qr_flutter: ^4.0.0             # QR generation
   local_auth: ^2.1.6             # Biometrics
 
-  # Firebase (if needed)
+  # Firebase (optional)
   firebase_core: ^2.24.2
   cloud_firestore: ^4.9.1
 
