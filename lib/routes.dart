@@ -10,7 +10,7 @@ import 'screens/core/sync_screen.dart';
 import 'screens/core/notifications_screen.dart';
 import 'screens/core/transaction_screen.dart';
 
-import 'screens/auth/register_user_screen.dart'; // ✅ Fixed path
+import 'screens/auth/register_user_screen.dart';
 import 'screens/profile/farmer_profile_screen.dart';
 
 import 'screens/loans/loan_application.dart';
@@ -30,7 +30,7 @@ import 'screens/investments/investor_list_screen.dart';
 import 'screens/investments/investor_registration_screen.dart';
 
 import 'screens/officers/officer_tasks_screen.dart';
-import 'screens/officers/field_assessment_screen.dart';
+import 'screens/officers/field_assessment_screen.dart'; // ✅ Correct import
 
 import 'screens/diagnostics/crops_screen.dart';
 import 'screens/diagnostics/soil_screen.dart';
@@ -80,7 +80,7 @@ Map<String, WidgetBuilder> appRoutes = {
   '/investors/new': (context) => const InvestorRegistrationScreen(),
 
   '/officer/tasks': (context) => const OfficerTasksScreen(),
-  '/officer/assessments': (context) => const FieldAssessmentScreen(),
+  '/officer/assessments': (context) => const FieldAssessmentScreen(), // ✅ Correct route and class
 
   '/diagnostics/crops': (context) => const CropsScreen(),
   '/diagnostics/soil': (context) => const SoilScreen(),
