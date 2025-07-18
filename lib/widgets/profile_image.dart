@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// 🔲 Widget to build a tappable profile image with edit and zoom support
 class EditableProfileImage extends StatelessWidget {
   final String? imagePath;
   final double width;
