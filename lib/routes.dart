@@ -52,10 +52,9 @@ import 'screens/profile/credit_score_screen.dart';
 import 'screens/officers/officer_tasks_screen.dart';
 import 'screens/officers/field_assessment_screen.dart';
 
-// Models (optional, if used in routing args)
+// Models for arguments
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
-import 'models/investments/investor_profile.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
   // Core & Utility
@@ -63,7 +62,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
 
-  // ✅ Corrected Register route
+  // Auth/Register
   '/register': (context) => const RegisterUserScreen(),
 
   // Logs
@@ -100,17 +99,19 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/diagnostics/soil': (context) => const SoilScreen(),
   '/diagnostics/livestock': (context) => const LivestockScreen(),
 
-  // AI and Help
+  // AI & Chat
   '/agrigpt': (context) => const AgriGPTScreen(),
   '/chat': (context) => const ChatScreen(),
   '/help': (context) => const HelpScreen(),
 
-  // Loans and Profile
-  '/loan': (context) => const LoanScreen(),
+  // Profile
   '/profile': (context) => const FarmerProfileScreen(),
   '/score': (context) => const CreditScoreScreen(),
 
-  // Officers
+  // Loans
+  '/loan': (context) => const LoanScreen(),
+
+  // Officer Screens
   '/officer/tasks': (context) => const OfficerTasksScreen(),
   '/officer/assessments': (context) => const FieldAssessmentScreen(),
 };
