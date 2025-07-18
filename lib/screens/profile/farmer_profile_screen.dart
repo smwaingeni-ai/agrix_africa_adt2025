@@ -42,10 +42,10 @@ class FarmerProfileScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Farmer Profile'),
             actions: [
-              if (profile.contact.isNotEmpty)
+              if (profile.contactNumber.isNotEmpty)
                 IconButton(
                   icon: const Icon(FontAwesomeIcons.whatsapp),
-                  onPressed: () => _launchWhatsApp(context, profile.contact),
+                  onPressed: () => _launchWhatsApp(context, profile.contactNumber),
                 ),
             ],
           ),
@@ -63,19 +63,15 @@ class FarmerProfileScreen extends StatelessWidget {
                       : null,
                 ),
                 const SizedBox(height: 16),
-                Text("Name: ${profile.name}", style: Theme.of(context).textTheme.titleMedium),
+                Text("Full Name: ${profile.fullName}", style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
-                Text("ID Number: ${profile.idNumber}"),
+                Text("ID: ${profile.id}"),
                 const SizedBox(height: 8),
-                Text("Phone: ${profile.contact}"),
+                Text("Phone: ${profile.contactNumber}"),
                 const SizedBox(height: 8),
-                Text("Farm Location: ${profile.farmLocation}"),
+                Text("Farm Size: ${profile.farmSizeHectares?.toStringAsFixed(2) ?? 'N/A'} hectares"),
                 const SizedBox(height: 8),
-                Text("Farm Size: ${profile.farmSize} hectares"),
-                const SizedBox(height: 8),
-                Text("Farm Type: ${profile.farmType}"),
-                const SizedBox(height: 8),
-                Text("Created At: ${profile.createdAt.toLocal()}"),
+                Text("Govt Affiliated: ${profile.govtAffiliated ? 'Yes' : 'No'}"),
               ],
             ),
           ),
