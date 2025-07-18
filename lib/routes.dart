@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'screens/core/landing_page.dart';
 import 'screens/core/sync_screen.dart';
 import 'screens/core/notifications_screen.dart';
+import 'screens/core/register_screen.dart';
 
 // Log Screens
 import 'screens/logs/logbook_screen.dart';
@@ -47,25 +48,24 @@ import 'screens/profile/credit_score_screen.dart';
 
 // Officer Screens
 import 'screens/officers/officer_tasks_screen.dart';
-import 'screens/officers/officer_assessments_screen.dart';
+// ✅ Updated import to use your correct screen
+import 'screens/officers/field_assessment_screen.dart';
 
-// Register/Login
-import 'screens/core/register_screen.dart';
-
-// Models (for reference, safe to ignore in routing logic)
+// Models (optional, if referenced somewhere)
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
 import 'models/investments/investor_profile.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
-  // ⚠️ LandingPage needs loggedInUser – pass via arguments or use generator
+  // ⚠️ LandingPage requires `loggedInUser` argument
   '/': (context) => const LandingPage(),
 
   // Core & Utility
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
+  '/register': (context) => const RegisterScreen(),
 
-  // Logging
+  // Logs
   '/logbook': (context) => const LogbookScreen(),
   '/logs/programs': (context) => const ProgramTrackingScreen(),
   '/logs/sustainability': (context) => const SustainabilityLogScreen(),
@@ -80,17 +80,18 @@ final Map<String, WidgetBuilder> appRoutes = {
   // Contracts
   '/contracts/offer': (context) => const ContractOfferForm(),
   '/contracts/list': (context) => const ContractListScreen(),
-
-  // ⚠️ ContractDetailScreen requires `ContractOffer` param
-  '/contracts/detail': (context) => const ContractDetailScreen(), // pass `ContractOffer` via arguments
+  '/contracts/detail': (context) {
+    final contract = ModalRoute.of(context)!.settings.arguments as ContractOffer;
+    return ContractDetailScreen(contract: contract);
+  },
 
   // Market
   '/market': (context) => const MarketScreen(),
   '/market/new': (context) => const MarketItemForm(),
-
-  // ⚠️ MarketDetailScreen requires `MarketItem` param
-  '/market/detail': (context) => const MarketDetailScreen(), // pass `MarketItem` via arguments
-
+  '/market/detail': (context) {
+    final item = ModalRoute.of(context)!.settings.arguments as MarketItem;
+    return MarketDetailScreen(item: item);
+  },
   '/market/invite': (context) => const MarketInviteScreen(),
 
   // Diagnostics
@@ -110,8 +111,6 @@ final Map<String, WidgetBuilder> appRoutes = {
 
   // Officers
   '/officer/tasks': (context) => const OfficerTasksScreen(),
-  '/officer/assessments': (context) => const OfficerAssessmentsScreen(),
-
-  // Register
-  '/register': (context) => const RegisterScreen(),
+  // ✅ Fixed: now correctly uses FieldAssessmentScreen
+  '/officer/assessments': (context) => const FieldAssessmentScreen(),
 };
