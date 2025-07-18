@@ -6,7 +6,6 @@ import 'package:agrix_africa_adt2025/services/profile/investor_service.dart';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
 
 class InvestorRegistrationScreen extends StatefulWidget {
-  // ✅ No const constructor
   @override
   _InvestorRegistrationScreenState createState() => _InvestorRegistrationScreenState();
 }
@@ -40,9 +39,9 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register as Investor')), // ✅ Removed const
+      appBar: AppBar(title: Text('Register as Investor')),
       body: Padding(
-        padding: EdgeInsets.all(16.0), // ✅ Removed const
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -50,27 +49,27 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(labelText: 'Full Name'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _phoneController,
                 decoration: InputDecoration(labelText: 'Phone Number'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _locationController,
                 decoration: InputDecoration(labelText: 'Country'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _contactController,
                 decoration: InputDecoration(labelText: 'Preferred Contact Method (e.g. WhatsApp)'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
               ),
               SizedBox(height: 16),
               Text("Investment Horizon"),
@@ -125,13 +124,14 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   if (_formKey.currentState!.validate()) {
                     final newInvestor = InvestorProfile(
                       id: Uuid().v4(),
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      contactNumber: _phoneController.text,
-                      contact: _contactController.text,
-                      location: _locationController.text,
+                      name: _nameController.text.trim(),
+                      email: _emailController.text.trim(),
+                      contactNumber: _phoneController.text.trim(),
+                      location: _locationController.text.trim(),
+                      contact: _contactController.text.trim(),
                       preferredHorizons: _selectedHorizons
-                          .map((e) => InvestmentHorizonExtension.fromLabel(e))
+                          .map((label) => InvestmentHorizonExtension.fromLabel(label))
+                          .whereType<InvestmentHorizon>() // avoid nulls
                           .toList(),
                       interests: _selectedInterests,
                       status: InvestorStatusExtension.fromString(_selectedStatus),
