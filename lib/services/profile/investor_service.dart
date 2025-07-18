@@ -88,7 +88,7 @@ class InvestorService {
     await saveEncrypted(investors);
   }
 
-  /// Aliased save method (for consistency)
+  /// Aliased save method (for consistent external use)
   Future<void> saveInvestor(InvestorProfile investor) async {
     await saveInvestorProfile(investor);
   }
