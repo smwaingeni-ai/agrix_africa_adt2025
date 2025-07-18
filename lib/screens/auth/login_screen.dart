@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/data/dummy_users.dart';
 import 'package:agrix_africa_adt2025/models/user_model.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/screens/core/landing_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -54,7 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => LandingPage(loggedInUser: user),
+          builder: (_) => LandingPage(
+            farmer: FarmerProfile.fromUser(user),
+          ),
         ),
       );
     } else {
