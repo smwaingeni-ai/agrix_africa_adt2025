@@ -20,6 +20,7 @@ import 'screens/investments/investor_list_screen.dart';
 // Contract Screens
 import 'screens/contracts/contract_offer_form.dart';
 import 'screens/contracts/contract_list_screen.dart';
+import 'screens/contracts/contract_detail_screen.dart';
 
 // Market Screens
 import 'screens/market/market_screen.dart';
@@ -57,6 +58,7 @@ import 'models/market/market_item.dart';
 import 'models/investments/investor_profile.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
+  // ⚠️ LandingPage needs loggedInUser – pass via arguments or use generator
   '/': (context) => const LandingPage(),
 
   // Core & Utility
@@ -79,10 +81,16 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/contracts/offer': (context) => const ContractOfferForm(),
   '/contracts/list': (context) => const ContractListScreen(),
 
+  // ⚠️ ContractDetailScreen requires `ContractOffer` param
+  '/contracts/detail': (context) => const ContractDetailScreen(), // pass `ContractOffer` via arguments
+
   // Market
   '/market': (context) => const MarketScreen(),
   '/market/new': (context) => const MarketItemForm(),
-  '/market/detail': (context) => const MarketDetailScreen(),
+
+  // ⚠️ MarketDetailScreen requires `MarketItem` param
+  '/market/detail': (context) => const MarketDetailScreen(), // pass `MarketItem` via arguments
+
   '/market/invite': (context) => const MarketInviteScreen(),
 
   // Diagnostics
