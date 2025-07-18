@@ -55,13 +55,10 @@ import 'screens/officers/field_assessment_screen.dart';
 // Models
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
-import 'models/dummy_user.dart';
-
-final DummyUser dummyUser = DummyUser();
 
 final Map<String, WidgetBuilder> appRoutes = {
   // Core
-  '/': (context) => LandingPage(loggedInUser: dummyUser),
+  '/': (context) => const LandingPage(),
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
 
