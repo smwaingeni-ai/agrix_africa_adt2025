@@ -1,82 +1,91 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class FarmerProfileScreen extends StatelessWidget {
-  const FarmerProfileScreen({super.key});
+import '../../models/farmer_profile.dart';
 
-  void _launchWhatsApp(BuildContext context, String phone) async {
-    final Uri whatsappUrl = Uri.parse('https://wa.me/$phone');
-    if (await canLaunchUrl(whatsappUrl)) {
-      await launchUrl(whatsappUrl);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch WhatsApp')),
-      );
+class FarmerProfileService {
+  static const String _storageKey = 'active_farmer_profile';
+
+  /// Save the farmer profile to SharedPreferences
+  static Future<void> saveProfile(FarmerProfile profile) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = jsonEncode(profile.toJson());
+    await prefs.setString(_storageKey, jsonString);
+  }
+
+  /// Load the farmer profile from SharedPreferences
+  static Future<FarmerProfile?> loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString(_storageKey);
+    if (jsonString != null) {
+      try {
+        return FarmerProfile.fromJson(jsonDecode(jsonString));
+      } catch (e) {
+        debugPrint('❌ Failed to decode farmer profile: $e');
+      }
+    }
+    return null;
+  }
+
+  /// Remove the profile from local storage
+  static Future<void> clearProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_storageKey);
+  }
+
+  /// Aliases for consistency across screens
+  static Future<void> saveActiveProfile(FarmerProfile profile) => saveProfile(profile);
+  static Future<FarmerProfile?> loadActiveProfile() => loadProfile();
+  static Future<void> clearActiveProfile() => clearProfile();
+
+  /// Pick an image from gallery and return its path
+  static Future<String?> pickImageAndGetPath() async {
+    final picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    return pickedFile?.path;
+  }
+
+  /// Return base64-encoded image string (Mobile/Desktop only)
+  static Future<String?> getProfileImageBase64(String? filePath) async {
+    if (filePath == null || kIsWeb) {
+      debugPrint("⚠️ Image path is null or unsupported on web.");
+      return null;
+    }
+
+    try {
+      final bytes = await File(filePath).readAsBytes();
+      return base64Encode(bytes);
+    } catch (e) {
+      debugPrint("❌ Error reading file: $e");
+      return null;
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<FarmerProfile?>(
-      future: FarmerProfileService.loadActiveProfile(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+  /// Render image safely across platforms
+  static Widget getImageWidget(String path, {BoxFit fit = BoxFit.cover}) {
+    if (kIsWeb) {
+      return Image.network(path, fit: fit);
+    } else {
+      return Image.file(File(path), fit: fit);
+    }
+  }
 
-        final profile = snapshot.data;
-
-        if (profile == null) {
-          return const Scaffold(
-            body: Center(child: Text('No profile found.')),
-          );
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Farmer Profile'),
-            actions: [
-              if (profile.contactNumber.isNotEmpty)
-                IconButton(
-                  icon: const Icon(FontAwesomeIcons.whatsapp),
-                  onPressed: () => _launchWhatsApp(context, profile.contactNumber),
-                ),
-            ],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: (profile.photoPath != null && profile.photoPath!.isNotEmpty)
-                      ? FileImage(File(profile.photoPath!))
-                      : null,
-                  child: (profile.photoPath == null || profile.photoPath!.isEmpty)
-                      ? const Icon(Icons.person, size: 50)
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                Text("Full Name: ${profile.fullName}", style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                Text("ID: ${profile.id}"),
-                const SizedBox(height: 8),
-                Text("Phone: ${profile.contactNumber}"),
-                const SizedBox(height: 8),
-                Text("Farm Size: ${profile.farmSizeHectares?.toStringAsFixed(2) ?? 'N/A'} hectares"),
-                const SizedBox(height: 8),
-                Text("Govt Affiliated: ${profile.govtAffiliated ? 'Yes' : 'No'}"),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  /// Optional: Save QR Image to disk
+  static Future<String?> saveQRImageToFile(Uint8List imageBytes, String filename) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final filePath = '${dir.path}/$filename';
+      final file = File(filePath);
+      await file.writeAsBytes(imageBytes);
+      return filePath;
+    } catch (e) {
+      debugPrint('❌ Error saving QR image: $e');
+      return null;
+    }
   }
 }
