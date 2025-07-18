@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/chat_message.dart';
-import 'package:agrix_africa_adt2025/services/chat_service.dart';
+import 'package:agrix_africa_adt2025/services/ai/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
