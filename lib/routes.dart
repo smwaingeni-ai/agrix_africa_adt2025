@@ -58,7 +58,6 @@ import 'models/market/market_item.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
   // Core
-  '/': (context) => const LandingPage(),
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
 
