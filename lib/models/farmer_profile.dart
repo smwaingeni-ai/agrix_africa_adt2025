@@ -1,141 +1,188 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io' as io;
 
-class FarmerProfile {
-  final String farmerId;
-  final String fullName;
-  final String idNumber;
-  final String contact; // REQUIRED
-  final String country;
-  final String province;
-  final String district;
-  final String ward;
-  final String village;
-  final String cell;
-  final double farmSize;
-  final String farmType;
-  final bool subsidised;
-  final String language;
-  final DateTime createdAt;
-  final String farmLocation;
-  final String? photoPath;
-  final String? qrImagePath;
+/// A platform-aware service for handling farmer profiles and profile images.
+class FarmerProfileService {
+  static const String _fileName = 'farmer_profiles.json';
+  static const String _activeFileName = 'active_farmer_profile.json';
 
-  FarmerProfile({
-    required this.farmerId,
-    required this.fullName,
-    required this.idNumber,
-    required this.contact,
-    required this.country,
-    required this.province,
-    required this.district,
-    required this.ward,
-    required this.village,
-    required this.cell,
-    required this.farmSize,
-    required this.farmType,
-    required this.subsidised,
-    required this.language,
-    required this.createdAt,
-    required this.farmLocation,
-    this.photoPath,
-    this.qrImagePath,
-  });
-
-  // ✅ Aliases for external consistency
-  String get id => farmerId;
-  String get name => fullName;
-  bool get govtAffiliated => subsidised;
-  double get farmSizeHectares => farmSize;
-
-  factory FarmerProfile.fromJson(Map<String, dynamic> json) {
-    return FarmerProfile(
-      farmerId: json['farmerId'],
-      fullName: json['fullName'],
-      idNumber: json['idNumber'],
-      contact: json['contact'] ?? '',
-      country: json['country'],
-      province: json['province'],
-      district: json['district'],
-      ward: json['ward'],
-      village: json['village'],
-      cell: json['cell'],
-      farmSize: (json['farmSize'] ?? 0).toDouble(),
-      farmType: json['farmType'],
-      subsidised: json['subsidised'] ?? false,
-      language: json['language'] ?? 'English',
-      createdAt: DateTime.parse(json['createdAt']),
-      farmLocation: json['farmLocation'],
-      photoPath: json['photoPath'],
-      qrImagePath: json['qrImagePath'],
-    );
+  /// Pick an image from gallery or camera and return a usable path.
+  /// On mobile/desktop: returns local file path. On web: returns network blob string.
+  static Future<String?> pickProfileImage({bool camera = false}) async {
+    final picker = ImagePicker();
+    final XFile? file = camera
+        ? await picker.pickImage(source: ImageSource.camera)
+        : await picker.pickImage(source: ImageSource.gallery);
+    return file?.path;
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'farmerId': farmerId,
-      'fullName': fullName,
-      'idNumber': idNumber,
-      'contact': contact,
-      'country': country,
-      'province': province,
-      'district': district,
-      'ward': ward,
-      'village': village,
-      'cell': cell,
-      'farmSize': farmSize,
-      'farmType': farmType,
-      'subsidised': subsidised,
-      'language': language,
-      'createdAt': createdAt.toIso8601String(),
-      'farmLocation': farmLocation,
-      'photoPath': photoPath,
-      'qrImagePath': qrImagePath,
-    };
+  /// Get platform-safe widget for displaying profile images.
+  static Widget buildProfileImage(String? imagePath,
+      {double width = 150, double height = 150}) {
+    if (imagePath == null || imagePath.isEmpty) {
+      return Container(
+        width: width,
+        height: height,
+        color: Colors.grey[300],
+        child: const Icon(Icons.person, size: 50, color: Colors.white),
+      );
+    }
+    if (kIsWeb) return Image.network(imagePath, width: width, height: height, fit: BoxFit.cover);
+    return Image.file(io.File(imagePath), width: width, height: height, fit: BoxFit.cover);
   }
 
-  static FarmerProfile fromUser(Map<String, dynamic> user) {
-    return FarmerProfile(
-      farmerId: user['farmerId'] ?? '',
-      fullName: user['fullName'] ?? '',
-      idNumber: user['idNumber'] ?? '',
-      contact: user['contact'] ?? '',
-      country: user['country'] ?? '',
-      province: user['province'] ?? '',
-      district: user['district'] ?? '',
-      ward: user['ward'] ?? '',
-      village: user['village'] ?? '',
-      cell: user['cell'] ?? '',
-      farmSize: (user['farmSize'] ?? 0).toDouble(),
-      farmType: user['farmType'] ?? 'Crop',
-      subsidised: user['subsidised'] ?? false,
-      language: user['language'] ?? 'English',
-      createdAt: DateTime.tryParse(user['createdAt'] ?? '') ?? DateTime.now(),
-      farmLocation: user['farmLocation'] ?? '',
-      photoPath: user['photoPath'],
-      qrImagePath: user['qrImagePath'],
-    );
+  // ———————————————————— File-based profile storage methods ————————————————————
+
+  static Future<io.File> _getProfileFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return io.File('${dir.path}/$_fileName');
   }
 
-  static FarmerProfile empty() {
-    return FarmerProfile(
-      farmerId: '',
-      fullName: '',
-      idNumber: '',
-      contact: '',
-      country: '',
-      province: '',
-      district: '',
-      ward: '',
-      village: '',
-      cell: '',
-      farmSize: 0.0,
-      farmType: 'Crop',
-      subsidised: false,
-      language: 'English',
-      createdAt: DateTime.now(),
-      farmLocation: '',
-      photoPath: null,
-      qrImagePath: null,
-    );
+  static Future<io.File> _getActiveFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return io.File('${dir.path}/$_activeFileName');
+  }
+
+  static Future<void> saveProfile(FarmerProfile profile) async {
+    try {
+      final file = await _getProfileFile();
+      await file.writeAsString(FarmerProfile.encode([profile]), flush: true);
+      debugPrint('✅ Profile saved successfully.');
+    } catch (e) {
+      debugPrint('❌ Error saving profile: $e');
+    }
+  }
+
+  static Future<void> saveFarmer(FarmerProfile profile) async {
+    try {
+      final farmers = await loadProfiles();
+      farmers.removeWhere((x) => x.id == profile.id);
+      farmers.add(profile);
+      final file = await _getProfileFile();
+      await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
+      debugPrint('✅ Farmer saved: ${profile.name}');
+    } catch (e) {
+      debugPrint('❌ Error saving farmer: $e');
+    }
+  }
+
+  static Future<void> updateFarmer(FarmerProfile profile) async {
+    try {
+      final farmers = await loadProfiles();
+      farmers.removeWhere((p) => p.id == profile.id);
+      farmers.add(profile);
+      final file = await _getProfileFile();
+      await file.writeAsString(FarmerProfile.encode(farmers), flush: true);
+      debugPrint('✅ Farmer updated: ${profile.name}');
+    } catch (e) {
+      debugPrint('❌ Error updating farmer: $e');
+    }
+  }
+
+  static Future<List<FarmerProfile>> loadProfiles() async {
+    try {
+      final file = await _getProfileFile();
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        return FarmerProfile.decode(content);
+      }
+    } catch (e) {
+      debugPrint('❌ Error loading profiles: $e');
+    }
+    return [];
+  }
+
+  static Future<FarmerProfile?> loadActiveProfile() async {
+    try {
+      final file = await _getActiveFile();
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        return FarmerProfile.fromRawJson(content);
+      }
+    } catch (e) {
+      debugPrint('❌ Error loading active profile: $e');
+    }
+    return null;
+  }
+
+  static Future<void> saveActiveProfile(FarmerProfile profile) async {
+    try {
+      final file = await _getActiveFile();
+      await file.writeAsString(jsonEncode(profile.toJson()));
+      debugPrint('✅ Active profile saved.');
+    } catch (e) {
+      debugPrint('❌ Error saving active profile: $e');
+    }
+  }
+
+  static Future<void> clearActiveProfile() async {
+    try {
+      final file = await _getActiveFile();
+      if (await file.exists()) {
+        await file.delete();
+        debugPrint('🗑️ Active profile cleared.');
+      }
+    } catch (e) {
+      debugPrint('❌ Error clearing active profile: $e');
+    }
+  }
+
+  static Future<void> deleteAllProfiles() async {
+    try {
+      final file = await _getProfileFile();
+      if (await file.exists()) {
+        await file.writeAsString('[]', flush: true);
+        debugPrint('🗑️ All profiles deleted.');
+      }
+    } catch (e) {
+      debugPrint('❌ Error deleting profiles: $e');
+    }
+  }
+
+  static Future<void> deleteFarmer(String id) async {
+    try {
+      final farmers = await loadProfiles();
+      farmers.removeWhere((f) => f.id == id);
+      final file = await _getProfileFile();
+      await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
+      debugPrint('🗑️ Farmer deleted: $id');
+    } catch (e) {
+      debugPrint('❌ Error deleting farmer: $e');
+    }
+  }
+
+  static Future<FarmerProfile?> getFarmerById(String id) async {
+    final farmers = await loadProfiles();
+    return farmers.firstWhere((f) => f.id == id, orElse: () => FarmerProfile.empty());
+  }
+
+  static Future<bool> profileExists() async {
+    final profiles = await loadProfiles();
+    return profiles.isNotEmpty;
+  }
+
+  static Future<String?> exportProfilesAsJson() async {
+    try {
+      final profiles = await loadProfiles();
+      return FarmerProfile.encode(profiles);
+    } catch (e) {
+      debugPrint('❌ Error exporting profiles: $e');
+      return null;
+    }
+  }
+
+  static Future<void> importProfilesFromJson(String jsonStr) async {
+    try {
+      final profiles = FarmerProfile.decode(jsonStr);
+      final file = await _getProfileFile();
+      await file.writeAsString(FarmerProfile.encode(profiles), flush: true);
+      debugPrint('📥 Profiles imported successfully.');
+    } catch (e) {
+      debugPrint('❌ Error importing profiles: $e');
+    }
   }
 }
