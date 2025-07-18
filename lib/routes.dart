@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Models
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
+import 'models/investments/investor_profile.dart';
 
 // Core Screens
 import 'screens/core/landing_screen.dart';
@@ -38,7 +39,7 @@ import 'screens/investments/investor_registration_screen.dart';
 
 // Officer Screens
 import 'screens/officers/officer_tasks_screen.dart';
-import 'screens/officers/field_assessment_screen.dart'; // ✅ Correct
+import 'screens/officers/field_assessment_screen.dart';
 
 // Diagnostics
 import 'screens/diagnostics/crops_screen.dart';
