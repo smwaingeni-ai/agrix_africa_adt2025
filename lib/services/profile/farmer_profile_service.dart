@@ -32,6 +32,11 @@ class FarmerProfileService {
     await prefs.remove(_storageKey);
   }
 
+  /// ✅ Alias for consistency with LandingPage
+  static Future<FarmerProfile?> loadActiveProfile() => loadProfile();
+
+  static Future<void> clearActiveProfile() => clearProfile();
+
   /// Pick an image and return its path
   static Future<String?> pickImageAndGetPath() async {
     final picker = ImagePicker();
