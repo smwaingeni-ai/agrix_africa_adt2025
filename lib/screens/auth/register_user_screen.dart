@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:agrix_africa_adt2025/models/user_model.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 import 'package:agrix_africa_adt2025/services/profile_service.dart';
+import 'package:agrix_africa_adt2025/screens/core/landing_page.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({super.key});
@@ -71,20 +72,35 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           farmSize: 1.0,
           farmType: farmType,
           subsidised: true,
-          contactNumber: phone,
+          contact: phone,
           language: 'English',
           createdAt: DateTime.now(),
           qrImagePath: '',
           photoPath: null,
+          farmLocation: '',
         );
+
         await ProfileService.saveActiveProfile(_profile!);
+
+        setState(() => _submitted = true);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('✅ Farmer registered successfully')),
+        );
+
+        // ✅ Navigate to LandingPage with farmer profile
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LandingPage(farmer: _profile!),
+          ),
+        );
+      } else {
+        setState(() => _submitted = true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('✅ User registered successfully')),
+        );
       }
-
-      setState(() => _submitted = true);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ User registered successfully')),
-      );
     }
   }
 
@@ -112,12 +128,6 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   const Text('📲 Scan this QR to identify the farmer:', style: TextStyle(fontSize: 14)),
                   const SizedBox(height: 16),
                   _buildQRCode(),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.home),
-                    label: const Text('Back to Home'),
-                    onPressed: () => Navigator.pop(context),
-                  ),
                 ],
               )
             : Form(
