@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
-import 'package:agrix_africa_adt2025/models/investment_offer.dart';
+import 'package:agrix_africa_adt2025/models/investments/investment_offer.dart';
 import 'package:agrix_africa_adt2025/services/market_service.dart';
 
 class InvestmentOfferForm extends StatefulWidget {
