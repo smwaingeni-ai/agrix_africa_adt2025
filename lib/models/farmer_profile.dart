@@ -1,17 +1,77 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io' as io;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
-/// A platform-aware service for handling farmer profiles and profile images.
+/// 🧑‍🌾 Farmer Profile Model
+class FarmerProfile {
+  final String id;
+  final String name;
+  final String contact;
+  final String farmSize;
+  final String? photoPath;
+  final String? region;
+  final bool subsidised;
+
+  FarmerProfile({
+    required this.id,
+    required this.name,
+    required this.contact,
+    required this.farmSize,
+    this.photoPath,
+    this.region,
+    required this.subsidised,
+  });
+
+  factory FarmerProfile.fromJson(Map<String, dynamic> json) => FarmerProfile(
+        id: json['id'],
+        name: json['name'],
+        contact: json['contact'],
+        farmSize: json['farmSize'],
+        photoPath: json['photoPath'],
+        region: json['region'],
+        subsidised: json['subsidised'] ?? false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'contact': contact,
+        'farmSize': farmSize,
+        'photoPath': photoPath,
+        'region': region,
+        'subsidised': subsidised,
+      };
+
+  factory FarmerProfile.fromRawJson(String str) =>
+      FarmerProfile.fromJson(jsonDecode(str));
+
+  static String encode(List<FarmerProfile> profiles) => jsonEncode(
+        profiles.map<Map<String, dynamic>>((p) => p.toJson()).toList(),
+      );
+
+  static List<FarmerProfile> decode(String jsonStr) =>
+      (jsonDecode(jsonStr) as List<dynamic>)
+          .map<FarmerProfile>((item) => FarmerProfile.fromJson(item))
+          .toList();
+
+  static FarmerProfile empty() => FarmerProfile(
+        id: '',
+        name: '',
+        contact: '',
+        farmSize: '',
+        subsidised: false,
+      );
+}
+
+/// 📦 Farmer Profile Service
 class FarmerProfileService {
   static const String _fileName = 'farmer_profiles.json';
   static const String _activeFileName = 'active_farmer_profile.json';
 
-  /// Pick an image from gallery or camera and return a usable path.
-  /// On mobile/desktop: returns local file path. On web: returns network blob string.
+  /// Pick image from camera or gallery
   static Future<String?> pickProfileImage({bool camera = false}) async {
     final picker = ImagePicker();
     final XFile? file = camera
@@ -20,7 +80,7 @@ class FarmerProfileService {
     return file?.path;
   }
 
-  /// Get platform-safe widget for displaying profile images.
+  /// Render profile image safely across platforms
   static Widget buildProfileImage(String? imagePath,
       {double width = 150, double height = 150}) {
     if (imagePath == null || imagePath.isEmpty) {
@@ -31,11 +91,14 @@ class FarmerProfileService {
         child: const Icon(Icons.person, size: 50, color: Colors.white),
       );
     }
-    if (kIsWeb) return Image.network(imagePath, width: width, height: height, fit: BoxFit.cover);
-    return Image.file(io.File(imagePath), width: width, height: height, fit: BoxFit.cover);
+    if (kIsWeb) {
+      return Image.network(imagePath,
+          width: width, height: height, fit: BoxFit.cover);
+    } else {
+      return Image.file(io.File(imagePath),
+          width: width, height: height, fit: BoxFit.cover);
+    }
   }
-
-  // ———————————————————— File-based profile storage methods ————————————————————
 
   static Future<io.File> _getProfileFile() async {
     final dir = await getApplicationDocumentsDirectory();
