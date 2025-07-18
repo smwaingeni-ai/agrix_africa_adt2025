@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:agrix_africa_adt2025/models/user_model.dart';
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // ✅ Import FarmerProfile model
 
 class LandingPage extends StatefulWidget {
   final UserModel loggedInUser;
@@ -24,14 +24,14 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Future<void> _loadProfile() async {
-    final loadedProfile = await FarmerProfileService.loadProfile();
+    final loadedProfile = await FarmerProfileService.loadActiveProfile();
     setState(() {
       _profile = loadedProfile;
     });
   }
 
   Future<void> _deleteProfile() async {
-    await FarmerProfileService.deleteProfile();
+    await FarmerProfileService.clearActiveProfile();
     setState(() {
       _profile = null;
     });
@@ -41,13 +41,11 @@ class _LandingPageState extends State<LandingPage> {
     if (_profile == null) return;
 
     final profileText = '''
-👤 Name: ${_profile!.fullName}
-📞 Contact: ${_profile!.contactNumber}
-🌍 Country: ${_profile!.country}, Province: ${_profile!.province}
-📐 Farm Size: ${_profile!.farmSize} acres
-🌱 Type: ${_profile!.farmType}
+👤 Name: ${_profile!.name}
+📞 Contact: ${_profile!.contact}
+🌍 Region: ${_profile!.region ?? 'N/A'}
+📐 Farm Size: ${_profile!.farmSize}
 🏛️ Subsidised: ${_profile!.subsidised ? "Yes" : "No"}
-🆔 ID Number: ${_profile!.idNumber}
 ''';
 
     Share.share(profileText);
@@ -148,16 +146,11 @@ class _LandingPageState extends State<LandingPage> {
                     ],
                     ListTile(
                       leading: const Icon(Icons.person, color: Colors.green),
-                      title: Text(_profile!.fullName),
+                      title: Text(_profile!.name),
                       subtitle: Text(
-                        '${_profile!.country}, ${_profile!.province}\nFarm Type: ${_profile!.farmType} • Subsidised: ${_profile!.subsidised ? "Yes" : "No"}',
+                        '${_profile!.region ?? "N/A"}\nFarm Size: ${_profile!.farmSize} • Subsidised: ${_profile!.subsidised ? "Yes" : "No"}',
                       ),
                     ),
-                    if (_profile!.qrImagePath != null && File(_profile!.qrImagePath!).existsSync())
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Image.file(File(_profile!.qrImagePath!), height: 100),
-                      ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
