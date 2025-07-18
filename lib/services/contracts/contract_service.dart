@@ -36,11 +36,12 @@ class ContractService {
     }
   }
 
-  static Future<void> addOffer(ContractOffer offer) async {
+  /// ✅ NEW: Method to directly add a single contract offer
+  static Future<void> addContractOffer(ContractOffer offer) async {
     try {
       final offers = await loadOffers();
 
-      // ✅ Ensure required fields like `amount` are present
+      // Provide fallback/default for required fields if needed
       if (offer.amount == null) {
         offer = offer.copyWith(amount: 0.0);
       }
@@ -48,8 +49,13 @@ class ContractService {
       offers.add(offer);
       await saveOffers(offers);
     } catch (e) {
-      print('❌ Error adding contract offer: $e');
+      print('❌ Error in addContractOffer: $e');
     }
+  }
+
+  /// ✅ Legacy method retained for compatibility
+  static Future<void> addOffer(ContractOffer offer) async {
+    await addContractOffer(offer); // Delegate to new method
   }
 
   static Future<void> updateOffer(String id, ContractOffer updatedOffer) async {
