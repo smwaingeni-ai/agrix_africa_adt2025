@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class InvestmentOffer {
   final String id;
-  final String listingId;
+  final String listingId; // ✅ Required: Connects to a market listing
   final String investorId;
   final String investorName;
   final String contact;
@@ -14,7 +14,7 @@ class InvestmentOffer {
   final String message;
   final DateTime offerDate;
   final bool isAccepted;
-  final DateTime timestamp; // ✅ Tracks creation time
+  final DateTime timestamp; // ✅ Tracks creation or last update time
 
   const InvestmentOffer({
     required this.id,
@@ -33,7 +33,7 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// ✅ Empty factory for drafts or forms
+  /// ✅ Empty factory for forms/drafts
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
         listingId: '',
@@ -90,15 +90,50 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// ✅ Batch encode to JSON string
+  /// ✅ Batch encode
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// ✅ Batch decode from JSON string
+  /// ✅ Batch decode
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
           .toList();
+
+  /// ✅ Copy method for updates
+  InvestmentOffer copyWith({
+    String? id,
+    String? listingId,
+    String? investorId,
+    String? investorName,
+    String? contact,
+    double? amount,
+    String? currency,
+    int? durationMonths,
+    String? term,
+    double? interestRate,
+    String? message,
+    DateTime? offerDate,
+    DateTime? timestamp,
+    bool? isAccepted,
+  }) {
+    return InvestmentOffer(
+      id: id ?? this.id,
+      listingId: listingId ?? this.listingId,
+      investorId: investorId ?? this.investorId,
+      investorName: investorName ?? this.investorName,
+      contact: contact ?? this.contact,
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+      durationMonths: durationMonths ?? this.durationMonths,
+      term: term ?? this.term,
+      interestRate: interestRate ?? this.interestRate,
+      message: message ?? this.message,
+      offerDate: offerDate ?? this.offerDate,
+      timestamp: timestamp ?? this.timestamp,
+      isAccepted: isAccepted ?? this.isAccepted,
+    );
+  }
 
   @override
   String toString() => 'InvestmentOffer(id: $id, investor: $investorName, contact: $contact)';
