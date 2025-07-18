@@ -32,7 +32,7 @@ import 'screens/market/market_detail_screen.dart';
 import 'screens/market/market_invite_screen.dart';
 
 // Investments
-import 'screens/investments/investment_offer_screen.dart';
+import 'screens/investments/investment_offer_form.dart'; // ✅ Corrected import
 import 'screens/investments/investment_offers_screen.dart';
 import 'screens/investments/investor_list_screen.dart';
 import 'screens/investments/investor_registration_screen.dart';
@@ -93,7 +93,7 @@ Map<String, WidgetBuilder> appRoutes = {
   '/market/invite': (context) => const MarketInviteScreen(),
 
   // Investments
-  '/investments/new': (context) => const InvestmentOfferScreen(),
+  '/investments/new': (context) => const InvestmentOfferForm(), // ✅ Corrected screen
   '/investments/list': (context) => const InvestmentOffersScreen(),
   '/investors': (context) => const InvestorListScreen(),
   '/investors/new': (context) => const InvestorRegistrationScreen(),
