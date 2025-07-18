@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/investor_profile.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_profile.dart';
 import 'package:agrix_africa_adt2025/services/investor_service.dart';
 
 class InvestorListScreen extends StatefulWidget {
