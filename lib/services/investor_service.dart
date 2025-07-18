@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:path_provider/path_provider.dart';
-import 'package:agrix_africa_adt2025/models/investor_profile.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_profile.dart';
 
 class InvestorService {
   static const String _fileName = 'investor_profiles_encrypted.json';
