@@ -8,66 +8,66 @@ import 'package:agrix_africa_adt2025/models/investments/investor_profile.dart';
 class InvestorService {
   static const String _fileName = 'investor_profiles_encrypted.json';
 
-  // AES key must be 32 characters for AES-256
-  final _key = encrypt.Key.fromUtf8('my32lengthsupersecretnooneknows!');
-  final _iv = encrypt.IV.fromLength(16); // 128-bit IV
+  // AES encryption setup
+  final _key = encrypt.Key.fromUtf8('my32lengthsupersecretnooneknows!'); // 32-byte key
+  final _iv = encrypt.IV.fromLength(16); // 16-byte IV
 
   encrypt.Encrypter get _encrypter => encrypt.Encrypter(encrypt.AES(_key));
 
-  /// 🔐 Get secure local file path
+  /// Get secure file path
   Future<String> _getFilePath() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return '${dir.path}/$_fileName';
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/$_fileName';
   }
 
-  /// 🔐 Encrypt and save list of investor profiles
+  /// Save list of investor profiles (encrypted)
   Future<void> saveEncrypted(List<InvestorProfile> profiles) async {
     try {
       final plainText = InvestorProfile.encode(profiles);
-      final encryptedText = _encrypter.encrypt(plainText, iv: _iv).base64;
+      final encrypted = _encrypter.encrypt(plainText, iv: _iv).base64;
       final file = File(await _getFilePath());
-      await file.writeAsString(encryptedText);
+      await file.writeAsString(encrypted);
       debugPrint('✅ Investor profiles encrypted and saved.');
     } catch (e) {
-      debugPrint('❌ Error saving investors: $e');
+      debugPrint('❌ Error saving encrypted investors: $e');
     }
   }
 
-  /// 🔓 Load and decrypt investor profiles
+  /// Load and decrypt investor profiles
   Future<List<InvestorProfile>> loadEncrypted() async {
     try {
       final file = File(await _getFilePath());
       if (!await file.exists()) return [];
 
-      final encryptedData = await file.readAsString();
-      final decrypted = _encrypter.decrypt64(encryptedData, iv: _iv);
-      return InvestorProfile.decode(decrypted);
+      final encryptedText = await file.readAsString();
+      final decryptedText = _encrypter.decrypt64(encryptedText, iv: _iv);
+      return InvestorProfile.decode(decryptedText);
     } catch (e) {
-      debugPrint('❌ Decryption failed: $e');
+      debugPrint('❌ Failed to decrypt investor data: $e');
       return [];
     }
   }
 
-  /// ✅ Public method to load investors
+  /// Public method to load all investors
   Future<List<InvestorProfile>> loadInvestors() async {
     return await loadEncrypted();
   }
 
-  /// ➕ Add a new investor
+  /// Add a new investor profile
   Future<void> addInvestor(InvestorProfile investor) async {
     final investors = await loadEncrypted();
     investors.add(investor);
     await saveEncrypted(investors);
   }
 
-  /// 🗑️ Remove investor by ID
+  /// Remove investor by ID
   Future<void> removeInvestor(String id) async {
     final investors = await loadEncrypted();
     investors.removeWhere((i) => i.id == id);
     await saveEncrypted(investors);
   }
 
-  /// 🔍 Get single investor by ID
+  /// Fetch an investor by ID
   Future<InvestorProfile> getInvestorById(String id) async {
     final investors = await loadEncrypted();
     return investors.firstWhere(
@@ -76,7 +76,7 @@ class InvestorService {
     );
   }
 
-  /// 💾 Save or update an investor profile
+  /// Save or update an investor profile
   Future<void> saveInvestorProfile(InvestorProfile profile) async {
     final investors = await loadEncrypted();
     final index = investors.indexWhere((i) => i.id == profile.id);
@@ -88,8 +88,8 @@ class InvestorService {
     await saveEncrypted(investors);
   }
 
-  /// ✅ ALIASED METHOD TO FIX MISSING saveInvestor() ERROR
+  /// Aliased save method (for consistency)
   Future<void> saveInvestor(InvestorProfile investor) async {
-    await saveInvestorProfile(investor); // internally calls secure logic
+    await saveInvestorProfile(investor);
   }
 }
