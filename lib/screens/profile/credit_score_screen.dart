@@ -1,84 +1,93 @@
-import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart' as service;
+import 'dart:convert';
+import 'farmer_profile.dart' as model;
 
-class CreditScoreScreen extends StatefulWidget {
-  const CreditScoreScreen({super.key});
+/// Represents a user in the AgriX system.
+class UserModel {
+  final String id;
+  final String name;
+  final String role;     // e.g., Farmer, Officer, Admin, etc.
+  final String passcode; // Optional login PIN or code
 
-  @override
-  State<CreditScoreScreen> createState() => _CreditScoreScreenState();
-}
+  const UserModel({
+    required this.id,
+    required this.name,
+    required this.role,
+    required this.passcode,
+  });
 
-class _CreditScoreScreenState extends State<CreditScoreScreen> {
-  List<model.FarmerProfile> _farmers = [];
-  bool _loading = true;
+  /// 🔹 Empty user (for forms or drafts)
+  factory UserModel.empty() => const UserModel(
+        id: '',
+        name: '',
+        role: 'Farmer',
+        passcode: '',
+      );
 
-  @override
-  void initState() {
-    super.initState();
-    _loadFarmers();
+  /// 🔁 Create from raw JSON string
+  factory UserModel.fromRawJson(String str) =>
+      UserModel.fromJson(json.decode(str));
+
+  /// 🔁 Convert to raw JSON string
+  String toRawJson() => json.encode(toJson());
+
+  /// 🔁 Create from JSON map
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      role: json['role'] ?? 'Farmer',
+      passcode: json['passcode'] ?? '',
+    );
   }
 
-  Future<void> _loadFarmers() async {
-    final farmers = await service.FarmerProfileService.loadProfiles();
-    farmers.sort((a, b) => _calculateScore(b).compareTo(_calculateScore(a)));
-    setState(() {
-      _farmers = farmers;
-      _loading = false;
-    });
+  /// 🔁 Convert to JSON map
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'role': role,
+        'passcode': passcode,
+      };
+
+  /// 🔄 Create UserModel from FarmerProfile
+  factory UserModel.fromFarmer(model.FarmerProfile profile) {
+    return UserModel(
+      id: profile.id,
+      name: profile.fullName,
+      role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
+      passcode: '', // optional; handled externally
+    );
   }
 
-  double _calculateScore(model.FarmerProfile farmer) {
-    final size = farmer.farmSizeHectares ?? 0.0;
-    final bonus = farmer.subsidised ? 1.5 : 1.0;
-    return (size * bonus).clamp(0, 100);
-  }
-
-  Widget _buildScoreCard(model.FarmerProfile farmer) {
-    final score = _calculateScore(farmer);
-    final approved = score >= 30;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      elevation: 2,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: approved ? Colors.green : Colors.redAccent,
-          child: Text(
-            score.toInt().toString(),
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        title: Text(farmer.fullName),
-        subtitle: Text(
-          'Score: ${score.toStringAsFixed(1)} • '
-          'Farm Size: ${farmer.farmSizeHectares?.toStringAsFixed(1) ?? 'N/A'} ha • '
-          'Subsidised: ${farmer.subsidised ? 'Yes' : 'No'}',
-        ),
-        trailing: Icon(
-          approved ? Icons.check_circle : Icons.cancel,
-          color: approved ? Colors.green : Colors.redAccent,
-        ),
-      ),
+  /// 🔄 Create a modified copy
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? role,
+    String? passcode,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      role: role ?? this.role,
+      passcode: passcode ?? this.passcode,
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Credit Scoring')),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _farmers.isEmpty
-              ? const Center(child: Text('📭 No farmers found'))
-              : RefreshIndicator(
-                  onRefresh: _loadFarmers,
-                  child: ListView.builder(
-                    itemCount: _farmers.length,
-                    itemBuilder: (context, index) =>
-                        _buildScoreCard(_farmers[index]),
-                  ),
-                ),
-    );
-  }
+  String toString() =>
+      'UserModel(id: $id, name: $name, role: $role, passcode: $passcode)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          role == other.role &&
+          passcode == other.passcode;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ name.hashCode ^ role.hashCode ^ passcode.hashCode;
 }
