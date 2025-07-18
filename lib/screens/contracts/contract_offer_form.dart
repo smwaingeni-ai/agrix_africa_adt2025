@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../models/contracts/contract_offer.dart';
-import '../../services/contracts/contract_service.dart';
+import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
+import 'package:agrix_africa_adt2025/services/contracts/contract_service.dart';
 
 class ContractOfferForm extends StatefulWidget {
   const ContractOfferForm({super.key});
