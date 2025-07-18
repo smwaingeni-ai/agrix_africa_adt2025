@@ -13,13 +13,12 @@ class FarmerProfile {
   final double farmSize;
   final String farmType;
   final bool subsidised;
-  final String contactNumber;
   final String language;
   final DateTime createdAt;
   final String? qrImagePath;
   final String? photoPath;
-  final String contact;         // ✅ Added
-  final String farmLocation;    // ✅ Added
+  final String contact;         // Replaces contactNumber
+  final String farmLocation;
 
   FarmerProfile({
     required this.farmerId,
@@ -34,13 +33,12 @@ class FarmerProfile {
     required this.farmSize,
     required this.farmType,
     required this.subsidised,
-    required this.contactNumber,
     required this.language,
     required this.createdAt,
     this.qrImagePath,
     this.photoPath,
-    required this.contact,         // ✅ Added
-    required this.farmLocation,    // ✅ Added
+    required this.contact,
+    required this.farmLocation,
   });
 
   factory FarmerProfile.empty() => FarmerProfile(
@@ -56,7 +54,6 @@ class FarmerProfile {
         farmSize: 0.0,
         farmType: '',
         subsidised: false,
-        contactNumber: '',
         language: 'English',
         createdAt: DateTime.now(),
         qrImagePath: null,
@@ -78,7 +75,6 @@ class FarmerProfile {
         'farmSize': farmSize,
         'farmType': farmType,
         'subsidised': subsidised,
-        'contactNumber': contactNumber,
         'language': language,
         'createdAt': createdAt.toIso8601String(),
         'qrImagePath': qrImagePath,
@@ -102,7 +98,6 @@ class FarmerProfile {
             : (json['farmSize'] ?? 0.0),
         farmType: json['farmType'] ?? '',
         subsidised: json['subsidised'] ?? false,
-        contactNumber: json['contactNumber'] ?? '',
         language: json['language'] ?? 'English',
         createdAt:
             DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
@@ -138,7 +133,6 @@ class FarmerProfile {
     double? farmSize,
     String? farmType,
     bool? subsidised,
-    String? contactNumber,
     String? language,
     DateTime? createdAt,
     String? qrImagePath,
@@ -159,7 +153,6 @@ class FarmerProfile {
       farmSize: farmSize ?? this.farmSize,
       farmType: farmType ?? this.farmType,
       subsidised: subsidised ?? this.subsidised,
-      contactNumber: contactNumber ?? this.contactNumber,
       language: language ?? this.language,
       createdAt: createdAt ?? this.createdAt,
       qrImagePath: qrImagePath ?? this.qrImagePath,
