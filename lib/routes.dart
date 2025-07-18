@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'models/contracts/contract_offer.dart';
+import 'models/market/market_item.dart';
+
 import 'screens/core/landing_screen.dart';
 import 'screens/core/landing_page.dart';
 import 'screens/core/language_country_setup.dart';
@@ -58,11 +61,17 @@ Map<String, WidgetBuilder> appRoutes = {
 
   '/contracts/new': (context) => const ContractOfferFormScreen(),
   '/contracts/list': (context) => const ContractListScreen(),
-  '/contracts/detail': (context) => const ContractDetailScreen(contract: placeholderContract), // Fix needed
+  '/contracts/detail': (context) {
+    final contract = ModalRoute.of(context)!.settings.arguments as ContractOffer;
+    return ContractDetailScreen(contract: contract);
+  },
 
   '/market': (context) => const MarketScreen(),
   '/market/new': (context) => const MarketItemFormScreen(),
-  '/market/detail': (context) => const MarketDetailScreen(item: placeholderMarketItem), // Fix needed
+  '/market/detail': (context) {
+    final item = ModalRoute.of(context)!.settings.arguments as MarketItem;
+    return MarketDetailScreen(item: item);
+  },
   '/market/invite': (context) => const MarketInviteScreen(),
 
   '/investments/new': (context) => const InvestmentOfferScreen(),
