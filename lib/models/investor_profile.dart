@@ -7,7 +7,7 @@ class InvestorProfile {
   String id;
   String name;
   String contactNumber;
-  String contact; // ✅ New field
+  String contact;
   String email;
   String location;
   List<InvestmentHorizon> preferredHorizons;
@@ -19,7 +19,7 @@ class InvestorProfile {
     required this.id,
     required this.name,
     required this.contactNumber,
-    required this.contact, // ✅ Added to constructor
+    required this.contact,
     required this.email,
     required this.location,
     required this.preferredHorizons,
@@ -47,10 +47,10 @@ class InvestorProfile {
         'id': id,
         'name': name,
         'contactNumber': contactNumber,
-        'contact': contact, // ✅ Included in JSON
+        'contact': contact,
         'email': email,
         'location': location,
-        'preferredHorizons': preferredHorizons.map((e) => e.name).toList(),
+        'preferredHorizons': preferredHorizons.map((e) => e.code).toList(), // ✅ use .code
         'status': status.name,
         'interests': interests,
         'registeredAt': registeredAt.toIso8601String(),
@@ -61,11 +61,11 @@ class InvestorProfile {
         id: json['id'] ?? '',
         name: json['name'] ?? '',
         contactNumber: json['contactNumber'] ?? '',
-        contact: json['contact'] ?? '', // ✅ Load from JSON
+        contact: json['contact'] ?? '',
         email: json['email'] ?? '',
         location: json['location'] ?? '',
         preferredHorizons: (json['preferredHorizons'] as List<dynamic>?)
-                ?.map((e) => InvestmentHorizonExtension.fromName(e.toString()))
+                ?.map((e) => InvestmentHorizonExtension.fromString(e.toString()))
                 .toList() ??
             [],
         status: InvestorStatusExtension.fromName(json['status'] ?? ''),
