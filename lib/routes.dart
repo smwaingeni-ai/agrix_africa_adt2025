@@ -74,7 +74,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   // Investments
   '/investments/offer': (context) => const InvestmentOfferForm(),
   '/investments/offers': (context) => const InvestmentOffersScreen(),
-  '/investors/register': (context) => const InvestorRegistrationScreen(),
+  '/investors/register': (context) => InvestorRegistrationScreen(), // ✅ FIXED: Removed `const`
   '/investors/list': (context) => const InvestorListScreen(),
 
   // Contracts
