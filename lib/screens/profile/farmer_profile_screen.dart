@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // if still separate; else remove
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // reverted to
 
 class FarmerProfileScreen extends StatelessWidget {
   const FarmerProfileScreen({super.key});
