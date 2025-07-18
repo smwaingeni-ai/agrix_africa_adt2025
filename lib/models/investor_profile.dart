@@ -1,122 +1,90 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
+import 'package:agrix_africa_adt2025/models/investments/investor_status.dart';
 
-// Models
-import 'models/contracts/contract_offer.dart';
-import 'models/market/market_item.dart';
-import 'models/investments/investor_profile.dart';
+/// Investor profile model
+class InvestorProfile {
+  String id;
+  String name;
+  String contactNumber;
+  String contact;
+  String email;
+  String location;
+  List<InvestmentHorizon> preferredHorizons;
+  InvestorStatus status;
+  List<String> interests;
+  DateTime registeredAt;
 
-// Core Screens
-import 'screens/core/landing_screen.dart';
-import 'screens/core/landing_page.dart';
-import 'screens/core/language_country_setup.dart';
-import 'screens/core/sync_screen.dart';
-import 'screens/core/notifications_screen.dart';
-import 'screens/core/transaction_screen.dart';
+  InvestorProfile({
+    required this.id,
+    required this.name,
+    required this.contactNumber,
+    required this.contact,
+    required this.email,
+    required this.location,
+    required this.preferredHorizons,
+    required this.status,
+    required this.interests,
+    required this.registeredAt,
+  });
 
-// Auth & Profile
-import 'screens/auth/register_user_screen.dart';
-import 'screens/profile/farmer_profile_screen.dart';
+  /// 🔹 Safe empty constructor for forms/defaults
+  factory InvestorProfile.empty() => InvestorProfile(
+        id: '',
+        name: '',
+        contactNumber: '',
+        contact: '',
+        email: '',
+        location: '',
+        preferredHorizons: [],
+        status: InvestorStatus.open,
+        interests: [],
+        registeredAt: DateTime.now(),
+      );
 
-// Loans
-import 'screens/loans/loan_application.dart';
+  /// 🔁 Convert to JSON map
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'contactNumber': contactNumber,
+        'contact': contact,
+        'email': email,
+        'location': location,
+        'preferredHorizons': preferredHorizons.map((e) => e.code).toList(), // ✅ use .code
+        'status': status.name,
+        'interests': interests,
+        'registeredAt': registeredAt.toIso8601String(),
+      };
 
-// Contracts
-import 'screens/contracts/contract_offer_form.dart';
-import 'screens/contracts/contract_list_screen.dart';
-import 'screens/contracts/contract_detail_screen.dart';
+  /// 🔁 Create instance from JSON map
+  factory InvestorProfile.fromJson(Map<String, dynamic> json) => InvestorProfile(
+        id: json['id'] ?? '',
+        name: json['name'] ?? '',
+        contactNumber: json['contactNumber'] ?? '',
+        contact: json['contact'] ?? '',
+        email: json['email'] ?? '',
+        location: json['location'] ?? '',
+        preferredHorizons: (json['preferredHorizons'] as List<dynamic>?)
+                ?.map((e) => InvestmentHorizonExtension.fromString(e.toString()))
+                .toList() ??
+            [],
+        status: InvestorStatusExtension.fromName(json['status'] ?? ''),
+        interests: List<String>.from(json['interests'] ?? []),
+        registeredAt:
+            DateTime.tryParse(json['registeredAt'] ?? '') ?? DateTime.now(),
+      );
 
-// Market
-import 'screens/market/market_screen.dart';
-import 'screens/market/market_item_form.dart';
-import 'screens/market/market_detail_screen.dart';
-import 'screens/market/market_invite_screen.dart';
+  /// 🔄 Encode a list of InvestorProfiles into JSON string
+  static String encode(List<InvestorProfile> investors) =>
+      json.encode(investors.map((i) => i.toJson()).toList());
 
-// Investments
-import 'screens/investments/investment_offer_screen.dart';
-import 'screens/investments/investment_offers_screen.dart';
-import 'screens/investments/investor_list_screen.dart';
-import 'screens/investments/investor_registration_screen.dart';
+  /// 🔄 Decode a JSON string into a list of InvestorProfiles
+  static List<InvestorProfile> decode(String jsonStr) =>
+      (json.decode(jsonStr) as List<dynamic>)
+          .map((i) => InvestorProfile.fromJson(i))
+          .toList();
 
-// Officer Screens
-import 'screens/officers/officer_tasks_screen.dart';
-import 'screens/officers/field_assessment_screen.dart';
-
-// Diagnostics
-import 'screens/diagnostics/crops_screen.dart';
-import 'screens/diagnostics/soil_screen.dart';
-import 'screens/diagnostics/livestock_screen.dart';
-
-// AI Advice
-import 'screens/ai_advice/agrigpt_screen.dart';
-
-// Logging
-import 'screens/logs/logbook_screen.dart';
-import 'screens/logs/program_tracking_screen.dart';
-import 'screens/logs/sustainability_log_screen.dart';
-import 'screens/logs/training_log_screen.dart';
-
-// Chat & Help
-import 'screens/chat_help/chat_screen.dart';
-import 'screens/chat_help/help_screen.dart';
-
-final Map<String, WidgetBuilder> appRoutes = {
-  // Core
-  '/': (context) => const LandingPage(),
-  '/home': (context) => const LandingScreen(),
-  '/setup': (context) => const LanguageCountrySetup(),
-  '/sync': (context) => const SyncScreen(),
-  '/notifications': (context) => const NotificationsScreen(),
-  '/transactions': (context) => const TransactionScreen(),
-
-  // Auth & Profile
-  '/register': (context) => const RegisterUserScreen(),
-  '/profile': (context) => const FarmerProfileScreen(),
-
-  // Loans
-  '/loan': (context) => const LoanApplicationScreen(),
-
-  // Contracts
-  '/contracts/new': (context) => const ContractOfferFormScreen(),
-  '/contracts/list': (context) => const ContractListScreen(),
-  '/contracts/detail': (context) {
-    final contract = ModalRoute.of(context)!.settings.arguments as ContractOffer;
-    return ContractDetailScreen(contract: contract);
-  },
-
-  // Market
-  '/market': (context) => const MarketScreen(),
-  '/market/new': (context) => const MarketItemFormScreen(),
-  '/market/detail': (context) {
-    final item = ModalRoute.of(context)!.settings.arguments as MarketItem;
-    return MarketDetailScreen(item: item);
-  },
-  '/market/invite': (context) => const MarketInviteScreen(),
-
-  // Investments
-  '/investments/offer': (context) => const InvestmentOfferScreen(),
-  '/investments/list': (context) => const InvestmentOffersScreen(),
-  '/investors/list': (context) => const InvestorListScreen(),
-  '/investors/register': (context) => const InvestorRegistrationScreen(),
-
-  // Officers
-  '/officer/tasks': (context) => const OfficerTasksScreen(),
-  '/officer/assessments': (context) => const FieldAssessmentScreen(),
-
-  // Diagnostics
-  '/diagnostics/crops': (context) => const CropsScreen(),
-  '/diagnostics/soil': (context) => const SoilScreen(),
-  '/diagnostics/livestock': (context) => const LivestockScreen(),
-
-  // AI Advice
-  '/agrigpt': (context) => const AgriGPTScreen(),
-
-  // Logs
-  '/logs/farmer': (context) => const LogbookScreen(),
-  '/logs/programs': (context) => const ProgramTrackingScreen(),
-  '/logs/sustainability': (context) => const SustainabilityLogScreen(),
-  '/logs/training': (context) => const TrainingLogScreen(),
-
-  // Communication
-  '/chat': (context) => const ChatScreen(),
-  '/help': (context) => const HelpScreen(),
-};
+  @override
+  String toString() =>
+      'InvestorProfile(name: $name, contact: $contact, status: ${status.label}, preferred: ${preferredHorizons.map((e) => e.label).join(", ")})';
+}
