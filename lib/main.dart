@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'routes.dart';
 
-// Corrected imports based on updated paths
-import 'models/farmer_profile.dart';
-import 'services/profile/farmer_profile_service.dart';
+// ✅ Import only the model from the model file
+import 'models/farmer_profile.dart' show FarmerProfile;
+
+// ✅ Import only the service from the service file
+import 'services/profile/farmer_profile_service.dart' show ProfileService;
 
 // Initial Screens
 import 'screens/core/language_country_setup.dart';
@@ -51,7 +53,7 @@ class _StartupDeciderState extends State<StartupDecider> {
   Future<void> _checkProfileAndNavigate() async {
     try {
       final FarmerProfile? profile =
-          await FarmerProfileService.loadActiveProfile();
+          await ProfileService.loadActiveProfile();
 
       setState(() {
         _initialScreen = (profile != null)
