@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:agrix_africa_adt2025/models/market_item.dart';
-import 'package:agrix_africa_adt2025/models/investment_offer.dart';
+import 'package:agrix_africa_adt2025/models/market/market_item.dart';
+import 'package:agrix_africa_adt2025/models/investments/investment_offer.dart';
 
 class MarketService {
   /// 🔹 Get local JSON file for market items
