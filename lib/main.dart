@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'routes.dart';
 import 'models/farmer_profile.dart';
-import 'models/user_model.dart';
 import 'services/profile_service.dart';
 
 // Initial Screens
@@ -25,8 +24,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const StartupDecider(), // Determines first screen at runtime
-      routes: appRoutes,             // 🔗 Full route map loaded here
+      home: const StartupDecider(),
+      routes: appRoutes,
     );
   }
 }
@@ -53,11 +52,11 @@ class _StartupDeciderState extends State<StartupDecider> {
 
       setState(() {
         _initialScreen = (profile != null)
-            ? LandingPage(loggedInUser: UserModel.fromFarmer(profile))
+            ? LandingPage(farmer: profile)
             : const LanguageCountrySetup();
       });
     } catch (e) {
-      debugPrint('❌ Error loading profile: \$e');
+      debugPrint('❌ Error loading profile: $e');
       setState(() {
         _initialScreen = const LanguageCountrySetup();
       });
