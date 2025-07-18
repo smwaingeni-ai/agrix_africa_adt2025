@@ -5,9 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:agrix_africa_adt2025/models/market/market_item.dart';
 
 class MarketDetailScreen extends StatelessWidget {
-  final MarketItem item;
-
-  const MarketDetailScreen({super.key, required this.item});
+  const MarketDetailScreen({super.key});
 
   void _launchPhone(String phone) async {
     final uri = Uri.parse("tel:$phone");
@@ -33,7 +31,7 @@ class MarketDetailScreen extends StatelessWidget {
     }
   }
 
-  void _share(BuildContext context) {
+  void _share(BuildContext context, MarketItem item) {
     final msg = "Check out this listing on AgriX:\n"
         "${item.title}\n${item.description}\n"
         "📍 Location: ${item.location}\n💰 Price: \$${(item.price ?? 0.0).toStringAsFixed(2)}";
@@ -70,15 +68,10 @@ class MarketDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
+    final MarketItem item = ModalRoute.of(context)!.settings.arguments as MarketItem;
 
-    final bool investmentFlag = (() {
-      try {
-        return item.isInvestorOpen;
-      } catch (_) {
-        return false;
-      }
-    })();
+    final bool imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
+    final bool investmentFlag = item.isInvestorOpen ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -86,7 +79,7 @@ class MarketDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => _share(context),
+            onPressed: () => _share(context, item),
           )
         ],
       ),
@@ -97,8 +90,11 @@ class MarketDetailScreen extends StatelessWidget {
             if (imageExists)
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.file(File(item.imagePath),
-                    height: 200, fit: BoxFit.cover),
+                child: Image.file(
+                  File(item.imagePath),
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
               ),
             const SizedBox(height: 12),
             Text(item.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
@@ -113,7 +109,7 @@ class MarketDetailScreen extends StatelessWidget {
             _buildFlag("Loan Accepted", item.isLoanAccepted),
             _buildFlag("Open for Investment", investmentFlag),
             if (investmentFlag)
-              _buildDetail("Investment Term", item.investmentTerm),
+              _buildDetail("Investment Term", item.investmentTerm ?? "-"),
             const Divider(height: 30),
             const Text("Contact Seller", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
