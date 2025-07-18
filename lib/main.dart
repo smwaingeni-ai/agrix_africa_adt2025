@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const StartupDecider(), // Initial screen is chosen dynamically
-      routes: appRoutes, // ✅ All static routes are now included here
+      home: const StartupDecider(), // Determines first screen at runtime
+      routes: appRoutes,             // 🔗 Full route map loaded here
     );
   }
 }
@@ -57,8 +57,7 @@ class _StartupDeciderState extends State<StartupDecider> {
             : const LanguageCountrySetup();
       });
     } catch (e) {
-      // In case of failure, fallback to language setup
-      debugPrint('Error loading profile: $e');
+      debugPrint('❌ Error loading profile: \$e');
       setState(() {
         _initialScreen = const LanguageCountrySetup();
       });
