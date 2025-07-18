@@ -6,7 +6,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:agrix_africa_adt2025/models/user_model.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // ✅ Fix: import model
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart'; // ✅ Import correct service
 import 'package:agrix_africa_adt2025/screens/core/landing_page.dart';
 
 class RegisterUserScreen extends StatefulWidget {
@@ -58,10 +59,10 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       users.add(user.toJson());
       await file.writeAsString(jsonEncode(users));
 
-      // Special handling for Farmer profiles
+      // ✅ Special handling for Farmer
       if (role == 'Farmer') {
         _profile = FarmerProfile(
-          id: userId,
+          farmerId: userId,
           name: name,
           contact: phone,
           idNumber: idNumber,
@@ -88,7 +89,6 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           const SnackBar(content: Text('✅ Farmer registered successfully')),
         );
 
-        // ✅ Navigate to LandingPage with user
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
