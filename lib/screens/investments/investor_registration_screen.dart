@@ -6,6 +6,7 @@ import 'package:agrix_africa_adt2025/services/investments/investor_service.dart'
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
 
 class InvestorRegistrationScreen extends StatefulWidget {
+  // ✅ No const constructor
   @override
   _InvestorRegistrationScreenState createState() => _InvestorRegistrationScreenState();
 }
@@ -39,40 +40,40 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register as Investor')),
+      appBar: AppBar(title: Text('Register as Investor')), // ✅ Removed const
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0), // ✅ Removed const
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Full Name'),
+                decoration: InputDecoration(labelText: 'Full Name'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _phoneController,
-                decoration: const InputDecoration(labelText: 'Phone Number'),
+                decoration: InputDecoration(labelText: 'Phone Number'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _locationController,
-                decoration: const InputDecoration(labelText: 'Country'),
+                decoration: InputDecoration(labelText: 'Country'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _contactController,
-                decoration: const InputDecoration(labelText: 'Preferred Contact Method (e.g. WhatsApp)'),
+                decoration: InputDecoration(labelText: 'Preferred Contact Method (e.g. WhatsApp)'),
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
-              const SizedBox(height: 16),
-              const Text("Investment Horizon"),
+              SizedBox(height: 16),
+              Text("Investment Horizon"),
               Wrap(
                 spacing: 8,
                 children: _horizons.map((h) {
@@ -89,8 +90,8 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 16),
-              const Text("Investment Interest"),
+              SizedBox(height: 16),
+              Text("Investment Interest"),
               Wrap(
                 spacing: 8,
                 children: _interests.map((i) {
@@ -107,23 +108,23 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Investment Status'),
+                decoration: InputDecoration(labelText: 'Investment Status'),
                 value: _selectedStatus,
                 onChanged: (value) => setState(() => _selectedStatus = value!),
                 items: ['Open', 'Indifferent', 'Not Open']
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               ElevatedButton.icon(
-                icon: const Icon(FontAwesomeIcons.whatsapp),
-                label: const Text('Register'),
+                icon: Icon(FontAwesomeIcons.whatsapp),
+                label: Text('Register'),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     final newInvestor = InvestorProfile(
-                      id: const Uuid().v4(),
+                      id: Uuid().v4(),
                       name: _nameController.text,
                       email: _emailController.text,
                       contactNumber: _phoneController.text,
@@ -140,7 +141,7 @@ class _InvestorRegistrationScreenState extends State<InvestorRegistrationScreen>
                     InvestorService().saveInvestor(newInvestor);
 
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Investor Registered!')),
+                      SnackBar(content: Text('Investor Registered!')),
                     );
                     Navigator.pop(context);
                   }
