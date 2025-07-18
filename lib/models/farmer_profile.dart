@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'user_model.dart';
 
 class FarmerProfile {
   final String farmerId;
   final String fullName;
   final String idNumber;
+  final String contact; // REQUIRED
   final String country;
   final String province;
   final String district;
@@ -16,15 +16,15 @@ class FarmerProfile {
   final bool subsidised;
   final String language;
   final DateTime createdAt;
-  final String? qrImagePath;
-  final String? photoPath;
-  final String contact;
   final String farmLocation;
+  final String? photoPath;
+  final String? qrImagePath;
 
   FarmerProfile({
     required this.farmerId,
     required this.fullName,
     required this.idNumber,
+    required this.contact,
     required this.country,
     required this.province,
     required this.district,
@@ -36,18 +36,86 @@ class FarmerProfile {
     required this.subsidised,
     required this.language,
     required this.createdAt,
-    this.qrImagePath,
-    this.photoPath,
-    required this.contact,
     required this.farmLocation,
+    this.photoPath,
+    this.qrImagePath,
   });
 
-  /// 🔹 Factory constructor to create a default profile from a UserModel
-  factory FarmerProfile.fromUser(UserModel user) {
+  factory FarmerProfile.fromJson(Map<String, dynamic> json) {
     return FarmerProfile(
-      farmerId: '', // will be generated later
-      fullName: user.name,
-      idNumber: user.id,
+      farmerId: json['farmerId'],
+      fullName: json['fullName'],
+      idNumber: json['idNumber'],
+      contact: json['contact'] ?? '', // Prevents null
+      country: json['country'],
+      province: json['province'],
+      district: json['district'],
+      ward: json['ward'],
+      village: json['village'],
+      cell: json['cell'],
+      farmSize: (json['farmSize'] ?? 0).toDouble(),
+      farmType: json['farmType'],
+      subsidised: json['subsidised'] ?? false,
+      language: json['language'] ?? 'English',
+      createdAt: DateTime.parse(json['createdAt']),
+      farmLocation: json['farmLocation'],
+      photoPath: json['photoPath'],
+      qrImagePath: json['qrImagePath'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'farmerId': farmerId,
+      'fullName': fullName,
+      'idNumber': idNumber,
+      'contact': contact,
+      'country': country,
+      'province': province,
+      'district': district,
+      'ward': ward,
+      'village': village,
+      'cell': cell,
+      'farmSize': farmSize,
+      'farmType': farmType,
+      'subsidised': subsidised,
+      'language': language,
+      'createdAt': createdAt.toIso8601String(),
+      'farmLocation': farmLocation,
+      'photoPath': photoPath,
+      'qrImagePath': qrImagePath,
+    };
+  }
+
+  static FarmerProfile fromUser(Map<String, dynamic> user) {
+    return FarmerProfile(
+      farmerId: user['farmerId'] ?? '',
+      fullName: user['fullName'] ?? '',
+      idNumber: user['idNumber'] ?? '',
+      contact: user['contact'] ?? '', // Ensured here
+      country: user['country'] ?? '',
+      province: user['province'] ?? '',
+      district: user['district'] ?? '',
+      ward: user['ward'] ?? '',
+      village: user['village'] ?? '',
+      cell: user['cell'] ?? '',
+      farmSize: (user['farmSize'] ?? 0).toDouble(),
+      farmType: user['farmType'] ?? 'Crop',
+      subsidised: user['subsidised'] ?? false,
+      language: user['language'] ?? 'English',
+      createdAt: DateTime.tryParse(user['createdAt'] ?? '') ?? DateTime.now(),
+      farmLocation: user['farmLocation'] ?? '',
+      photoPath: user['photoPath'],
+      qrImagePath: user['qrImagePath'],
+    );
+  }
+
+  static FarmerProfile empty() {
+    return FarmerProfile(
+      farmerId: '',
+      fullName: '',
+      idNumber: '',
+      contact: '', // Required placeholder
       country: '',
       province: '',
       district: '',
@@ -55,138 +123,13 @@ class FarmerProfile {
       village: '',
       cell: '',
       farmSize: 0.0,
-      farmType: '',
-      subsidised: user.role.toLowerCase().contains('subsidised'),
+      farmType: 'Crop',
+      subsidised: false,
       language: 'English',
       createdAt: DateTime.now(),
-      contact: '',
       farmLocation: '',
-      qrImagePath: null,
       photoPath: null,
+      qrImagePath: null,
     );
   }
-
-  factory FarmerProfile.empty() => FarmerProfile(
-        farmerId: '',
-        fullName: '',
-        idNumber: '',
-        country: '',
-        province: '',
-        district: '',
-        ward: '',
-        village: '',
-        cell: '',
-        farmSize: 0.0,
-        farmType: '',
-        subsidised: false,
-        language: 'English',
-        createdAt: DateTime.now(),
-        qrImagePath: null,
-        photoPath: null,
-        contact: '',
-        farmLocation: '',
-      );
-
-  Map<String, dynamic> toJson() => {
-        'farmerId': farmerId,
-        'fullName': fullName,
-        'idNumber': idNumber,
-        'country': country,
-        'province': province,
-        'district': district,
-        'ward': ward,
-        'village': village,
-        'cell': cell,
-        'farmSize': farmSize,
-        'farmType': farmType,
-        'subsidised': subsidised,
-        'language': language,
-        'createdAt': createdAt.toIso8601String(),
-        'qrImagePath': qrImagePath,
-        'photoPath': photoPath,
-        'contact': contact,
-        'farmLocation': farmLocation,
-      };
-
-  factory FarmerProfile.fromJson(Map<String, dynamic> json) => FarmerProfile(
-        farmerId: json['farmerId'] ?? '',
-        fullName: json['fullName'] ?? '',
-        idNumber: json['idNumber'] ?? '',
-        country: json['country'] ?? '',
-        province: json['province'] ?? '',
-        district: json['district'] ?? '',
-        ward: json['ward'] ?? '',
-        village: json['village'] ?? '',
-        cell: json['cell'] ?? '',
-        farmSize: (json['farmSize'] is int)
-            ? (json['farmSize'] as int).toDouble()
-            : (json['farmSize'] ?? 0.0),
-        farmType: json['farmType'] ?? '',
-        subsidised: json['subsidised'] ?? false,
-        language: json['language'] ?? 'English',
-        createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
-        qrImagePath: json['qrImagePath'],
-        photoPath: json['photoPath'],
-        contact: json['contact'] ?? '',
-        farmLocation: json['farmLocation'] ?? '',
-      );
-
-  String toRawJson() => jsonEncode(toJson());
-
-  static FarmerProfile fromRawJson(String str) =>
-      FarmerProfile.fromJson(jsonDecode(str));
-
-  static String encode(List<FarmerProfile> profiles) =>
-      jsonEncode(profiles.map((p) => p.toJson()).toList());
-
-  static List<FarmerProfile> decode(String jsonStr) =>
-      (jsonDecode(jsonStr) as List)
-          .map((item) => FarmerProfile.fromJson(item))
-          .toList();
-
-  FarmerProfile copyWith({
-    String? farmerId,
-    String? fullName,
-    String? idNumber,
-    String? country,
-    String? province,
-    String? district,
-    String? ward,
-    String? village,
-    String? cell,
-    double? farmSize,
-    String? farmType,
-    bool? subsidised,
-    String? language,
-    DateTime? createdAt,
-    String? qrImagePath,
-    String? photoPath,
-    String? contact,
-    String? farmLocation,
-  }) {
-    return FarmerProfile(
-      farmerId: farmerId ?? this.farmerId,
-      fullName: fullName ?? this.fullName,
-      idNumber: idNumber ?? this.idNumber,
-      country: country ?? this.country,
-      province: province ?? this.province,
-      district: district ?? this.district,
-      ward: ward ?? this.ward,
-      village: village ?? this.village,
-      cell: cell ?? this.cell,
-      farmSize: farmSize ?? this.farmSize,
-      farmType: farmType ?? this.farmType,
-      subsidised: subsidised ?? this.subsidised,
-      language: language ?? this.language,
-      createdAt: createdAt ?? this.createdAt,
-      qrImagePath: qrImagePath ?? this.qrImagePath,
-      photoPath: photoPath ?? this.photoPath,
-      contact: contact ?? this.contact,
-      farmLocation: farmLocation ?? this.farmLocation,
-    );
-  }
-
-  @override
-  String toString() =>
-      'FarmerProfile(fullName: $fullName, idNumber: $idNumber, country: $country)';
 }
