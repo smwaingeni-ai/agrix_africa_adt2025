@@ -36,7 +36,7 @@ class MarketDetailScreen extends StatelessWidget {
   void _share(BuildContext context, MarketItem item) {
     final msg = "Check out this listing on AgriX:\n"
         "${item.title}\n${item.description}\n"
-        "📍 Location: ${item.location}\n💰 Price: \$${(item.price ?? 0.0).toStringAsFixed(2)}";
+        "📍 Location: ${item.location}\n💰 Price: \$${item.price.toStringAsFixed(2)}";
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("📤 Shared: $msg")), // Placeholder for share_plus
     );
@@ -70,8 +70,9 @@ class MarketDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool imageExists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
-    final bool investmentFlag = item.isInvestorOpen ?? false;
+    final String? imagePath =
+        item.imagePaths.isNotEmpty ? item.imagePaths.first : null;
+    final bool imageExists = imagePath != null && File(imagePath).existsSync();
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +92,7 @@ class MarketDetailScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.file(
-                  File(item.imagePath),
+                  File(imagePath!),
                   height: 200,
                   fit: BoxFit.cover,
                 ),
@@ -104,12 +105,12 @@ class MarketDetailScreen extends StatelessWidget {
             _buildDetail("Category", item.category),
             _buildDetail("Type", item.type),
             _buildDetail("Location", item.location),
-            _buildDetail("Price", "\$${(item.price ?? 0.0).toStringAsFixed(2)}"),
-            _buildDetail("Payment", item.paymentOption),
+            _buildDetail("Price", "\$${item.price.toStringAsFixed(2)}"),
+            _buildDetail("Payment", item.paymentOptions.isNotEmpty ? item.paymentOptions.first : 'N/A'),
             _buildFlag("Loan Accepted", item.isLoanAccepted),
-            _buildFlag("Open for Investment", investmentFlag),
-            if (investmentFlag)
-              _buildDetail("Investment Term", item.investmentTerm ?? "-"),
+            _buildFlag("Open for Investment", item.isInvestmentOpen),
+            if (item.isInvestmentOpen)
+              _buildDetail("Investment Term", item.investmentTerm),
             const Divider(height: 30),
             const Text("Contact Seller", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
@@ -120,17 +121,17 @@ class MarketDetailScreen extends StatelessWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.phone),
                   label: const Text("Call"),
-                  onPressed: () => _launchPhone(item.contact),
+                  onPressed: () => _launchPhone(item.ownerContact),
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.sms),
                   label: const Text("SMS"),
-                  onPressed: () => _launchSMS(item.contact),
+                  onPressed: () => _launchSMS(item.ownerContact),
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(FontAwesomeIcons.whatsapp),
                   label: const Text("WhatsApp"),
-                  onPressed: () => _launchWhatsApp(item.contact),
+                  onPressed: () => _launchWhatsApp(item.ownerContact),
                 ),
               ],
             ),
