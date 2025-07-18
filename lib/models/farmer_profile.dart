@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'user_model.dart';
 
 class FarmerProfile {
   final String farmerId;
@@ -17,7 +18,7 @@ class FarmerProfile {
   final DateTime createdAt;
   final String? qrImagePath;
   final String? photoPath;
-  final String contact;         // Replaces contactNumber
+  final String contact;
   final String farmLocation;
 
   FarmerProfile({
@@ -40,6 +41,30 @@ class FarmerProfile {
     required this.contact,
     required this.farmLocation,
   });
+
+  /// 🔹 Factory constructor to create a default profile from a UserModel
+  factory FarmerProfile.fromUser(UserModel user) {
+    return FarmerProfile(
+      farmerId: '', // will be generated later
+      fullName: user.name,
+      idNumber: user.id,
+      country: '',
+      province: '',
+      district: '',
+      ward: '',
+      village: '',
+      cell: '',
+      farmSize: 0.0,
+      farmType: '',
+      subsidised: user.role.toLowerCase().contains('subsidised'),
+      language: 'English',
+      createdAt: DateTime.now(),
+      contact: '',
+      farmLocation: '',
+      qrImagePath: null,
+      photoPath: null,
+    );
+  }
 
   factory FarmerProfile.empty() => FarmerProfile(
         farmerId: '',
@@ -99,8 +124,7 @@ class FarmerProfile {
         farmType: json['farmType'] ?? '',
         subsidised: json['subsidised'] ?? false,
         language: json['language'] ?? 'English',
-        createdAt:
-            DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+        createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
         qrImagePath: json['qrImagePath'],
         photoPath: json['photoPath'],
         contact: json['contact'] ?? '',
