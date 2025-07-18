@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'screens/core/landing_page.dart';
 import 'screens/core/sync_screen.dart';
 import 'screens/core/notifications_screen.dart';
-import 'screens/core/register_screen.dart';
+
+// ✅ Updated to use correct register screen
+import 'screens/auth/register_user_screen.dart';
 
 // Log Screens
 import 'screens/logs/logbook_screen.dart';
@@ -48,22 +50,21 @@ import 'screens/profile/credit_score_screen.dart';
 
 // Officer Screens
 import 'screens/officers/officer_tasks_screen.dart';
-// ✅ Updated import to use your correct screen
 import 'screens/officers/field_assessment_screen.dart';
 
-// Models (optional, if referenced somewhere)
+// Models (optional, if used in routing args)
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
 import 'models/investments/investor_profile.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
-  // ⚠️ LandingPage requires `loggedInUser` argument
-  '/': (context) => const LandingPage(),
-
   // Core & Utility
+  '/': (context) => const LandingPage(),
   '/sync': (context) => const SyncScreen(),
   '/notifications': (context) => const NotificationsScreen(),
-  '/register': (context) => const RegisterScreen(),
+
+  // ✅ Corrected Register route
+  '/register': (context) => const RegisterUserScreen(),
 
   // Logs
   '/logbook': (context) => const LogbookScreen(),
@@ -111,6 +112,5 @@ final Map<String, WidgetBuilder> appRoutes = {
 
   // Officers
   '/officer/tasks': (context) => const OfficerTasksScreen(),
-  // ✅ Fixed: now correctly uses FieldAssessmentScreen
   '/officer/assessments': (context) => const FieldAssessmentScreen(),
 };
