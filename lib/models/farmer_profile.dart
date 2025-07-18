@@ -18,6 +18,8 @@ class FarmerProfile {
   final DateTime createdAt;
   final String? qrImagePath;
   final String? photoPath;
+  final String contact;         // ✅ Added
+  final String farmLocation;    // ✅ Added
 
   FarmerProfile({
     required this.farmerId,
@@ -37,15 +39,10 @@ class FarmerProfile {
     required this.createdAt,
     this.qrImagePath,
     this.photoPath,
+    required this.contact,         // ✅ Added
+    required this.farmLocation,    // ✅ Added
   });
 
-  /// 🔹 Friendly accessors
-  String get id => farmerId;
-  String get name => fullName;
-  bool get govtAffiliated => subsidised;
-  double get farmSizeHectares => farmSize;
-
-  /// 🔹 Default empty profile
   factory FarmerProfile.empty() => FarmerProfile(
         farmerId: '',
         fullName: '',
@@ -64,9 +61,10 @@ class FarmerProfile {
         createdAt: DateTime.now(),
         qrImagePath: null,
         photoPath: null,
+        contact: '',
+        farmLocation: '',
       );
 
-  /// 🔹 Convert to JSON
   Map<String, dynamic> toJson() => {
         'farmerId': farmerId,
         'fullName': fullName,
@@ -85,9 +83,10 @@ class FarmerProfile {
         'createdAt': createdAt.toIso8601String(),
         'qrImagePath': qrImagePath,
         'photoPath': photoPath,
+        'contact': contact,
+        'farmLocation': farmLocation,
       };
 
-  /// 🔹 Create from JSON
   factory FarmerProfile.fromJson(Map<String, dynamic> json) => FarmerProfile(
         farmerId: json['farmerId'] ?? '',
         fullName: json['fullName'] ?? '',
@@ -109,26 +108,23 @@ class FarmerProfile {
             DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
         qrImagePath: json['qrImagePath'],
         photoPath: json['photoPath'],
+        contact: json['contact'] ?? '',
+        farmLocation: json['farmLocation'] ?? '',
       );
 
-  /// 🔹 Encode to raw JSON string
   String toRawJson() => jsonEncode(toJson());
 
-  /// 🔹 Decode from raw JSON string
   static FarmerProfile fromRawJson(String str) =>
       FarmerProfile.fromJson(jsonDecode(str));
 
-  /// 🔹 Encode a list of FarmerProfiles
   static String encode(List<FarmerProfile> profiles) =>
       jsonEncode(profiles.map((p) => p.toJson()).toList());
 
-  /// 🔹 Decode a list of FarmerProfiles
   static List<FarmerProfile> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((item) => FarmerProfile.fromJson(item))
           .toList();
 
-  /// 🔹 Create a modified copy
   FarmerProfile copyWith({
     String? farmerId,
     String? fullName,
@@ -147,6 +143,8 @@ class FarmerProfile {
     DateTime? createdAt,
     String? qrImagePath,
     String? photoPath,
+    String? contact,
+    String? farmLocation,
   }) {
     return FarmerProfile(
       farmerId: farmerId ?? this.farmerId,
@@ -166,6 +164,8 @@ class FarmerProfile {
       createdAt: createdAt ?? this.createdAt,
       qrImagePath: qrImagePath ?? this.qrImagePath,
       photoPath: photoPath ?? this.photoPath,
+      contact: contact ?? this.contact,
+      farmLocation: farmLocation ?? this.farmLocation,
     );
   }
 
