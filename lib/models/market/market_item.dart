@@ -12,7 +12,7 @@ class MarketItem {
   final bool isForSale;
   final DateTime postedAt;
 
-  // Optional fields for extended functionality
+  // Optional extended fields
   final String? paymentOption;      // e.g., 'cash', 'loan', 'bank transfer'
   final String? investmentTerm;     // e.g., 'short', 'mid', 'long'
   final bool? isLoanAccepted;
@@ -35,7 +35,7 @@ class MarketItem {
     this.isInvestorOpen,
   });
 
-  /// ✅ Convert MarketItem to JSON Map for storage or transmission
+  /// ✅ Convert MarketItem to JSON Map for storage
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
@@ -53,7 +53,7 @@ class MarketItem {
         'isInvestorOpen': isInvestorOpen,
       };
 
-  /// ✅ Create MarketItem from JSON Map (e.g., from DB or file)
+  /// ✅ Create MarketItem from JSON Map
   factory MarketItem.fromJson(Map<String, dynamic> json) => MarketItem(
         id: json['id'] ?? '',
         title: json['title'] ?? '',
@@ -61,17 +61,17 @@ class MarketItem {
         type: json['type'] ?? '',
         location: json['location'] ?? '',
         imagePath: json['imagePath'] ?? '',
-        price: (json['price'] as num).toDouble(),
+        price: (json['price'] as num?)?.toDouble() ?? 0.0,
         contact: json['contact'] ?? '',
         isForSale: json['isForSale'] ?? false,
-        postedAt: DateTime.parse(json['postedAt']),
+        postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
         paymentOption: json['paymentOption'],
         investmentTerm: json['investmentTerm'],
         isLoanAccepted: json['isLoanAccepted'],
         isInvestorOpen: json['isInvestorOpen'],
       );
 
-  /// ✅ Helpful for debugging/logging
+  /// ✅ Debug-friendly string representation
   @override
   String toString() => jsonEncode(toJson());
 }
