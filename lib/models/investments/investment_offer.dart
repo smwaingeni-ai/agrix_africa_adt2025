@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class InvestmentOffer {
   final String id;
-  final String listingId;
+  final String listingId; // ✅ Required for all offers
   final String investorId;
   final String investorName;
   final String contact;
@@ -33,9 +33,10 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
+  /// Creates an empty offer with default values
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
-        listingId: '',
+        listingId: '', // Still required for consistency
         investorId: '',
         investorName: '',
         contact: '',
@@ -50,6 +51,7 @@ class InvestmentOffer {
         isAccepted: false,
       );
 
+  /// Parses from JSON
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
     return InvestmentOffer(
@@ -70,6 +72,7 @@ class InvestmentOffer {
     );
   }
 
+  /// Serializes to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'listingId': listingId,
@@ -87,16 +90,19 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
+  /// Encode a list of offers to a string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
+  /// Decode a string to a list of offers
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
           .toList();
 
   @override
-  String toString() => 'InvestmentOffer($id, $listingId, $investorName, $amount $currency)';
+  String toString() =>
+      'InvestmentOffer($id, $listingId, $investorName, $amount $currency)';
 
   @override
   bool operator ==(Object other) =>
