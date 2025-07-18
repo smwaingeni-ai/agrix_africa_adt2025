@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 
 class CreditScoreScreen extends StatefulWidget {
   const CreditScoreScreen({super.key});
@@ -20,7 +20,7 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
   }
 
   Future<void> _loadFarmers() async {
-    final farmers = await FarmerService.loadFarmers();
+    final farmers = await FarmerProfileService.loadProfiles();
     farmers.sort((a, b) => _calculateScore(b).compareTo(_calculateScore(a)));
     setState(() {
       _farmers = farmers;
@@ -29,8 +29,8 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
   }
 
   double _calculateScore(FarmerProfile farmer) {
-    final size = farmer.farmSizeHectares ?? 0.0;
-    final bonus = farmer.govtAffiliated ? 1.5 : 1.0;
+    final size = double.tryParse(farmer.farmSize) ?? 0.0;
+    final bonus = farmer.subsidised ? 1.5 : 1.0;
     return (size * bonus).clamp(0, 100);
   }
 
@@ -49,11 +49,11 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
             style: const TextStyle(color: Colors.white),
           ),
         ),
-        title: Text(farmer.fullName),
+        title: Text(farmer.name),
         subtitle: Text(
           'Score: ${score.toStringAsFixed(1)} • '
-          'Farm Size: ${farmer.farmSizeHectares?.toStringAsFixed(1) ?? 'N/A'} ha • '
-          'Affiliated: ${farmer.govtAffiliated ? 'Yes' : 'No'}',
+          'Farm Size: ${farmer.farmSize} ha • '
+          'Subsidised: ${farmer.subsidised ? 'Yes' : 'No'}',
         ),
         trailing: Icon(
           approved ? Icons.check_circle : Icons.cancel,
