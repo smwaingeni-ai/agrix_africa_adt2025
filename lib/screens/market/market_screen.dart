@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/market_item.dart';
+import 'package:agrix_africa_adt2025/models/market/market_item.dart';
 import 'package:agrix_africa_adt2025/services/market_service.dart';
 import 'market_item_form.dart';
 import 'market_detail_screen.dart';
