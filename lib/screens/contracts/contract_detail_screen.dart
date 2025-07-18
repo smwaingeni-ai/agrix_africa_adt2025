@@ -7,7 +7,7 @@ import 'package:share_plus/share_plus.dart';
 class ContractDetailScreen extends StatelessWidget {
   final ContractOffer contract;
 
-  const ContractDetailScreen({super.key, required this.contract});
+  const ContractDetailScreen({required this.contract, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
