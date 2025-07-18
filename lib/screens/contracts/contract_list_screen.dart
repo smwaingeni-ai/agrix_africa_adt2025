@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
 import 'package:agrix_africa_adt2025/services/contracts/contract_service.dart';
-import 'package:agrix_africa_adt2025/screens/contracts/contract_detail_screen.dart';
 import 'package:agrix_africa_adt2025/screens/contracts/contract_applications_list.dart';
 
 class ContractListScreen extends StatefulWidget {
@@ -23,7 +22,7 @@ class _ContractListScreenState extends State<ContractListScreen> {
 
   Future<void> _loadContracts() async {
     try {
-      final contracts = await ContractService.loadOffers(); // ✅ Static call
+      final contracts = await ContractService.loadOffers();
       if (mounted) {
         setState(() {
           _contracts = contracts;
@@ -39,16 +38,19 @@ class _ContractListScreenState extends State<ContractListScreen> {
   }
 
   void _viewDetails(ContractOffer offer) {
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(builder: (_) => ContractDetailScreen(contract: offer)),
+      '/contracts/detail',
+      arguments: offer,
     );
   }
 
   void _viewApplicants(ContractOffer offer) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => ContractApplicationsListScreen(offer: offer)),
+      MaterialPageRoute(
+        builder: (_) => ContractApplicationsListScreen(offer: offer),
+      ),
     );
   }
 
