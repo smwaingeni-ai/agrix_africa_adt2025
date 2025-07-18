@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:agrix_africa_adt2025/models/investments/investor_profile.dart';
-import 'package:agrix_africa_adt2025/services/investments/investor_service.dart';
+import 'package:agrix_africa_adt2025/services/profile/investor_service.dart';
 import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
 
 class InvestorRegistrationScreen extends StatefulWidget {
