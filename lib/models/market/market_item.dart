@@ -4,57 +4,71 @@ class MarketItem {
   final String id;
   final String title;
   final String description;
-  final String category; // e.g., 'crop', 'livestock', 'equipment'
+  final String type; // e.g., 'crop', 'livestock', 'equipment'
   final String location;
   final String imagePath; // Local or network image path
   final double price;
-  final String contact; // Contact info (e.g., phone or email)
-  final bool isForSale; // true = for sale, false = for lease/barter
+  final String contact;
+  final bool isForSale;
   final DateTime postedAt;
+
+  // Additional fields used in UI/screens
+  final String? paymentOption; // e.g., 'cash', 'loan', 'bank transfer'
+  final String? investmentTerm; // short/mid/long term
+  final bool? isLoanAccepted;
+  final bool? isInvestorOpen;
 
   MarketItem({
     required this.id,
     required this.title,
     required this.description,
-    required this.category,
+    required this.type,
     required this.location,
     required this.imagePath,
     required this.price,
     required this.contact,
     required this.isForSale,
     required this.postedAt,
+    this.paymentOption,
+    this.investmentTerm,
+    this.isLoanAccepted,
+    this.isInvestorOpen,
   });
 
-  // For saving to local JSON or database
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
         'description': description,
-        'category': category,
+        'type': type,
         'location': location,
         'imagePath': imagePath,
         'price': price,
         'contact': contact,
         'isForSale': isForSale,
         'postedAt': postedAt.toIso8601String(),
+        'paymentOption': paymentOption,
+        'investmentTerm': investmentTerm,
+        'isLoanAccepted': isLoanAccepted,
+        'isInvestorOpen': isInvestorOpen,
       };
 
-  // For loading from JSON or database
   factory MarketItem.fromJson(Map<String, dynamic> json) => MarketItem(
         id: json['id'],
         title: json['title'],
         description: json['description'],
-        category: json['category'],
+        type: json['type'],
         location: json['location'],
         imagePath: json['imagePath'],
         price: (json['price'] as num).toDouble(),
         contact: json['contact'],
         isForSale: json['isForSale'],
         postedAt: DateTime.parse(json['postedAt']),
+        paymentOption: json['paymentOption'],
+        investmentTerm: json['investmentTerm'],
+        isLoanAccepted: json['isLoanAccepted'],
+        isInvestorOpen: json['isInvestorOpen'],
       );
 
   @override
-  String toString() {
-    return jsonEncode(toJson());
-  }
+  String toString() => jsonEncode(toJson());
 }
