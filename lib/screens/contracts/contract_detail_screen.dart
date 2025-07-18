@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:agrix_africa_adt2025/models/contracts/contract_offer.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ContractDetailScreen extends StatelessWidget {
   final ContractOffer contract;
@@ -41,17 +43,15 @@ class ContractDetailScreen extends StatelessWidget {
             _buildDetailTile("🌱 Crop/Livestock Type", contract.cropOrLivestockType),
             _buildDetailTile("📍 Location", contract.location),
             _buildDetailTile("📑 Terms & Conditions", contract.terms),
-            _buildDetailTile("📞 Contact Info", contract.contact),
+            _buildContactTile(context, contract.contact),
             const SizedBox(height: 30),
             ElevatedButton.icon(
               icon: const Icon(Icons.share),
               label: const Text("Share Contract"),
               onPressed: () {
-                // You can later integrate url_launcher or share_plus here.
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("🚀 Sharing functionality coming soon."),
-                  ),
+                Share.share(
+                  '📄 Contract: ${contract.title}\n💵 Amount: ${currencyFormatter.format(contract.amount)}\n📞 Contact: ${contract.contact}',
+                  subject: 'AgriX Contract Offer – ${contract.title}',
                 );
               },
             ),
@@ -87,5 +87,75 @@ class ContractDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildContactTile(BuildContext context, String contact) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "📞 Contact Info",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.green,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            contact.isNotEmpty ? contact : "N/A",
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+            ),
+          ),
+          ButtonBar(
+            alignment: MainAxisAlignment.start,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.call),
+                label: const Text("Call"),
+                onPressed: () => _launchContact("Call", contact),
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.sms),
+                label: const Text("Message"),
+                onPressed: () => _launchContact("Message", contact),
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.email),
+                label: const Text("Email"),
+                onPressed: () => _launchContact("Email", contact),
+              ),
+            ],
+          ),
+          const Divider(height: 24),
+        ],
+      ),
+    );
+  }
+
+  void _launchContact(String method, String contact) async {
+    String url = '';
+    switch (method) {
+      case 'Call':
+        url = 'tel:$contact';
+        break;
+      case 'Message':
+        url = 'sms:$contact';
+        break;
+      case 'Email':
+        url = 'mailto:$contact';
+        break;
+    }
+
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('❌ Cannot launch $url');
+    }
   }
 }
