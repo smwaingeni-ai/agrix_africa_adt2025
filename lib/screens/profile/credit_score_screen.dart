@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
+import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart' as service;
 
 class CreditScoreScreen extends StatefulWidget {
   const CreditScoreScreen({super.key});
@@ -10,7 +10,7 @@ class CreditScoreScreen extends StatefulWidget {
 }
 
 class _CreditScoreScreenState extends State<CreditScoreScreen> {
-  List<FarmerProfile> _farmers = [];
+  List<model.FarmerProfile> _farmers = [];
   bool _loading = true;
 
   @override
@@ -20,7 +20,7 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
   }
 
   Future<void> _loadFarmers() async {
-    final farmers = await FarmerProfileService.loadProfiles();
+    final farmers = await service.FarmerProfileService.loadProfiles();
     farmers.sort((a, b) => _calculateScore(b).compareTo(_calculateScore(a)));
     setState(() {
       _farmers = farmers;
@@ -28,13 +28,13 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
     });
   }
 
-  double _calculateScore(FarmerProfile farmer) {
-    final size = double.tryParse(farmer.farmSize) ?? 0.0;
+  double _calculateScore(model.FarmerProfile farmer) {
+    final size = farmer.farmSizeHectares ?? 0.0;
     final bonus = farmer.subsidised ? 1.5 : 1.0;
     return (size * bonus).clamp(0, 100);
   }
 
-  Widget _buildScoreCard(FarmerProfile farmer) {
+  Widget _buildScoreCard(model.FarmerProfile farmer) {
     final score = _calculateScore(farmer);
     final approved = score >= 30;
 
@@ -49,10 +49,10 @@ class _CreditScoreScreenState extends State<CreditScoreScreen> {
             style: const TextStyle(color: Colors.white),
           ),
         ),
-        title: Text(farmer.name),
+        title: Text(farmer.fullName),
         subtitle: Text(
           'Score: ${score.toStringAsFixed(1)} • '
-          'Farm Size: ${farmer.farmSize} ha • '
+          'Farm Size: ${farmer.farmSizeHectares?.toStringAsFixed(1) ?? 'N/A'} ha • '
           'Subsidised: ${farmer.subsidised ? 'Yes' : 'No'}',
         ),
         trailing: Icon(
