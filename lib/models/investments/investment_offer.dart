@@ -33,10 +33,10 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// Creates an empty offer with default values
+  /// Creates an empty InvestmentOffer
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
-        listingId: '', // Still required for consistency
+        listingId: '',
         investorId: '',
         investorName: '',
         contact: '',
@@ -51,7 +51,7 @@ class InvestmentOffer {
         isAccepted: false,
       );
 
-  /// Parses from JSON
+  /// Deserialize from JSON
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
     return InvestmentOffer(
@@ -72,7 +72,7 @@ class InvestmentOffer {
     );
   }
 
-  /// Serializes to JSON
+  /// Serialize to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'listingId': listingId,
@@ -90,11 +90,11 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// Encode a list of offers to a string
+  /// Encode list to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// Decode a string to a list of offers
+  /// Decode list from JSON string
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
