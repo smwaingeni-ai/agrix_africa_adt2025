@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import '../../models/tasks/task.dart';
+import 'package:agrix_africa_adt2025/models/tasks/task_model.dart';
 
 class TaskService {
   static const _key = 'officer_tasks';
