@@ -6,8 +6,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:agrix_africa_adt2025/models/user_model.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // ✅ Fix: import model
 import 'package:agrix_africa_adt2025/screens/core/landing_page.dart';
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({super.key});
@@ -61,39 +61,38 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       // Special handling for Farmer profiles
       if (role == 'Farmer') {
         _profile = FarmerProfile(
-          farmerId: userId,
-          fullName: name,
+          id: userId,
+          name: name,
+          contact: phone,
           idNumber: idNumber,
-          country: 'Zimbabwe',
+          region: region,
           province: province,
           district: district,
           ward: ward,
           village: village,
           cell: cell,
-          farmSize: 1.0,
+          farmSize: '1.0',
           farmType: farmType,
           subsidised: true,
-          contact: phone,
           language: 'English',
-          createdAt: DateTime.now(),
+          createdAt: DateTime.now().toIso8601String(),
           qrImagePath: '',
           photoPath: null,
           farmLocation: '',
         );
 
         await FarmerProfileService.saveActiveProfile(_profile!);
-
         setState(() => _submitted = true);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('✅ Farmer registered successfully')),
         );
 
-        // ✅ Navigate to LandingPage with farmer profile
+        // ✅ Navigate to LandingPage with user
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LandingPage(loggedInUser: _profile!),
+            builder: (context) => LandingPage(loggedInUser: user),
           ),
         );
       } else {
