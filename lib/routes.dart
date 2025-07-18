@@ -52,7 +52,7 @@ import 'screens/profile/credit_score_screen.dart';
 import 'screens/officers/officer_tasks_screen.dart';
 import 'screens/officers/field_assessment_screen.dart';
 
-// Models
+// Models (used in route argument passing)
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
 
