@@ -17,14 +17,14 @@ dependencies:
   uuid: ^4.1.0                   # Unique IDs
   share_plus: ^7.2.1             # Share content
   intl: ^0.18.1                  # Date/time formatting
-  url_launcher: ^6.2.5           # ✅ Launch tel:, sms:, mailto:, https:
-  shared_preferences: ^2.2.2     # Persistent local storage
+  url_launcher: ^6.2.5           # Launch tel:, sms:, mailto:, https:
+  shared_preferences: ^2.0.18    # Persistent local storage (downgraded)
   flutter_secure_storage: ^9.0.0 # Encrypted secure storage
 
   # UI/UX Enhancements
   flutter_svg: ^2.0.9            # SVG support
   google_fonts: ^6.1.0           # Font customization
-  font_awesome_flutter: ^10.7.0 # ✅ WhatsApp and social icons
+  font_awesome_flutter: ^10.7.0  # WhatsApp and social icons
 
   # QR and Biometrics
   qr_flutter: ^4.0.0             # QR generation
