@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'package:agrix_africa_adt2025/models/user_model.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/services/profile_service.dart';
 import 'package:agrix_africa_adt2025/screens/core/landing_page.dart';
+import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({super.key});
@@ -80,7 +81,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           farmLocation: '',
         );
 
-        await ProfileService.saveActiveProfile(_profile!);
+        await FarmerProfileService.saveActiveProfile(_profile!);
 
         setState(() => _submitted = true);
 
@@ -92,7 +93,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LandingPage(farmer: _profile!),
+            builder: (context) => LandingPage(loggedInUser: _profile!),
           ),
         );
       } else {
