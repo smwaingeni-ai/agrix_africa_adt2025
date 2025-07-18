@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agrix_africa_adt2025/models/investments/investment_horizon.dart';
 import 'package:agrix_africa_adt2025/models/investment_offer.dart';
 import 'package:agrix_africa_adt2025/services/market_service.dart';
 
@@ -16,23 +17,17 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
   String _contact = '';
   double _amount = 0.0;
   double _interestRate = 0.0;
-  String _term = 'Short-term (1-2 yrs)';
-
-  final List<String> _terms = [
-    'Short-term (1-2 yrs)',
-    'Mid-term (3-5 yrs)',
-    'Long-term (>6 yrs)'
-  ];
+  InvestmentHorizon? _selectedHorizon;
 
   Future<void> _submitOffer() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && _selectedHorizon != null) {
       _formKey.currentState!.save();
 
       final offer = InvestmentOffer(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         investorName: _investorName,
         amount: _amount,
-        term: _term,
+        term: _selectedHorizon!.code, // ✅ Save as enum code
         interestRate: _interestRate,
         isAccepted: false,
         contact: _contact,
@@ -84,7 +79,8 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Interest Rate (%)'),
+              decoration:
+                  const InputDecoration(labelText: 'Interest Rate (%)'),
               keyboardType: TextInputType.number,
               validator: (value) =>
                   value == null || double.tryParse(value) == null
@@ -93,16 +89,22 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
               onSaved: (value) => _interestRate = double.parse(value!),
             ),
             const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<InvestmentHorizon>(
               decoration: const InputDecoration(labelText: 'Investment Term'),
-              value: _term,
-              items: _terms
-                  .map((term) => DropdownMenuItem(
-                        value: term,
-                        child: Text(term),
+              value: _selectedHorizon,
+              items: InvestmentHorizon.values
+                  .map((horizon) => DropdownMenuItem(
+                        value: horizon,
+                        child: Text(horizon.label),
                       ))
                   .toList(),
-              onChanged: (value) => setState(() => _term = value!),
+              onChanged: (value) {
+                setState(() {
+                  _selectedHorizon = value!;
+                });
+              },
+              validator: (value) =>
+                  value == null ? 'Select an investment term' : null,
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
