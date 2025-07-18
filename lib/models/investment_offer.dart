@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class InvestmentOffer {
   final String id;
-  final String listingId; // ✅ Required: Connects to a market listing
+  final String listingId; // ✅ Required field
   final String investorId;
   final String investorName;
   final String contact;
@@ -14,7 +14,7 @@ class InvestmentOffer {
   final String message;
   final DateTime offerDate;
   final bool isAccepted;
-  final DateTime timestamp; // ✅ Tracks creation or last update time
+  final DateTime timestamp;
 
   const InvestmentOffer({
     required this.id,
@@ -33,7 +33,7 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// ✅ Empty factory for forms/drafts
+  /// ✅ Empty factory for drafts or forms
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
         listingId: '',
@@ -90,53 +90,19 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// ✅ Batch encode
+  /// ✅ Batch encode to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// ✅ Batch decode
+  /// ✅ Batch decode from JSON string
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
           .toList();
 
-  /// ✅ Copy method for updates
-  InvestmentOffer copyWith({
-    String? id,
-    String? listingId,
-    String? investorId,
-    String? investorName,
-    String? contact,
-    double? amount,
-    String? currency,
-    int? durationMonths,
-    String? term,
-    double? interestRate,
-    String? message,
-    DateTime? offerDate,
-    DateTime? timestamp,
-    bool? isAccepted,
-  }) {
-    return InvestmentOffer(
-      id: id ?? this.id,
-      listingId: listingId ?? this.listingId,
-      investorId: investorId ?? this.investorId,
-      investorName: investorName ?? this.investorName,
-      contact: contact ?? this.contact,
-      amount: amount ?? this.amount,
-      currency: currency ?? this.currency,
-      durationMonths: durationMonths ?? this.durationMonths,
-      term: term ?? this.term,
-      interestRate: interestRate ?? this.interestRate,
-      message: message ?? this.message,
-      offerDate: offerDate ?? this.offerDate,
-      timestamp: timestamp ?? this.timestamp,
-      isAccepted: isAccepted ?? this.isAccepted,
-    );
-  }
-
   @override
-  String toString() => 'InvestmentOffer(id: $id, investor: $investorName, contact: $contact)';
+  String toString() =>
+      'InvestmentOffer(id: $id, listingId: $listingId, investor: $investorName, contact: $contact)';
 
   @override
   bool operator ==(Object other) =>
