@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,12 +8,14 @@ import 'package:agrix_africa_adt2025/services/farmer_service.dart';
 class FarmerProfileScreen extends StatelessWidget {
   const FarmerProfileScreen({super.key});
 
-  void _launchWhatsApp(String phone) async {
+  void _launchWhatsApp(BuildContext context, String phone) async {
     final Uri whatsappUrl = Uri.parse('https://wa.me/$phone');
     if (await canLaunchUrl(whatsappUrl)) {
       await launchUrl(whatsappUrl);
     } else {
-      throw 'Could not launch WhatsApp';
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch WhatsApp')),
+      );
     }
   }
 
@@ -39,10 +42,11 @@ class FarmerProfileScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Farmer Profile'),
             actions: [
-              IconButton(
-                icon: const Icon(FontAwesomeIcons.whatsapp),
-                onPressed: () => _launchWhatsApp(profile.contact),
-              ),
+              if (profile.contact.isNotEmpty)
+                IconButton(
+                  icon: const Icon(FontAwesomeIcons.whatsapp),
+                  onPressed: () => _launchWhatsApp(context, profile.contact),
+                ),
             ],
           ),
           body: Padding(
@@ -51,15 +55,17 @@ class FarmerProfileScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: profile.photoPath != null
+                  backgroundImage: (profile.photoPath != null && profile.photoPath!.isNotEmpty)
                       ? FileImage(File(profile.photoPath!))
                       : null,
-                  child: profile.photoPath == null ? const Icon(Icons.person, size: 50) : null,
+                  child: (profile.photoPath == null || profile.photoPath!.isEmpty)
+                      ? const Icon(Icons.person, size: 50)
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 Text("Name: ${profile.name}", style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
-                Text("ID: ${profile.idNumber}"),
+                Text("ID Number: ${profile.idNumber}"),
                 const SizedBox(height: 8),
                 Text("Phone: ${profile.contact}"),
                 const SizedBox(height: 8),
@@ -68,6 +74,8 @@ class FarmerProfileScreen extends StatelessWidget {
                 Text("Farm Size: ${profile.farmSize} hectares"),
                 const SizedBox(height: 8),
                 Text("Farm Type: ${profile.farmType}"),
+                const SizedBox(height: 8),
+                Text("Created At: ${profile.createdAt.toLocal()}"),
               ],
             ),
           ),
