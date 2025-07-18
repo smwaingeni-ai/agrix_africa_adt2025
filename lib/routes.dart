@@ -55,6 +55,7 @@ import 'screens/officers/field_assessment_screen.dart';
 // Models (used in route argument passing)
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
+import 'models/user_model.dart'; // ✅ Needed for LandingPage
 
 final Map<String, WidgetBuilder> appRoutes = {
   // Core
@@ -120,3 +121,28 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/officer/tasks': (context) => const OfficerTasksScreen(),
   '/officer/assessments': (context) => const FieldAssessmentScreen(),
 };
+
+/// ✅ Handle routes with arguments like LandingPage
+Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  if (settings.name == '/landing') {
+    final args = settings.arguments;
+    if (args is UserModel) {
+      return MaterialPageRoute(
+        builder: (context) => LandingPage(loggedInUser: args),
+      );
+    } else {
+      return MaterialPageRoute(
+        builder: (context) => const Scaffold(
+          body: Center(child: Text('Invalid user data for Landing Page')),
+        ),
+      );
+    }
+  }
+
+  // Optionally handle unknown routes
+  return MaterialPageRoute(
+    builder: (context) => const Scaffold(
+      body: Center(child: Text('Page not found')),
+    ),
+  );
+}
