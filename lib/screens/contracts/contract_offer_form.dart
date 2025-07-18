@@ -12,16 +12,16 @@ class ContractOfferForm extends StatefulWidget {
 
 class _ContractOfferFormState extends State<ContractOfferForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _paymentTermsController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _partiesController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _cropTypeController = TextEditingController();
-  final TextEditingController _termsController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _durationController = TextEditingController();
+  final _paymentTermsController = TextEditingController();
+  final _contactController = TextEditingController();
+  final _partiesController = TextEditingController();
+  final _amountController = TextEditingController();
+  final _cropTypeController = TextEditingController();
+  final _termsController = TextEditingController();
 
   bool _isActive = true;
 
@@ -40,7 +40,7 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
     super.dispose();
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       final offer = ContractOffer(
         id: const Uuid().v4(),
@@ -51,10 +51,9 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
         paymentTerms: _paymentTermsController.text.trim(),
         contact: _contactController.text.trim(),
         parties: _partiesController.text
-            .trim()
             .split(',')
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty)
+            .map((p) => p.trim())
+            .where((p) => p.isNotEmpty)
             .toList(),
         amount: double.tryParse(_amountController.text.trim()) ?? 0.0,
         cropOrLivestockType: _cropTypeController.text.trim(),
@@ -78,7 +77,7 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Contract Offer')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -86,14 +85,12 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Title is required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Title is required' : null,
               ),
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(labelText: 'Description'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Description is required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Description is required' : null,
               ),
               TextFormField(
                 controller: _locationController,
@@ -110,15 +107,12 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
               TextFormField(
                 controller: _contactController,
                 decoration: const InputDecoration(labelText: 'Contact'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Contact is required' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Contact is required' : null,
               ),
               TextFormField(
                 controller: _partiesController,
-                decoration: const InputDecoration(
-                    labelText: 'Parties (comma-separated)'),
-                validator: (value) =>
-                    value!.isEmpty ? 'At least one party is required' : null,
+                decoration: const InputDecoration(labelText: 'Parties (comma-separated)'),
+                validator: (value) => value == null || value.isEmpty ? 'At least one party is required' : null,
               ),
               TextFormField(
                 controller: _amountController,
@@ -127,8 +121,7 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
               ),
               TextFormField(
                 controller: _cropTypeController,
-                decoration:
-                    const InputDecoration(labelText: 'Crop/Livestock Type'),
+                decoration: const InputDecoration(labelText: 'Crop/Livestock Type'),
               ),
               TextFormField(
                 controller: _termsController,
@@ -137,7 +130,7 @@ class _ContractOfferFormState extends State<ContractOfferForm> {
               SwitchListTile(
                 title: const Text('Is Active?'),
                 value: _isActive,
-                onChanged: (val) => setState(() => _isActive = val),
+                onChanged: (value) => setState(() => _isActive = value),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
