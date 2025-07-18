@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:agrix_africa_adt2025/models/user_model.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // ✅ Import FarmerProfile model
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
+import 'package:agrix_africa_adt2025/services/profile_service.dart'; // ✅ Ensure this import exists
 
 class LandingPage extends StatefulWidget {
   final UserModel loggedInUser;
@@ -31,7 +32,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Future<void> _deleteProfile() async {
-    await FarmerProfileService.clearActiveProfile();
+    await FarmerProfileService.clearActiveProfile(); // ✅ Use correct method
     setState(() {
       _profile = null;
     });
@@ -130,9 +131,11 @@ class _LandingPageState extends State<LandingPage> {
                 elevation: 2,
                 child: Column(
                   children: [
-                    if (_profile!.photoPath != null && File(_profile!.photoPath!).existsSync()) ...[
+                    if (_profile!.photoPath != null &&
+                        File(_profile!.photoPath!).existsSync()) ...[
                       const SizedBox(height: 10),
-                      const Text('📷 Farmer Photo', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text('📷 Farmer Photo',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 6),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -160,7 +163,8 @@ class _LandingPageState extends State<LandingPage> {
                             icon: const Icon(Icons.edit),
                             label: const Text("Edit"),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/profile').then((_) => _loadProfile());
+                              Navigator.pushNamed(context, '/profile')
+                                  .then((_) => _loadProfile());
                             },
                           ),
                           ElevatedButton.icon(
@@ -187,7 +191,8 @@ class _LandingPageState extends State<LandingPage> {
                 icon: const Icon(Icons.person_add),
                 label: const Text('Create Farmer Profile'),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/profile').then((_) => _loadProfile());
+                  Navigator.pushNamed(context, '/profile')
+                      .then((_) => _loadProfile());
                 },
               ),
             const SizedBox(height: 16),
@@ -203,7 +208,8 @@ class _LandingPageState extends State<LandingPage> {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 children: buttons
-                    .map((btn) => buildGridButton(btn['label']!, btn['route']!))
+                    .map((btn) =>
+                        buildGridButton(btn['label']!, btn['route']!))
                     .toList(),
               ),
             ),
