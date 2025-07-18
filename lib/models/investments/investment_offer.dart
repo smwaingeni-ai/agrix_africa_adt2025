@@ -3,8 +3,6 @@ import 'dart:convert';
 class InvestmentOffer {
   final String id;
   final String investorName;
-
-  // Additional fields
   final String listingId;
   final String investorId;
   final String contact;
@@ -35,7 +33,7 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// Create a blank instance
+  /// Blank factory
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
         investorName: '',
@@ -53,7 +51,7 @@ class InvestmentOffer {
         isAccepted: false,
       );
 
-  /// Create from JSON
+  /// Deserialize from JSON
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
     return InvestmentOffer(
@@ -74,7 +72,7 @@ class InvestmentOffer {
     );
   }
 
-  /// Convert to JSON
+  /// Serialize to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'investorName': investorName,
@@ -104,7 +102,7 @@ class InvestmentOffer {
 
   @override
   String toString() =>
-      'InvestmentOffer($id, $listingId, $investorName, $amount $currency)';
+      'InvestmentOffer(id: $id, investor: $investorName, amount: $amount $currency)';
 
   @override
   bool operator ==(Object other) =>
