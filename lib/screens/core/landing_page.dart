@@ -8,7 +8,7 @@ import 'package:agrix_africa_adt2025/services/profile_service.dart';
 class LandingPage extends StatefulWidget {
   final UserModel loggedInUser;
 
-  const LandingPage({super.key, required this.loggedInUser});
+  const LandingPage({Key? key, required this.loggedInUser}) : super(key: key);
 
   @override
   State<LandingPage> createState() => _LandingPageState();
@@ -92,7 +92,9 @@ class _LandingPageState extends State<LandingPage> {
           IconButton(
             icon: const Icon(Icons.settings),
             tooltip: 'Edit Profile',
-            onPressed: () => Navigator.pushNamed(context, '/profile').then((_) => _loadProfile()),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile').then((_) => _loadProfile());
+            },
           ),
         ],
       ),
@@ -100,7 +102,6 @@ class _LandingPageState extends State<LandingPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Logo and title
             Column(
               children: [
                 Image.asset('assets/alogo.png', height: 100),
@@ -112,8 +113,6 @@ class _LandingPageState extends State<LandingPage> {
               ],
             ),
             const SizedBox(height: 20),
-
-            // Greeting
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -127,8 +126,6 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Farmer profile display
             if (_profile != null)
               Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -137,8 +134,7 @@ class _LandingPageState extends State<LandingPage> {
                   children: [
                     if (_profile!.photoPath != null && File(_profile!.photoPath!).existsSync()) ...[
                       const SizedBox(height: 10),
-                      const Text('📷 Farmer Photo',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text('📷 Farmer Photo', style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 6),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -157,8 +153,7 @@ class _LandingPageState extends State<LandingPage> {
                         '${_profile!.country}, ${_profile!.province}\nFarm Type: ${_profile!.farmType} • Subsidised: ${_profile!.subsidised ? "Yes" : "No"}',
                       ),
                     ),
-                    if (_profile!.qrImagePath != null &&
-                        File(_profile!.qrImagePath!).existsSync())
+                    if (_profile!.qrImagePath != null && File(_profile!.qrImagePath!).existsSync())
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Image.file(File(_profile!.qrImagePath!), height: 100),
@@ -202,7 +197,6 @@ class _LandingPageState extends State<LandingPage> {
                   Navigator.pushNamed(context, '/profile').then((_) => _loadProfile());
                 },
               ),
-
             const SizedBox(height: 16),
             const Text(
               'Your AI-powered farming assistant.',
@@ -210,8 +204,6 @@ class _LandingPageState extends State<LandingPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-
-            // Grid of features
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
