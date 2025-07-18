@@ -2,9 +2,11 @@ import 'dart:convert';
 
 class InvestmentOffer {
   final String id;
-  final String listingId; // ✅ Required for all offers
-  final String investorId;
   final String investorName;
+
+  // Additional fields
+  final String listingId;
+  final String investorId;
   final String contact;
   final double amount;
   final String currency;
@@ -18,9 +20,9 @@ class InvestmentOffer {
 
   const InvestmentOffer({
     required this.id,
+    required this.investorName,
     required this.listingId,
     required this.investorId,
-    required this.investorName,
     required this.contact,
     required this.amount,
     required this.currency,
@@ -33,12 +35,12 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// Creates an empty InvestmentOffer
+  /// Create a blank instance
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
+        investorName: '',
         listingId: '',
         investorId: '',
-        investorName: '',
         contact: '',
         amount: 0.0,
         currency: 'USD',
@@ -51,14 +53,14 @@ class InvestmentOffer {
         isAccepted: false,
       );
 
-  /// Deserialize from JSON
+  /// Create from JSON
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
     return InvestmentOffer(
       id: json['id'] ?? '',
+      investorName: json['investorName'] ?? '',
       listingId: json['listingId'] ?? '',
       investorId: json['investorId'] ?? '',
-      investorName: json['investorName'] ?? '',
       contact: json['contact'] ?? '',
       amount: (json['amount'] ?? 0).toDouble(),
       currency: json['currency'] ?? 'USD',
@@ -72,12 +74,12 @@ class InvestmentOffer {
     );
   }
 
-  /// Serialize to JSON
+  /// Convert to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
+        'investorName': investorName,
         'listingId': listingId,
         'investorId': investorId,
-        'investorName': investorName,
         'contact': contact,
         'amount': amount,
         'currency': currency,
@@ -90,11 +92,11 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// Encode list to JSON string
+  /// Encode list of offers to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// Decode list from JSON string
+  /// Decode JSON string to list of offers
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
@@ -110,9 +112,9 @@ class InvestmentOffer {
       other is InvestmentOffer &&
           runtimeType == other.runtimeType &&
           id == other.id &&
+          investorName == other.investorName &&
           listingId == other.listingId &&
           investorId == other.investorId &&
-          investorName == other.investorName &&
           contact == other.contact &&
           amount == other.amount &&
           currency == other.currency &&
@@ -127,9 +129,9 @@ class InvestmentOffer {
   @override
   int get hashCode =>
       id.hashCode ^
+      investorName.hashCode ^
       listingId.hashCode ^
       investorId.hashCode ^
-      investorName.hashCode ^
       contact.hashCode ^
       amount.hashCode ^
       currency.hashCode ^
