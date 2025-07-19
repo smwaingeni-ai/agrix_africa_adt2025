@@ -10,27 +10,27 @@ dependencies:
     sdk: flutter
 
   # Core Functionality
-  image_picker: ^1.0.7           # Camera/gallery access
-  tflite: ^1.1.2                 # On-device ML
-  path_provider: ^2.1.2          # File paths
-  file_picker: ^6.1.1            # File picker
-  uuid: ^4.1.0                   # Unique IDs
-  share_plus: ^7.2.1             # Share content
-  intl: ^0.18.1                  # Date/time formatting
-  url_launcher: ^6.2.5           # Launch tel:, sms:, mailto:, https:
-  shared_preferences: ^2.0.18    # Persistent local storage (downgraded)
-  flutter_secure_storage: ^9.0.0 # Encrypted secure storage
+  image_picker: ^1.0.7             # Camera/gallery access
+  tflite: ^1.1.2                   # On-device ML
+  path_provider: ^2.1.2            # File paths
+  file_picker: ^6.1.1              # File picker
+  uuid: ^4.1.0                     # Unique IDs
+  share_plus: ^7.2.1               # Share content
+  intl: ^0.18.1                    # Date/time formatting
+  url_launcher: ^6.2.5             # Launch tel:, sms:, mailto:, https:
+  shared_preferences: ^2.0.18      # Persistent local storage (stable)
+  flutter_secure_storage: ^9.0.0   # Encrypted secure storage
 
   # UI/UX Enhancements
-  flutter_svg: ^2.0.9            # SVG support
-  google_fonts: ^6.1.0           # Font customization
-  font_awesome_flutter: ^10.7.0  # WhatsApp and social icons
+  flutter_svg: ^2.0.9              # SVG support
+  google_fonts: ^6.1.0             # Font customization
+  font_awesome_flutter: ^10.7.0    # WhatsApp and social icons
 
   # QR and Biometrics
-  qr_flutter: ^4.0.0             # QR generation
-  local_auth: ^2.1.6             # Biometrics
+  qr_flutter: ^4.0.0               # QR generation
+  local_auth: ^2.1.6               # Biometrics
 
-  # Firebase (optional)
+  # Firebase (Optional Features)
   firebase_core: ^2.24.2
   cloud_firestore: ^4.9.1
 
