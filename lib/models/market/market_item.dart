@@ -1,129 +1,123 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:uuid/uuid.dart';
+import 'package:agrix_africa_adt2025/models/market/market_item.dart';
 
-/// Represents an item listed in the AgriX marketplace.
-class MarketItem {
-  /// Unique identifier for the market item.
-  final String id;
+class MarketItemForm extends StatefulWidget {
+  final Function(MarketItem) onSubmit;
 
-  /// Title of the item, e.g., 'Fresh Tomatoes', 'Goat for Sale'.
-  final String title;
+  const MarketItemForm({Key? key, required this.onSubmit}) : super(key: key);
 
-  /// Detailed item description.
-  final String description;
+  @override
+  State<MarketItemForm> createState() => _MarketItemFormState();
+}
 
-  /// Type of item: 'crop', 'livestock', 'equipment', 'service', etc.
-  final String type;
+class _MarketItemFormState extends State<MarketItemForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _uuid = const Uuid();
 
-  /// Location where the item is available (e.g., 'Lusaka, Zambia').
-  final String location;
+  String? _title;
+  String? _description;
+  double? _price;
+  String _category = 'Crops';
+  String? _contact;
+  File? _imageFile;
 
-  /// Local path or URL to the item's image.
-  final String imagePath;
+  final List<String> _categories = ['Crops', 'Livestock', 'Equipment', 'Fertilizer', 'Other'];
 
-  /// Price of the item in local currency.
-  final double price;
-
-  /// Contact details of the seller (phone or email).
-  final String contact;
-
-  /// True if the item is listed for sale; false for barter, lease, or donation.
-  final bool isForSale;
-
-  /// Timestamp indicating when the item was listed.
-  final DateTime postedAt;
-
-  /// Optional: Accepted payment option (e.g., 'cash', 'loan').
-  final String? paymentOption;
-
-  /// Optional: Investment term (e.g., 'short', 'mid', 'long').
-  final String? investmentTerm;
-
-  /// Optional: True if the seller accepts loans.
-  final bool? isLoanAccepted;
-
-  /// Optional: True if the seller is open to investment.
-  final bool? isInvestorOpen;
-
-  /// Optional: Unique identifier for the item's owner.
-  final String? ownerId;
-
-  /// Optional: Item category or sub-type (e.g., 'vegetable', 'poultry').
-  final String? category;
-
-  const MarketItem({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.type,
-    required this.location,
-    required this.imagePath,
-    required this.price,
-    required this.contact,
-    required this.isForSale,
-    required this.postedAt,
-    this.paymentOption,
-    this.investmentTerm,
-    this.isLoanAccepted,
-    this.isInvestorOpen,
-    this.ownerId,
-    this.category,
-  });
-
-  /// Serializes the object to a JSON-compatible map.
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'type': type,
-        'location': location,
-        'imagePath': imagePath,
-        'price': price,
-        'contact': contact,
-        'isForSale': isForSale,
-        'postedAt': postedAt.toIso8601String(),
-        'paymentOption': paymentOption,
-        'investmentTerm': investmentTerm,
-        'isLoanAccepted': isLoanAccepted,
-        'isInvestorOpen': isInvestorOpen,
-        'ownerId': ownerId,
-        'category': category,
-      };
-
-  /// Creates a MarketItem instance from a JSON map.
-  factory MarketItem.fromJson(Map<String, dynamic> json) {
-    return MarketItem(
-      id: json['id'] ?? '',
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      type: json['type'] ?? '',
-      location: json['location'] ?? '',
-      imagePath: json['imagePath'] ?? '',
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      contact: json['contact'] ?? '',
-      isForSale: json['isForSale'] ?? true,
-      postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
-      paymentOption: json['paymentOption'] as String?,
-      investmentTerm: json['investmentTerm'] as String?,
-      isLoanAccepted: json['isLoanAccepted'] as bool?,
-      isInvestorOpen: json['isInvestorOpen'] as bool?,
-      ownerId: json['ownerId'] as String?,
-      category: json['category'] as String?,
-    );
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      setState(() {
+        _imageFile = File(picked.path);
+      });
+    }
   }
 
-  /// Returns true if the item qualifies as an investment opportunity.
-  bool get isInvestment =>
-      (investmentTerm != null && investmentTerm!.isNotEmpty) ||
-      (isInvestorOpen ?? false);
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final newItem = MarketItem(
+        id: _uuid.v4(),
+        title: _title!,
+        description: _description!,
+        price: _price!,
+        category: _category,
+        contact: _contact!,
+        imagePath: _imageFile?.path ?? '',
+        postedAt: DateTime.now().toIso8601String(),
+      );
+
+      widget.onSubmit(newItem);
+    }
+  }
 
   @override
-  String toString() => 'MarketItem(${jsonEncode(toJson())})';
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MarketItem && runtimeType == other.runtimeType && id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Market Item'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Title'),
+                validator: (value) => value == null || value.isEmpty ? 'Enter a title' : null,
+                onSaved: (value) => _title = value,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Description'),
+                maxLines: 3,
+                validator: (value) => value == null || value.isEmpty ? 'Enter a description' : null,
+                onSaved: (value) => _description = value,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Price'),
+                keyboardType: TextInputType.number,
+                validator: (value) => value == null || double.tryParse(value) == null ? 'Enter a valid price' : null,
+                onSaved: (value) => _price = double.tryParse(value!),
+              ),
+              DropdownButtonFormField<String>(
+                value: _category,
+                decoration: const InputDecoration(labelText: 'Category'),
+                items: _categories
+                    .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                    .toList(),
+                onChanged: (val) {
+                  if (val != null) setState(() => _category = val);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Contact Info'),
+                validator: (value) => value == null || value.isEmpty ? 'Provide contact info' : null,
+                onSaved: (value) => _contact = value,
+              ),
+              const SizedBox(height: 16),
+              _imageFile != null
+                  ? Image.file(_imageFile!, height: 150)
+                  : const Text('No image selected'),
+              TextButton.icon(
+                icon: const Icon(Icons.image),
+                label: const Text('Select Image'),
+                onPressed: _pickImage,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: _submitForm,
+                icon: const Icon(Icons.check),
+                label: const Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
