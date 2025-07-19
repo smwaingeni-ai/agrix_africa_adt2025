@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:your_project_name/models/market_item.dart'; // ✅ Only import here
+import 'package:agrix_africa_adt2025/models/market/market_item.dart'; // ✅ Corrected import path
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
