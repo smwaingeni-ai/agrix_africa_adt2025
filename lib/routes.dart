@@ -55,7 +55,7 @@ import 'screens/officers/field_assessment_screen.dart';
 // Models (for argument passing)
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
-import 'models/user_model.dart';
+import 'models/user_model.dart'; // ✅ Keep this only here
 
 final Map<String, WidgetBuilder> appRoutes = {
   // Core
