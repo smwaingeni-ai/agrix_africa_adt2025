@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart'; // ✅ Added import
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
+import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart' as service;
 
 class LoanApplicationScreen extends StatefulWidget {
   const LoanApplicationScreen({super.key});
@@ -10,9 +10,9 @@ class LoanApplicationScreen extends StatefulWidget {
 }
 
 class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
-  FarmerProfile? _selectedFarmer;
+  model.FarmerProfile? _selectedFarmer;
   final TextEditingController _amountController = TextEditingController();
-  final Map<String, FarmerProfile> _farmerMap = {};
+  final Map<String, model.FarmerProfile> _farmerMap = {};
 
   @override
   void initState() {
@@ -22,11 +22,11 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
 
   Future<void> _loadFarmers() async {
     try {
-      final farmers = await ProfileService.loadFarmers();
+      final farmers = await service.FarmerProfileService.loadProfiles();
       if (mounted) {
         setState(() {
           for (var farmer in farmers) {
-            _farmerMap[farmer.farmerId] = farmer;
+            _farmerMap[farmer.id] = farmer;
           }
         });
       }
@@ -35,8 +35,8 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     }
   }
 
-  double _scoreFarmer(FarmerProfile f) {
-    double score = (f.farmSize ?? 0.0) * (f.govtAffiliated ? 1.5 : 1.0);
+  double _scoreFarmer(model.FarmerProfile f) {
+    double score = (f.farmSizeHectares ?? 0.0) * (f.govtAffiliated ? 1.5 : 1.0);
     return score.clamp(0, 100);
   }
 
@@ -80,14 +80,14 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            DropdownButtonFormField<FarmerProfile>(
+            DropdownButtonFormField<model.FarmerProfile>(
               isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Select Farmer',
                 border: OutlineInputBorder(),
               ),
               items: _farmerMap.values.map((farmer) {
-                return DropdownMenuItem(
+                return DropdownMenuItem<model.FarmerProfile>(
                   value: farmer,
                   child: Text('${farmer.fullName} (${farmer.govtAffiliated ? 'Govt' : 'Private'})'),
                 );
