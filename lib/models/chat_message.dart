@@ -1,4 +1,6 @@
-import 'dart:convert';
+resolve this file by addressing this...✅ 2. Wrong or Missing Constructor Parameters
+🚨 File	❌ Problem	✅ Fix
+ChatMessage()	id required but not provided	Pass id: UniqueKey().toString()...in /lib/models/chat_message.dart. Provide production ready code, current code:.....import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 /// Represents a single chat message between user and system (bot).
