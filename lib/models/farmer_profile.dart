@@ -215,4 +215,9 @@ class FarmerProfile {
     final parts = [village, ward, district, province, region];
     return parts.where((p) => p != null && p!.isNotEmpty).join(', ');
   }
+
+  /// ✅ Aliases for compatibility
+  String get name => fullName;
+  String get contact => contactNumber;
+  double? get farmSize => farmSizeHectares;
 }
