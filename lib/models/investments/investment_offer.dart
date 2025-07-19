@@ -41,7 +41,7 @@ class InvestmentOffer {
         investorId: '',
         contact: '',
         amount: 0.0,
-        currency: 'USD',
+        currency: 'USD', // ✅ Default currency
         durationMonths: 0,
         term: '',
         interestRate: 0.0,
@@ -61,7 +61,7 @@ class InvestmentOffer {
       investorId: json['investorId'] ?? '',
       contact: json['contact'] ?? '',
       amount: (json['amount'] ?? 0).toDouble(),
-      currency: json['currency'] ?? 'USD',
+      currency: json['currency'] ?? 'USD', // ✅ Handles missing field
       durationMonths: json['durationMonths'] ?? 0,
       term: json['term'] ?? '',
       interestRate: (json['interestRate'] ?? 0).toDouble(),
@@ -90,17 +90,14 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// 🔹 Encode list of offers to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// 🔹 Decode JSON string to list of offers
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
           .toList();
 
-  /// 🔹 Clone object with selective overrides
   InvestmentOffer copyWith({
     String? id,
     String? investorName,
@@ -135,7 +132,6 @@ class InvestmentOffer {
     );
   }
 
-  /// 🔹 Debug-friendly string
   @override
   String toString() =>
       'InvestmentOffer(id: $id, investor: $investorName, amount: $amount $currency, accepted: $isAccepted)';
