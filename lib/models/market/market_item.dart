@@ -46,6 +46,12 @@ class MarketItem {
   /// Whether the seller is open to investors
   final bool? isInvestorOpen;
 
+  /// Owner ID (usually the farmer or trader)
+  final String? ownerId;
+
+  /// Category or sub-type, e.g., 'vegetable', 'poultry'
+  final String? category;
+
   MarketItem({
     required this.id,
     required this.title,
@@ -61,6 +67,8 @@ class MarketItem {
     this.investmentTerm,
     this.isLoanAccepted,
     this.isInvestorOpen,
+    this.ownerId,
+    this.category,
   });
 
   /// Converts the object to a JSON map for storage or networking.
@@ -79,6 +87,8 @@ class MarketItem {
         'investmentTerm': investmentTerm,
         'isLoanAccepted': isLoanAccepted,
         'isInvestorOpen': isInvestorOpen,
+        'ownerId': ownerId,
+        'category': category,
       };
 
   /// Creates a MarketItem from a JSON map.
@@ -98,6 +108,8 @@ class MarketItem {
       investmentTerm: json['investmentTerm'],
       isLoanAccepted: json['isLoanAccepted'],
       isInvestorOpen: json['isInvestorOpen'],
+      ownerId: json['ownerId'],
+      category: json['category'],
     );
   }
 
