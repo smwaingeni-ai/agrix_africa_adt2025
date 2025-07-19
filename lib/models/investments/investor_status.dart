@@ -20,36 +20,30 @@ extension InvestorStatusExtension on InvestorStatus {
   }
 
   /// Short name for storage (e.g. 'open', 'notOpen', 'indifferent').
-  String get code => name;
+  String get code => toString().split('.').last;
 
   /// Parse from code string (enum name).
-  static InvestorStatus fromName(String name) {
+  static InvestorStatus fromCode(String code) {
     return InvestorStatus.values.firstWhere(
-      (e) => e.name.toLowerCase() == name.toLowerCase(),
+      (e) => e.code.toLowerCase() == code.toLowerCase(),
       orElse: () => InvestorStatus.indifferent,
     );
   }
 
   /// Parse from UI label.
   static InvestorStatus fromLabel(String label) {
-    switch (label.trim().toLowerCase()) {
-      case 'open':
-      case 'open to investment':
-        return InvestorStatus.open;
-      case 'not open':
-        return InvestorStatus.notOpen;
-      case 'indifferent':
-      default:
-        return InvestorStatus.indifferent;
+    final normalized = label.trim().toLowerCase();
+    if (normalized == 'open' || normalized == 'open to investment') {
+      return InvestorStatus.open;
+    } else if (normalized == 'not open') {
+      return InvestorStatus.notOpen;
+    } else {
+      return InvestorStatus.indifferent;
     }
   }
 
   /// Parse from any string (label or code).
   static InvestorStatus fromString(String value) {
-    try {
-      return fromLabel(value);
-    } catch (_) {
-      return fromName(value);
-    }
+    return fromLabel(value); // Fallback handled inside fromLabel
   }
 }
