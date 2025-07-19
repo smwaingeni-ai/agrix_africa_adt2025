@@ -56,7 +56,13 @@ class _MarketInviteScreenState extends State<MarketInviteScreen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: Colors.red.shade400,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -67,15 +73,15 @@ class _MarketInviteScreenState extends State<MarketInviteScreen> {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            const Text("Select Contact",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Select Contact", style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _selectedContact,
+              value: _selectedContact.isNotEmpty ? _selectedContact : null,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 12),
               ),
+              isExpanded: true,
               items: _contacts
                   .map((phone) =>
                       DropdownMenuItem(value: phone, child: Text(phone)))
@@ -85,8 +91,7 @@ class _MarketInviteScreenState extends State<MarketInviteScreen> {
               },
             ),
             const SizedBox(height: 20),
-            const Text("Message",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Message", style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             TextField(
               controller: _messageController,
