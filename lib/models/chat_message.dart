@@ -38,10 +38,11 @@ class ChatMessage {
     );
   }
 
-  /// 🔹 Deserialize from JSON
+  /// 🔹 Deserialize from JSON with ID fallback
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
+    final id = json['id'];
     return ChatMessage(
-      id: json['id'] ?? const Uuid().v4(),
+      id: id is String && id.isNotEmpty ? id : const Uuid().v4(),
       sender: json['sender'] ?? 'user',
       message: json['message'] ?? '',
       timestamp: DateTime.tryParse(json['timestamp'] ?? '') ?? DateTime.now(),
