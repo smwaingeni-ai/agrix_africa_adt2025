@@ -33,7 +33,7 @@ class InvestmentOffer {
     this.isAccepted = false,
   });
 
-  /// Blank factory
+  /// 🔹 Create a blank/default offer
   factory InvestmentOffer.empty() => InvestmentOffer(
         id: '',
         investorName: '',
@@ -51,7 +51,7 @@ class InvestmentOffer {
         isAccepted: false,
       );
 
-  /// Deserialize from JSON
+  /// 🔹 Deserialize from JSON
   factory InvestmentOffer.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
     return InvestmentOffer(
@@ -72,7 +72,7 @@ class InvestmentOffer {
     );
   }
 
-  /// Serialize to JSON
+  /// 🔹 Serialize to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'investorName': investorName,
@@ -90,19 +90,55 @@ class InvestmentOffer {
         'isAccepted': isAccepted,
       };
 
-  /// Encode list of offers to JSON string
+  /// 🔹 Encode list of offers to JSON string
   static String encode(List<InvestmentOffer> offers) =>
       jsonEncode(offers.map((e) => e.toJson()).toList());
 
-  /// Decode JSON string to list of offers
+  /// 🔹 Decode JSON string to list of offers
   static List<InvestmentOffer> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List)
           .map((e) => InvestmentOffer.fromJson(e))
           .toList();
 
+  /// 🔹 Clone object with selective overrides
+  InvestmentOffer copyWith({
+    String? id,
+    String? investorName,
+    String? listingId,
+    String? investorId,
+    String? contact,
+    double? amount,
+    String? currency,
+    int? durationMonths,
+    String? term,
+    double? interestRate,
+    String? message,
+    DateTime? offerDate,
+    DateTime? timestamp,
+    bool? isAccepted,
+  }) {
+    return InvestmentOffer(
+      id: id ?? this.id,
+      investorName: investorName ?? this.investorName,
+      listingId: listingId ?? this.listingId,
+      investorId: investorId ?? this.investorId,
+      contact: contact ?? this.contact,
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+      durationMonths: durationMonths ?? this.durationMonths,
+      term: term ?? this.term,
+      interestRate: interestRate ?? this.interestRate,
+      message: message ?? this.message,
+      offerDate: offerDate ?? this.offerDate,
+      timestamp: timestamp ?? this.timestamp,
+      isAccepted: isAccepted ?? this.isAccepted,
+    );
+  }
+
+  /// 🔹 Debug-friendly string
   @override
   String toString() =>
-      'InvestmentOffer(id: $id, investor: $investorName, amount: $amount $currency)';
+      'InvestmentOffer(id: $id, investor: $investorName, amount: $amount $currency, accepted: $isAccepted)';
 
   @override
   bool operator ==(Object other) =>
