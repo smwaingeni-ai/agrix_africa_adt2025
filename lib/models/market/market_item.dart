@@ -52,7 +52,7 @@ class MarketItem {
   /// Category or sub-type, e.g., 'vegetable', 'poultry'
   final String? category;
 
-  MarketItem({
+  const MarketItem({
     required this.id,
     required this.title,
     required this.description,
@@ -102,31 +102,31 @@ class MarketItem {
       imagePath: json['imagePath'] ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       contact: json['contact'] ?? '',
-      isForSale: json['isForSale'] ?? false,
+      isForSale: json['isForSale'] ?? true,
       postedAt: DateTime.tryParse(json['postedAt'] ?? '') ?? DateTime.now(),
-      paymentOption: json['paymentOption'],
-      investmentTerm: json['investmentTerm'],
-      isLoanAccepted: json['isLoanAccepted'],
-      isInvestorOpen: json['isInvestorOpen'],
-      ownerId: json['ownerId'],
-      category: json['category'],
+      paymentOption: json['paymentOption'] as String?,
+      investmentTerm: json['investmentTerm'] as String?,
+      isLoanAccepted: json['isLoanAccepted'] as bool?,
+      isInvestorOpen: json['isInvestorOpen'] as bool?,
+      ownerId: json['ownerId'] as String?,
+      category: json['category'] as String?,
     );
   }
 
   /// Returns true if the item is listed for investment.
-  bool get isInvestment => investmentTerm != null || isInvestorOpen == true;
+  bool get isInvestment =>
+      (investmentTerm != null && investmentTerm!.isNotEmpty) ||
+      (isInvestorOpen ?? false);
 
-  /// Friendly debug view of the object.
+  /// Returns a debug-friendly string view of the item.
   @override
-  String toString() => jsonEncode(toJson());
+  String toString() => 'MarketItem(${jsonEncode(toJson())})';
 
-  /// Equality override for comparisons and lists.
+  /// Equality based on item ID
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MarketItem &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
+      other is MarketItem && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
