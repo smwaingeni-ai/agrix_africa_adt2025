@@ -1,93 +1,55 @@
-import 'dart:convert';
-import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
+import 'package:flutter/material.dart';
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
 
-/// Represents a user in the AgriX system.
-class UserModel {
-  final String id;
-  final String name;
-  final String role;     // e.g., Farmer, Officer, Admin, etc.
-  final String passcode; // Optional login PIN or code
+class CreditScoreScreen extends StatelessWidget {
+  final FarmerProfile farmer;
 
-  const UserModel({
-    required this.id,
-    required this.name,
-    required this.role,
-    required this.passcode,
-  });
+  const CreditScoreScreen({super.key, required this.farmer});
 
-  /// 🔹 Empty user (for forms or drafts)
-  factory UserModel.empty() => const UserModel(
-        id: '',
-        name: '',
-        role: 'Farmer',
-        passcode: '',
-      );
-
-  /// 🔁 Create from raw JSON string
-  factory UserModel.fromRawJson(String str) =>
-      UserModel.fromJson(json.decode(str));
-
-  /// 🔁 Convert to raw JSON string
-  String toRawJson() => json.encode(toJson());
-
-  /// 🔁 Create from JSON map
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      role: json['role'] ?? 'Farmer',
-      passcode: json['passcode'] ?? '',
-    );
-  }
-
-  /// 🔁 Convert to JSON map
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'role': role,
-        'passcode': passcode,
-      };
-
-  /// 🔄 Create UserModel from FarmerProfile
-  factory UserModel.fromFarmer(model.FarmerProfile profile) {
-    return UserModel(
-      id: profile.idNumber, // Or profile.farmerId based on your definition
-      name: profile.fullName,
-      role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
-      passcode: '', // Optional
-    );
-  }
-
-  /// 🔄 Create a modified copy
-  UserModel copyWith({
-    String? id,
-    String? name,
-    String? role,
-    String? passcode,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      role: role ?? this.role,
-      passcode: passcode ?? this.passcode,
-    );
+  int calculateScore(FarmerProfile farmer) {
+    int score = 600;
+    if (farmer.subsidised) score += 50;
+    if (farmer.farmSize > 5) score += 30;
+    if (farmer.region.toLowerCase().contains('irrigated')) score += 20;
+    return score.clamp(300, 850); // score out of 850
   }
 
   @override
-  String toString() =>
-      'UserModel(id: $id, name: $name, role: $role, passcode: $passcode)';
+  Widget build(BuildContext context) {
+    final score = calculateScore(farmer);
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserModel &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name &&
-          role == other.role &&
-          passcode == other.passcode;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^ name.hashCode ^ role.hashCode ^ passcode.hashCode;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Credit Score')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Your Estimated Credit Score',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  '$score / 850',
+                  style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.green),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'This score is based on your farm size, subsidy status, and region.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
