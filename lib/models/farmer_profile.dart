@@ -30,11 +30,17 @@ class FarmerProfile {
   /// Whether the farmer is on a subsidy program
   final bool subsidised;
 
+  /// Whether the farmer is affiliated with government programs
+  final bool govtAffiliated;
+
   /// Language preference
   final String? language;
 
   /// Timestamp when profile was created
   final String? createdAt;
+
+  /// Timestamp when farmer was registered
+  final String? registeredAt;
 
   /// Optional image paths
   final String? qrImagePath;
@@ -54,8 +60,10 @@ class FarmerProfile {
     this.farmSizeHectares,
     this.farmType,
     required this.subsidised,
+    required this.govtAffiliated,
     this.language,
     this.createdAt,
+    this.registeredAt,
     this.qrImagePath,
     this.photoPath,
     this.farmLocation,
@@ -77,8 +85,10 @@ class FarmerProfile {
       farmSizeHectares: (json['farmSizeHectares'] as num?)?.toDouble(),
       farmType: json['farmType'],
       subsidised: json['subsidised'] ?? false,
+      govtAffiliated: json['govtAffiliated'] ?? false,
       language: json['language'],
       createdAt: json['createdAt'],
+      registeredAt: json['registeredAt'],
       qrImagePath: json['qrImagePath'],
       photoPath: json['photoPath'],
       farmLocation: json['farmLocation'],
@@ -100,40 +110,37 @@ class FarmerProfile {
         'farmSizeHectares': farmSizeHectares,
         'farmType': farmType,
         'subsidised': subsidised,
+        'govtAffiliated': govtAffiliated,
         'language': language,
         'createdAt': createdAt,
+        'registeredAt': registeredAt,
         'qrImagePath': qrImagePath,
         'photoPath': photoPath,
         'farmLocation': farmLocation,
       };
 
-  /// ✅ Parse from raw JSON string
   factory FarmerProfile.fromRawJson(String str) =>
       FarmerProfile.fromJson(jsonDecode(str));
 
-  /// ✅ Convert to raw JSON string
   String toRawJson() => jsonEncode(toJson());
 
-  /// ✅ Encode a list of profiles
   static String encode(List<FarmerProfile> profiles) =>
       jsonEncode(profiles.map((p) => p.toJson()).toList());
 
-  /// ✅ Decode a list of profiles
   static List<FarmerProfile> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List<dynamic>)
           .map((item) => FarmerProfile.fromJson(item))
           .toList();
 
-  /// ✅ Empty profile template
   static FarmerProfile empty() => FarmerProfile(
         farmerId: '',
         fullName: '',
         contactNumber: '',
         idNumber: '',
         subsidised: false,
+        govtAffiliated: false,
       );
 
-  /// ✅ Copy with override
   FarmerProfile copyWith({
     String? farmerId,
     String? fullName,
@@ -148,8 +155,10 @@ class FarmerProfile {
     double? farmSizeHectares,
     String? farmType,
     bool? subsidised,
+    bool? govtAffiliated,
     String? language,
     String? createdAt,
+    String? registeredAt,
     String? qrImagePath,
     String? photoPath,
     String? farmLocation,
@@ -168,15 +177,16 @@ class FarmerProfile {
       farmSizeHectares: farmSizeHectares ?? this.farmSizeHectares,
       farmType: farmType ?? this.farmType,
       subsidised: subsidised ?? this.subsidised,
+      govtAffiliated: govtAffiliated ?? this.govtAffiliated,
       language: language ?? this.language,
       createdAt: createdAt ?? this.createdAt,
+      registeredAt: registeredAt ?? this.registeredAt,
       qrImagePath: qrImagePath ?? this.qrImagePath,
       photoPath: photoPath ?? this.photoPath,
       farmLocation: farmLocation ?? this.farmLocation,
     );
   }
 
-  /// ✅ Comparison override
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -220,4 +230,7 @@ class FarmerProfile {
   String get name => fullName;
   String get contact => contactNumber;
   double? get farmSize => farmSizeHectares;
+
+  /// ✅ Getter alias for `id`
+  String get id => farmerId;
 }
