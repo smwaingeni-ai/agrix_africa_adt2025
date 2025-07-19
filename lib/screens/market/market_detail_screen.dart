@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:agrix_africa_adt2025/models/market/market_item.dart';
+import 'package:agrix_africa_adt2025/models/market/market_item.dart'; // ✅ Corrected path
 
 class MarketDetailScreen extends StatelessWidget {
   final MarketItem item;
@@ -38,7 +38,7 @@ class MarketDetailScreen extends StatelessWidget {
         "${item.title}\n${item.description}\n"
         "📍 Location: ${item.location}\n💰 Price: \$${item.price.toStringAsFixed(2)}";
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("📤 Shared: $msg")), // Placeholder for share_plus
+      SnackBar(content: Text("📤 Shared: $msg")), // Placeholder — use share_plus in future
     );
   }
 
@@ -72,7 +72,15 @@ class MarketDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final String? imagePath =
         item.imagePaths.isNotEmpty ? item.imagePaths.first : null;
-    final bool imageExists = imagePath != null && File(imagePath).existsSync();
+    bool imageExists = false;
+
+    if (imagePath != null) {
+      try {
+        imageExists = File(imagePath).existsSync();
+      } catch (e) {
+        imageExists = false;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
