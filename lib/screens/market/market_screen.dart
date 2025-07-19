@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:agrix_africa_adt2025/models/market/market_item.dart';
+import 'package:agrix_africa_adt2025/screens/market/market_item_form.dart';
+import 'package:agrix_africa_adt2025/screens/market/market_detail_screen.dart';
 import 'package:agrix_africa_adt2025/services/market/market_service.dart';
-import 'market_item_form.dart';
-import 'market_detail_screen.dart';
-import 'market_invite_screen.dart';
 
 class MarketScreen extends StatefulWidget {
-  const MarketScreen({super.key});
+  const MarketScreen({Key? key}) : super(key: key);
 
   @override
-  State<MarketScreen> createState() => _MarketScreenState();
+  _MarketScreenState createState() => _MarketScreenState();
 }
 
 class _MarketScreenState extends State<MarketScreen> {
   List<MarketItem> _items = [];
-  bool _loading = true;
 
   @override
   void initState() {
@@ -26,48 +24,28 @@ class _MarketScreenState extends State<MarketScreen> {
     final items = await MarketService.loadItems();
     setState(() {
       _items = items;
-      _loading = false;
     });
   }
 
-  void _goToCreateItem() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const MarketItemForm()),
-    );
+  void _addItem(MarketItem item) async {
+    await MarketService.addItem(item);
     _loadItems();
   }
 
-  void _goToInviteScreen() {
+  void _openForm() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const MarketInviteScreen()),
+      MaterialPageRoute(
+        builder: (_) => MarketItemForm(onSubmit: _addItem),
+      ),
     );
   }
 
-  void _goToDetail(MarketItem item) {
-    Navigator.pushNamed(
+  void _openDetails(MarketItem item) {
+    Navigator.push(
       context,
-      '/market/detail',
-      arguments: item,
-    );
-  }
-
-  Widget _buildMarketCard(MarketItem item) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: ListTile(
-        title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Type: ${item.type}'),
-            Text('Location: ${item.location}'),
-            Text('Price: \$${(item.price ?? 0.0).toStringAsFixed(2)}'),
-          ],
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: () => _goToDetail(item),
+      MaterialPageRoute(
+        builder: (_) => MarketDetailScreen(item: item),
       ),
     );
   }
@@ -79,39 +57,25 @@ class _MarketScreenState extends State<MarketScreen> {
         title: const Text('Agri Market'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.group_add),
-            onPressed: _goToInviteScreen,
-            tooltip: "Invite to Market",
-          ),
-          IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _goToCreateItem,
-            tooltip: "Add Listing",
-          ),
+            onPressed: _openForm,
+          )
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _items.isEmpty
-              ? const Center(
-                  child: Text(
-                    '📭 No market listings available.\nTap ➕ to add one.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadItems,
-                  child: ListView.builder(
-                    itemCount: _items.length,
-                    itemBuilder: (context, index) => _buildMarketCard(_items[index]),
-                  ),
-                ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _goToCreateItem,
-        tooltip: 'Add New Listing',
-        child: const Icon(Icons.add),
-      ),
+      body: _items.isEmpty
+          ? const Center(child: Text('No market items available.'))
+          : ListView.builder(
+              itemCount: _items.length,
+              itemBuilder: (context, index) {
+                final item = _items[index];
+                return ListTile(
+                  title: Text(item.title),
+                  subtitle: Text('${item.category} • ${item.location}'),
+                  trailing: Text('\$${item.price.toStringAsFixed(2)}'),
+                  onTap: () => _openDetails(item),
+                );
+              },
+            ),
     );
   }
 }
