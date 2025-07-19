@@ -2,54 +2,52 @@ import 'dart:convert';
 
 /// Represents an item listed in the AgriX marketplace.
 class MarketItem {
-  /// Unique ID for this item.
+  /// Unique identifier for the market item.
   final String id;
 
-  /// Title of the item, e.g., 'Fresh Tomatoes', 'Goat for Sale'
+  /// Title of the item, e.g., 'Fresh Tomatoes', 'Goat for Sale'.
   final String title;
 
-  /// Detailed description
+  /// Detailed item description.
   final String description;
 
   /// Type of item: 'crop', 'livestock', 'equipment', 'service', etc.
   final String type;
 
-  /// Location where the item is based (e.g., 'Lusaka, Zambia')
+  /// Location where the item is available (e.g., 'Lusaka, Zambia').
   final String location;
 
-  /// Path to the item's image (local path or network URL)
+  /// Local path or URL to the item's image.
   final String imagePath;
 
-  /// Price in local currency
+  /// Price of the item in local currency.
   final double price;
 
-  /// Contact details (phone number or email)
+  /// Contact details of the seller (phone or email).
   final String contact;
 
-  /// True if item is for sale; false if for barter, donation, or lease
+  /// True if the item is listed for sale; false for barter, lease, or donation.
   final bool isForSale;
 
-  /// Timestamp when item was posted
+  /// Timestamp indicating when the item was listed.
   final DateTime postedAt;
 
-  // Optional Fields for Financial/Investment Features
-
-  /// Payment option (e.g., 'cash', 'loan', 'bank transfer')
+  /// Optional: Accepted payment option (e.g., 'cash', 'loan').
   final String? paymentOption;
 
-  /// Investment term (e.g., 'short', 'mid', 'long')
+  /// Optional: Investment term (e.g., 'short', 'mid', 'long').
   final String? investmentTerm;
 
-  /// Whether loans are accepted for this item
+  /// Optional: True if the seller accepts loans.
   final bool? isLoanAccepted;
 
-  /// Whether the seller is open to investors
+  /// Optional: True if the seller is open to investment.
   final bool? isInvestorOpen;
 
-  /// Owner ID (usually the farmer or trader)
+  /// Optional: Unique identifier for the item's owner.
   final String? ownerId;
 
-  /// Category or sub-type, e.g., 'vegetable', 'poultry'
+  /// Optional: Item category or sub-type (e.g., 'vegetable', 'poultry').
   final String? category;
 
   const MarketItem({
@@ -71,7 +69,7 @@ class MarketItem {
     this.category,
   });
 
-  /// Converts the object to a JSON map for storage or networking.
+  /// Serializes the object to a JSON-compatible map.
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
@@ -91,7 +89,7 @@ class MarketItem {
         'category': category,
       };
 
-  /// Creates a MarketItem from a JSON map.
+  /// Creates a MarketItem instance from a JSON map.
   factory MarketItem.fromJson(Map<String, dynamic> json) {
     return MarketItem(
       id: json['id'] ?? '',
@@ -113,16 +111,14 @@ class MarketItem {
     );
   }
 
-  /// Returns true if the item is listed for investment.
+  /// Returns true if the item qualifies as an investment opportunity.
   bool get isInvestment =>
       (investmentTerm != null && investmentTerm!.isNotEmpty) ||
       (isInvestorOpen ?? false);
 
-  /// Returns a debug-friendly string view of the item.
   @override
   String toString() => 'MarketItem(${jsonEncode(toJson())})';
 
-  /// Equality based on item ID
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
