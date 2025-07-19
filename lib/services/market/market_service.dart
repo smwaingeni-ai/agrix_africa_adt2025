@@ -9,25 +9,36 @@ class MarketService {
 
   /// Save all market items
   static Future<void> saveItems(List<model.MarketItem> items) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonList = items.map((item) => item.toJson()).toList();
-    await prefs.setString(_itemsKey, json.encode(jsonList));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonList = items.map((item) => item.toJson()).toList();
+      await prefs.setString(_itemsKey, json.encode(jsonList));
+    } catch (e) {
+      print('Error saving market items: $e');
+    }
   }
 
   /// Load all market items
   static Future<List<model.MarketItem>> loadItems() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_itemsKey);
-    if (raw == null) return [];
-    final decoded = json.decode(raw) as List<dynamic>;
-    return decoded.map((e) => model.MarketItem.fromJson(e)).toList();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_itemsKey);
+      if (raw == null) return [];
+      final decoded = json.decode(raw) as List<dynamic>;
+      return decoded.map((e) => model.MarketItem.fromJson(e)).toList();
+    } catch (e) {
+      print('Error loading market items: $e');
+      return [];
+    }
   }
 
-  /// Add a new market item
+  /// Add a new market item (avoid duplicates)
   static Future<void> addItem(model.MarketItem item) async {
     final items = await loadItems();
-    items.add(item);
-    await saveItems(items);
+    if (!items.any((existing) => existing.id == item.id)) {
+      items.add(item);
+      await saveItems(items);
+    }
   }
 
   /// Save a single market item (replacing by ID)
@@ -38,7 +49,7 @@ class MarketService {
     await saveItems(updated);
   }
 
-  /// Update a market item
+  /// Update a market item by ID
   static Future<void> updateItem(model.MarketItem updatedItem) async {
     final items = await loadItems();
     final index = items.indexWhere((item) => item.id == updatedItem.id);
@@ -48,30 +59,41 @@ class MarketService {
     }
   }
 
-  /// Save investment offers
+  /// Save all investment offers
   static Future<void> saveOffers(List<investment.InvestmentOffer> offers) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonList = offers.map((e) => e.toJson()).toList();
-    await prefs.setString(_offersKey, json.encode(jsonList));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonList = offers.map((e) => e.toJson()).toList();
+      await prefs.setString(_offersKey, json.encode(jsonList));
+    } catch (e) {
+      print('Error saving investment offers: $e');
+    }
   }
 
-  /// Load investment offers
+  /// Load all investment offers
   static Future<List<investment.InvestmentOffer>> loadOffers() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_offersKey);
-    if (raw == null) return [];
-    final decoded = json.decode(raw) as List<dynamic>;
-    return decoded.map((e) => investment.InvestmentOffer.fromJson(e)).toList();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_offersKey);
+      if (raw == null) return [];
+      final decoded = json.decode(raw) as List<dynamic>;
+      return decoded.map((e) => investment.InvestmentOffer.fromJson(e)).toList();
+    } catch (e) {
+      print('Error loading investment offers: $e');
+      return [];
+    }
   }
 
-  /// Add a new investment offer
+  /// Add a new investment offer (avoid duplicates)
   static Future<void> addOffer(investment.InvestmentOffer offer) async {
     final offers = await loadOffers();
-    offers.add(offer);
-    await saveOffers(offers);
+    if (!offers.any((existing) => existing.id == offer.id)) {
+      offers.add(offer);
+      await saveOffers(offers);
+    }
   }
 
-  /// Save a single investment offer (replacing by ID)
+  /// Save a single investment offer (replace by ID)
   static Future<void> saveOffer(investment.InvestmentOffer offer) async {
     final offers = await loadOffers();
     final updated = offers.where((existing) => existing.id != offer.id).toList();
@@ -79,7 +101,7 @@ class MarketService {
     await saveOffers(updated);
   }
 
-  /// Update an investment offer
+  /// Update an existing investment offer by ID
   static Future<void> updateOffer(investment.InvestmentOffer updatedOffer) async {
     final offers = await loadOffers();
     final index = offers.indexWhere((offer) => offer.id == updatedOffer.id);
