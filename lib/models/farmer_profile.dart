@@ -1,221 +1,197 @@
 import 'dart:convert';
-import 'dart:io' as io;
-import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 /// 🧑‍🌾 Farmer Profile Model
 class FarmerProfile {
-  final String id;
-  final String name;
-  final String contact;
-  final String farmSize;
-  final String? photoPath;
+  /// Unique ID for the farmer
+  final String farmerId;
+
+  /// Full name of the farmer
+  final String fullName;
+
+  /// Contact number (phone)
+  final String contactNumber;
+
+  /// National ID or similar identifier
+  final String idNumber;
+
+  /// Regional and location info
   final String? region;
+  final String? province;
+  final String? district;
+  final String? ward;
+  final String? village;
+  final String? cell;
+
+  /// Farm details
+  final double? farmSizeHectares;
+  final String? farmType;
+  final String? farmLocation;
+
+  /// Whether the farmer is on a subsidy program
   final bool subsidised;
 
+  /// Language preference
+  final String? language;
+
+  /// Created timestamp
+  final String? createdAt;
+
+  /// Optional: paths for profile image and QR code
+  final String? qrImagePath;
+  final String? photoPath;
+
   FarmerProfile({
-    required this.id,
-    required this.name,
-    required this.contact,
-    required this.farmSize,
-    this.photoPath,
+    required this.farmerId,
+    required this.fullName,
+    required this.contactNumber,
+    required this.idNumber,
     this.region,
+    this.province,
+    this.district,
+    this.ward,
+    this.village,
+    this.cell,
+    this.farmSizeHectares,
+    this.farmType,
     required this.subsidised,
+    this.language,
+    this.createdAt,
+    this.qrImagePath,
+    this.photoPath,
+    this.farmLocation,
   });
 
-  factory FarmerProfile.fromJson(Map<String, dynamic> json) => FarmerProfile(
-        id: json['id'],
-        name: json['name'],
-        contact: json['contact'],
-        farmSize: json['farmSize'],
-        photoPath: json['photoPath'],
-        region: json['region'],
-        subsidised: json['subsidised'] ?? false,
-      );
+  /// ✅ From JSON
+  factory FarmerProfile.fromJson(Map<String, dynamic> json) {
+    return FarmerProfile(
+      farmerId: json['farmerId'] ?? '',
+      fullName: json['fullName'] ?? '',
+      contactNumber: json['contactNumber'] ?? '',
+      idNumber: json['idNumber'] ?? '',
+      region: json['region'],
+      province: json['province'],
+      district: json['district'],
+      ward: json['ward'],
+      village: json['village'],
+      cell: json['cell'],
+      farmSizeHectares: (json['farmSizeHectares'] as num?)?.toDouble(),
+      farmType: json['farmType'],
+      subsidised: json['subsidised'] ?? false,
+      language: json['language'],
+      createdAt: json['createdAt'],
+      qrImagePath: json['qrImagePath'],
+      photoPath: json['photoPath'],
+      farmLocation: json['farmLocation'],
+    );
+  }
 
+  /// ✅ To JSON
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'contact': contact,
-        'farmSize': farmSize,
-        'photoPath': photoPath,
+        'farmerId': farmerId,
+        'fullName': fullName,
+        'contactNumber': contactNumber,
+        'idNumber': idNumber,
         'region': region,
+        'province': province,
+        'district': district,
+        'ward': ward,
+        'village': village,
+        'cell': cell,
+        'farmSizeHectares': farmSizeHectares,
+        'farmType': farmType,
         'subsidised': subsidised,
+        'language': language,
+        'createdAt': createdAt,
+        'qrImagePath': qrImagePath,
+        'photoPath': photoPath,
+        'farmLocation': farmLocation,
       };
 
+  /// ✅ JSON string decoding
   factory FarmerProfile.fromRawJson(String str) =>
       FarmerProfile.fromJson(jsonDecode(str));
 
+  /// ✅ JSON string encoding
+  String toRawJson() => jsonEncode(toJson());
+
+  /// ✅ List encoding
   static String encode(List<FarmerProfile> profiles) => jsonEncode(
-        profiles.map<Map<String, dynamic>>((p) => p.toJson()).toList(),
+        profiles.map((p) => p.toJson()).toList(),
       );
 
+  /// ✅ List decoding
   static List<FarmerProfile> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List<dynamic>)
-          .map<FarmerProfile>((item) => FarmerProfile.fromJson(item))
+          .map((item) => FarmerProfile.fromJson(item))
           .toList();
 
+  /// ✅ Create empty template
   static FarmerProfile empty() => FarmerProfile(
-        id: '',
-        name: '',
-        contact: '',
-        farmSize: '',
+        farmerId: '',
+        fullName: '',
+        contactNumber: '',
+        idNumber: '',
         subsidised: false,
       );
-}
 
-/// 📦 Farmer Profile Service
-class FarmerProfileService {
-  static const String _fileName = 'farmer_profiles.json';
-  static const String _activeFileName = 'active_farmer_profile.json';
-
-  static Future<String?> pickProfileImage({bool camera = false}) async {
-    final picker = ImagePicker();
-    final XFile? file = camera
-        ? await picker.pickImage(source: ImageSource.camera)
-        : await picker.pickImage(source: ImageSource.gallery);
-    return file?.path;
+  /// ✅ Copy with override
+  FarmerProfile copyWith({
+    String? farmerId,
+    String? fullName,
+    String? contactNumber,
+    String? idNumber,
+    String? region,
+    String? province,
+    String? district,
+    String? ward,
+    String? village,
+    String? cell,
+    double? farmSizeHectares,
+    String? farmType,
+    bool? subsidised,
+    String? language,
+    String? createdAt,
+    String? qrImagePath,
+    String? photoPath,
+    String? farmLocation,
+  }) {
+    return FarmerProfile(
+      farmerId: farmerId ?? this.farmerId,
+      fullName: fullName ?? this.fullName,
+      contactNumber: contactNumber ?? this.contactNumber,
+      idNumber: idNumber ?? this.idNumber,
+      region: region ?? this.region,
+      province: province ?? this.province,
+      district: district ?? this.district,
+      ward: ward ?? this.ward,
+      village: village ?? this.village,
+      cell: cell ?? this.cell,
+      farmSizeHectares: farmSizeHectares ?? this.farmSizeHectares,
+      farmType: farmType ?? this.farmType,
+      subsidised: subsidised ?? this.subsidised,
+      language: language ?? this.language,
+      createdAt: createdAt ?? this.createdAt,
+      qrImagePath: qrImagePath ?? this.qrImagePath,
+      photoPath: photoPath ?? this.photoPath,
+      farmLocation: farmLocation ?? this.farmLocation,
+    );
   }
 
-  static Future<io.File> _getProfileFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return io.File('${dir.path}/$_fileName');
-  }
+  /// ✅ Equatable override for comparison
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FarmerProfile &&
+          runtimeType == other.runtimeType &&
+          farmerId == other.farmerId &&
+          fullName == other.fullName &&
+          contactNumber == other.contactNumber &&
+          idNumber == other.idNumber;
 
-  static Future<io.File> _getActiveFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return io.File('${dir.path}/$_activeFileName');
-  }
-
-  static Future<void> saveProfile(FarmerProfile profile) async {
-    try {
-      final file = await _getProfileFile();
-      await file.writeAsString(FarmerProfile.encode([profile]), flush: true);
-    } catch (e) {
-      debugPrint('❌ Error saving profile: $e');
-    }
-  }
-
-  static Future<void> saveFarmer(FarmerProfile profile) async {
-    try {
-      final farmers = await loadProfiles();
-      farmers.removeWhere((x) => x.id == profile.id);
-      farmers.add(profile);
-      final file = await _getProfileFile();
-      await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
-    } catch (e) {
-      debugPrint('❌ Error saving farmer: $e');
-    }
-  }
-
-  static Future<void> updateFarmer(FarmerProfile profile) async {
-    try {
-      final farmers = await loadProfiles();
-      farmers.removeWhere((p) => p.id == profile.id);
-      farmers.add(profile);
-      final file = await _getProfileFile();
-      await file.writeAsString(FarmerProfile.encode(farmers), flush: true);
-    } catch (e) {
-      debugPrint('❌ Error updating farmer: $e');
-    }
-  }
-
-  static Future<List<FarmerProfile>> loadProfiles() async {
-    try {
-      final file = await _getProfileFile();
-      if (await file.exists()) {
-        final content = await file.readAsString();
-        return FarmerProfile.decode(content);
-      }
-    } catch (e) {
-      debugPrint('❌ Error loading profiles: $e');
-    }
-    return [];
-  }
-
-  static Future<FarmerProfile?> loadActiveProfile() async {
-    try {
-      final file = await _getActiveFile();
-      if (await file.exists()) {
-        final content = await file.readAsString();
-        return FarmerProfile.fromRawJson(content);
-      }
-    } catch (e) {
-      debugPrint('❌ Error loading active profile: $e');
-    }
-    return null;
-  }
-
-  static Future<void> saveActiveProfile(FarmerProfile profile) async {
-    try {
-      final file = await _getActiveFile();
-      await file.writeAsString(jsonEncode(profile.toJson()));
-    } catch (e) {
-      debugPrint('❌ Error saving active profile: $e');
-    }
-  }
-
-  static Future<void> clearActiveProfile() async {
-    try {
-      final file = await _getActiveFile();
-      if (await file.exists()) {
-        await file.delete();
-      }
-    } catch (e) {
-      debugPrint('❌ Error clearing active profile: $e');
-    }
-  }
-
-  static Future<void> deleteAllProfiles() async {
-    try {
-      final file = await _getProfileFile();
-      if (await file.exists()) {
-        await file.writeAsString('[]', flush: true);
-      }
-    } catch (e) {
-      debugPrint('❌ Error deleting profiles: $e');
-    }
-  }
-
-  static Future<void> deleteFarmer(String id) async {
-    try {
-      final farmers = await loadProfiles();
-      farmers.removeWhere((f) => f.id == id);
-      final file = await _getProfileFile();
-      await file.writeAsString(jsonEncode(farmers.map((f) => f.toJson()).toList()));
-    } catch (e) {
-      debugPrint('❌ Error deleting farmer: $e');
-    }
-  }
-
-  static Future<FarmerProfile?> getFarmerById(String id) async {
-    final farmers = await loadProfiles();
-    return farmers.firstWhere((f) => f.id == id, orElse: () => FarmerProfile.empty());
-  }
-
-  static Future<bool> profileExists() async {
-    final profiles = await loadProfiles();
-    return profiles.isNotEmpty;
-  }
-
-  static Future<String?> exportProfilesAsJson() async {
-    try {
-      final profiles = await loadProfiles();
-      return FarmerProfile.encode(profiles);
-    } catch (e) {
-      debugPrint('❌ Error exporting profiles: $e');
-      return null;
-    }
-  }
-
-  static Future<void> importProfilesFromJson(String jsonStr) async {
-    try {
-      final profiles = FarmerProfile.decode(jsonStr);
-      final file = await _getProfileFile();
-      await file.writeAsString(FarmerProfile.encode(profiles), flush: true);
-    } catch (e) {
-      debugPrint('❌ Error importing profiles: $e');
-    }
-  }
+  @override
+  int get hashCode =>
+      farmerId.hashCode ^
+      fullName.hashCode ^
+      contactNumber.hashCode ^
+      idNumber.hashCode;
 }
