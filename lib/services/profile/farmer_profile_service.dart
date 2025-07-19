@@ -13,9 +13,14 @@ class FarmerProfileService {
 
   /// Save the farmer profile to SharedPreferences
   static Future<void> saveProfile(FarmerProfile profile) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = jsonEncode(profile.toJson());
-    await prefs.setString(_storageKey, jsonString);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = jsonEncode(profile.toJson());
+      await prefs.setString(_storageKey, jsonString);
+      debugPrint('✅ Farmer profile saved successfully.');
+    } catch (e) {
+      debugPrint('❌ Error saving farmer profile: $e');
+    }
   }
 
   /// Load the farmer profile from SharedPreferences
@@ -24,8 +29,7 @@ class FarmerProfileService {
     final jsonString = prefs.getString(_storageKey);
     if (jsonString != null) {
       try {
-        final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-        return FarmerProfile.fromJson(jsonMap);
+        return FarmerProfile.fromJson(jsonDecode(jsonString));
       } catch (e) {
         debugPrint('❌ Failed to decode farmer profile: $e');
       }
@@ -33,25 +37,49 @@ class FarmerProfileService {
     return null;
   }
 
-  /// Clear the stored profile
+  /// Check if a profile is saved
+  static Future<bool> isProfileSaved() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey(_storageKey);
+  }
+
+  /// Remove the profile from local storage
   static Future<void> clearProfile() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_storageKey);
+    debugPrint('🗑️ Farmer profile cleared from storage.');
   }
 
-  /// Aliases for consistent naming
+  /// Aliases for consistency across screens
   static Future<void> saveActiveProfile(FarmerProfile profile) => saveProfile(profile);
   static Future<FarmerProfile?> loadActiveProfile() => loadProfile();
   static Future<void> clearActiveProfile() => clearProfile();
 
-  /// Pick image from gallery
-  static Future<String?> pickImageAndGetPath() async {
-    final picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    return pickedFile?.path;
+  /// Pick an image from gallery and return its path
+  static Future<String?> pickImageFromGallery() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      return pickedFile?.path;
+    } catch (e) {
+      debugPrint('❌ Error picking image from gallery: $e');
+      return null;
+    }
   }
 
-  /// Convert image to base64 (non-web only)
+  /// Pick an image from camera and return its path
+  static Future<String?> pickImageFromCamera() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+      return pickedFile?.path;
+    } catch (e) {
+      debugPrint('❌ Error capturing image from camera: $e');
+      return null;
+    }
+  }
+
+  /// Convert file to base64 (Mobile/Desktop only)
   static Future<String?> getProfileImageBase64(String? filePath) async {
     if (filePath == null || kIsWeb) {
       debugPrint("⚠️ Image path is null or unsupported on web.");
@@ -62,12 +90,12 @@ class FarmerProfileService {
       final bytes = await File(filePath).readAsBytes();
       return base64Encode(bytes);
     } catch (e) {
-      debugPrint("❌ Error reading image file: $e");
+      debugPrint("❌ Error reading file for base64 conversion: $e");
       return null;
     }
   }
 
-  /// Display image widget based on platform
+  /// Render image safely across platforms
   static Widget getImageWidget(String path, {BoxFit fit = BoxFit.cover}) {
     if (kIsWeb) {
       return Image.network(path, fit: fit);
@@ -76,13 +104,14 @@ class FarmerProfileService {
     }
   }
 
-  /// Save QR code image to local disk and return file path
+  /// Optional: Save QR image to disk and return file path
   static Future<String?> saveQRImageToFile(Uint8List imageBytes, String filename) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final filePath = '${dir.path}/$filename';
       final file = File(filePath);
       await file.writeAsBytes(imageBytes);
+      debugPrint('✅ QR image saved at: $filePath');
       return filePath;
     } catch (e) {
       debugPrint('❌ Error saving QR image: $e');
