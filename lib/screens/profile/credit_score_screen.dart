@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'farmer_profile.dart' as model;
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
 
 /// Represents a user in the AgriX system.
 class UserModel {
@@ -51,10 +51,10 @@ class UserModel {
   /// 🔄 Create UserModel from FarmerProfile
   factory UserModel.fromFarmer(model.FarmerProfile profile) {
     return UserModel(
-      id: profile.id,
+      id: profile.idNumber, // Or profile.farmerId based on your definition
       name: profile.fullName,
       role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
-      passcode: '', // optional; handled externally
+      passcode: '', // Optional
     );
   }
 
