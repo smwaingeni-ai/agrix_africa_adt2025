@@ -2,12 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:agrix_africa_adt2025/models/user_model.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart'; // ✅ Correct import path
+import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart';
 
 class LandingPage extends StatefulWidget {
-  final UserModel loggedInUser;
+  final FarmerProfile loggedInUser;
 
   const LandingPage({Key? key, required this.loggedInUser}) : super(key: key);
 
@@ -32,7 +31,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Future<void> _deleteProfile() async {
-    await FarmerProfileService.clearActiveProfile(); // ✅ Use correct method
+    await FarmerProfileService.clearActiveProfile();
     setState(() {
       _profile = null;
     });
@@ -120,7 +119,7 @@ class _LandingPageState extends State<LandingPage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                '👋 Welcome ${widget.loggedInUser.name} (${widget.loggedInUser.role})',
+                '👋 Welcome ${widget.loggedInUser.name} (${widget.loggedInUser.idNumber})',
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
@@ -208,8 +207,7 @@ class _LandingPageState extends State<LandingPage> {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 children: buttons
-                    .map((btn) =>
-                        buildGridButton(btn['label']!, btn['route']!))
+                    .map((btn) => buildGridButton(btn['label']!, btn['route']!))
                     .toList(),
               ),
             ),
