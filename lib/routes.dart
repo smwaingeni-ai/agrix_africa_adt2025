@@ -36,7 +36,7 @@ import 'screens/diagnostics/crops_screen.dart';
 import 'screens/diagnostics/soil_screen.dart';
 import 'screens/diagnostics/livestock_screen.dart';
 
-// AI Advice & Chat
+// AI & Chat
 import 'screens/ai_advice/agrigpt_screen.dart';
 import 'screens/chat_help/chat_screen.dart';
 import 'screens/chat_help/help_screen.dart';
@@ -52,10 +52,10 @@ import 'screens/profile/credit_score_screen.dart';
 import 'screens/officers/officer_tasks_screen.dart';
 import 'screens/officers/field_assessment_screen.dart';
 
-// Models (used in route argument passing)
+// Models (for argument passing)
 import 'models/contracts/contract_offer.dart';
 import 'models/market/market_item.dart';
-import 'models/user_model.dart'; // ✅ Needed for LandingPage
+import 'models/user_model.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
   // Core
@@ -74,30 +74,16 @@ final Map<String, WidgetBuilder> appRoutes = {
   // Investments
   '/investments/offer': (context) => const InvestmentOfferForm(),
   '/investments/offers': (context) => const InvestmentOffersScreen(),
-  '/investors/register': (context) => InvestorRegistrationScreen(), // ✅ FIXED: Removed `const`
+  '/investors/register': (context) => InvestorRegistrationScreen(),
   '/investors/list': (context) => const InvestorListScreen(),
 
   // Contracts
   '/contracts/offer': (context) => const ContractOfferForm(),
   '/contracts/list': (context) => const ContractListScreen(),
-  '/contracts/detail': (context) {
-    final args = ModalRoute.of(context)!.settings.arguments;
-    if (args is ContractOffer) {
-      return ContractDetailScreen(contract: args);
-    }
-    return const Scaffold(body: Center(child: Text('Invalid contract data')));
-  },
 
   // Market
   '/market': (context) => const MarketScreen(),
   '/market/new': (context) => const MarketItemForm(),
-  '/market/detail': (context) {
-    final args = ModalRoute.of(context)!.settings.arguments;
-    if (args is MarketItem) {
-      return MarketDetailScreen(item: args);
-    }
-    return const Scaffold(body: Center(child: Text('Invalid market item')));
-  },
   '/market/invite': (context) => const MarketInviteScreen(),
 
   // Diagnostics
@@ -122,27 +108,45 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/officer/assessments': (context) => const FieldAssessmentScreen(),
 };
 
-/// ✅ Handle routes with arguments like LandingPage
+/// Handle routes requiring arguments
 Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-  if (settings.name == '/landing') {
-    final args = settings.arguments;
-    if (args is UserModel) {
-      return MaterialPageRoute(
-        builder: (context) => LandingPage(loggedInUser: args),
-      );
-    } else {
-      return MaterialPageRoute(
-        builder: (context) => const Scaffold(
-          body: Center(child: Text('Invalid user data for Landing Page')),
-        ),
-      );
-    }
-  }
+  switch (settings.name) {
+    case '/contracts/detail':
+      final args = settings.arguments;
+      if (args is ContractOffer) {
+        return MaterialPageRoute(
+          builder: (context) => ContractDetailScreen(contract: args),
+        );
+      }
+      return _errorRoute('Invalid contract data');
 
-  // Optionally handle unknown routes
+    case '/market/detail':
+      final args = settings.arguments;
+      if (args is MarketItem) {
+        return MaterialPageRoute(
+          builder: (context) => MarketDetailScreen(item: args),
+        );
+      }
+      return _errorRoute('Invalid market item');
+
+    case '/landing':
+      final args = settings.arguments;
+      if (args is UserModel) {
+        return MaterialPageRoute(
+          builder: (context) => LandingPage(loggedInUser: args),
+        );
+      }
+      return _errorRoute('Invalid user data for Landing Page');
+
+    default:
+      return _errorRoute('Page not found');
+  }
+}
+
+Route<dynamic> _errorRoute(String message) {
   return MaterialPageRoute(
-    builder: (context) => const Scaffold(
-      body: Center(child: Text('Page not found')),
+    builder: (context) => Scaffold(
+      body: Center(child: Text(message)),
     ),
   );
 }
