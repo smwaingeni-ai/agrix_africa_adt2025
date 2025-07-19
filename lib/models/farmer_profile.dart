@@ -33,10 +33,10 @@ class FarmerProfile {
   /// Language preference
   final String? language;
 
-  /// Created timestamp
+  /// Timestamp when profile was created
   final String? createdAt;
 
-  /// Optional: paths for profile image and QR code
+  /// Optional image paths
   final String? qrImagePath;
   final String? photoPath;
 
@@ -61,7 +61,7 @@ class FarmerProfile {
     this.farmLocation,
   });
 
-  /// ✅ From JSON
+  /// ✅ Decode from JSON
   factory FarmerProfile.fromJson(Map<String, dynamic> json) {
     return FarmerProfile(
       farmerId: json['farmerId'] ?? '',
@@ -85,7 +85,7 @@ class FarmerProfile {
     );
   }
 
-  /// ✅ To JSON
+  /// ✅ Encode to JSON
   Map<String, dynamic> toJson() => {
         'farmerId': farmerId,
         'fullName': fullName,
@@ -107,25 +107,24 @@ class FarmerProfile {
         'farmLocation': farmLocation,
       };
 
-  /// ✅ JSON string decoding
+  /// ✅ Parse from raw JSON string
   factory FarmerProfile.fromRawJson(String str) =>
       FarmerProfile.fromJson(jsonDecode(str));
 
-  /// ✅ JSON string encoding
+  /// ✅ Convert to raw JSON string
   String toRawJson() => jsonEncode(toJson());
 
-  /// ✅ List encoding
-  static String encode(List<FarmerProfile> profiles) => jsonEncode(
-        profiles.map((p) => p.toJson()).toList(),
-      );
+  /// ✅ Encode a list of profiles
+  static String encode(List<FarmerProfile> profiles) =>
+      jsonEncode(profiles.map((p) => p.toJson()).toList());
 
-  /// ✅ List decoding
+  /// ✅ Decode a list of profiles
   static List<FarmerProfile> decode(String jsonStr) =>
       (jsonDecode(jsonStr) as List<dynamic>)
           .map((item) => FarmerProfile.fromJson(item))
           .toList();
 
-  /// ✅ Create empty template
+  /// ✅ Empty profile template
   static FarmerProfile empty() => FarmerProfile(
         farmerId: '',
         fullName: '',
@@ -177,7 +176,7 @@ class FarmerProfile {
     );
   }
 
-  /// ✅ Equatable override for comparison
+  /// ✅ Comparison override
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -194,4 +193,26 @@ class FarmerProfile {
       fullName.hashCode ^
       contactNumber.hashCode ^
       idNumber.hashCode;
+
+  /// ✅ Utility: is profile valid
+  bool get isValid =>
+      farmerId.isNotEmpty &&
+      fullName.isNotEmpty &&
+      contactNumber.isNotEmpty &&
+      idNumber.isNotEmpty;
+
+  /// ✅ Utility: fallback display name
+  String get displayName => fullName.isNotEmpty ? fullName : 'Unnamed Farmer';
+
+  /// ✅ Utility: check if photo exists
+  bool get hasPhoto => photoPath != null && photoPath!.isNotEmpty;
+
+  /// ✅ Utility: check if QR exists
+  bool get hasQR => qrImagePath != null && qrImagePath!.isNotEmpty;
+
+  /// ✅ Utility: combine location into a single readable string
+  String get fullAddress {
+    final parts = [village, ward, district, province, region];
+    return parts.where((p) => p != null && p!.isNotEmpty).join(', ');
+  }
 }
