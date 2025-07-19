@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:agrix_africa_adt2025/models/user_model.dart';
 import 'package:agrix_africa_adt2025/models/farmer_profile.dart';
-import 'package:agrix_africa_adt2025/services/profile_service.dart'; // ✅ Import correct service
+import 'package:agrix_africa_adt2025/services/profile/farmer_profile_service.dart'; // ✅ Corrected import path
 import 'package:agrix_africa_adt2025/screens/core/landing_page.dart';
 
 class RegisterUserScreen extends StatefulWidget {
