@@ -13,6 +13,7 @@ class InvestmentOfferForm extends StatefulWidget {
 class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
   final _formKey = GlobalKey<FormState>();
 
+  String _investorId = '';
   String _investorName = '';
   String _contact = '';
   double _amount = 0.0;
@@ -26,7 +27,8 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
       final now = DateTime.now();
       final offer = InvestmentOffer(
         id: now.millisecondsSinceEpoch.toString(),
-        listingId: 'listing_${now.millisecondsSinceEpoch}', // ✅ Required field
+        listingId: 'listing_${now.millisecondsSinceEpoch}',
+        investorId: _investorId,
         investorName: _investorName,
         amount: _amount,
         term: _selectedHorizon!.code,
@@ -57,36 +59,48 @@ class _InvestmentOfferFormState extends State<InvestmentOfferForm> {
           key: _formKey,
           child: Column(children: [
             TextFormField(
+              decoration: const InputDecoration(labelText: 'Investor ID'),
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter investor ID' : null,
+              onSaved: (value) => _investorId = value!.trim(),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
               decoration: const InputDecoration(labelText: 'Investor Name'),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Enter name' : null,
-              onSaved: (value) => _investorName = value!,
+              onSaved: (value) => _investorName = value!.trim(),
             ),
             const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Contact'),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Enter contact' : null,
-              onSaved: (value) => _contact = value!,
+              onSaved: (value) => _contact = value!.trim(),
             ),
             const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Amount (USD)'),
               keyboardType: TextInputType.number,
-              validator: (value) =>
-                  value == null || double.tryParse(value) == null
-                      ? 'Enter valid amount'
-                      : null,
+              validator: (value) {
+                final parsed = double.tryParse(value ?? '');
+                return (parsed == null || parsed <= 0)
+                    ? 'Enter valid amount'
+                    : null;
+              },
               onSaved: (value) => _amount = double.parse(value!),
             ),
             const SizedBox(height: 10),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Interest Rate (%)'),
+              decoration:
+                  const InputDecoration(labelText: 'Interest Rate (%)'),
               keyboardType: TextInputType.number,
-              validator: (value) =>
-                  value == null || double.tryParse(value) == null
-                      ? 'Enter valid rate'
-                      : null,
+              validator: (value) {
+                final parsed = double.tryParse(value ?? '');
+                return (parsed == null || parsed < 0)
+                    ? 'Enter valid interest rate'
+                    : null;
+              },
               onSaved: (value) => _interestRate = double.parse(value!),
             ),
             const SizedBox(height: 10),
