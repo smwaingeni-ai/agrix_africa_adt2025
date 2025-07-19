@@ -24,7 +24,8 @@ class FarmerProfileService {
     final jsonString = prefs.getString(_storageKey);
     if (jsonString != null) {
       try {
-        return FarmerProfile.fromJson(jsonDecode(jsonString));
+        final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+        return FarmerProfile.fromJson(jsonMap);
       } catch (e) {
         debugPrint('❌ Failed to decode farmer profile: $e');
       }
@@ -32,25 +33,25 @@ class FarmerProfileService {
     return null;
   }
 
-  /// Remove the profile from local storage
+  /// Clear the stored profile
   static Future<void> clearProfile() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_storageKey);
   }
 
-  /// Aliases for consistency across screens
+  /// Aliases for consistent naming
   static Future<void> saveActiveProfile(FarmerProfile profile) => saveProfile(profile);
   static Future<FarmerProfile?> loadActiveProfile() => loadProfile();
   static Future<void> clearActiveProfile() => clearProfile();
 
-  /// Pick an image from gallery and return its path
+  /// Pick image from gallery
   static Future<String?> pickImageAndGetPath() async {
     final picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
     return pickedFile?.path;
   }
 
-  /// Return base64-encoded image string (Mobile/Desktop only)
+  /// Convert image to base64 (non-web only)
   static Future<String?> getProfileImageBase64(String? filePath) async {
     if (filePath == null || kIsWeb) {
       debugPrint("⚠️ Image path is null or unsupported on web.");
@@ -61,12 +62,12 @@ class FarmerProfileService {
       final bytes = await File(filePath).readAsBytes();
       return base64Encode(bytes);
     } catch (e) {
-      debugPrint("❌ Error reading file: $e");
+      debugPrint("❌ Error reading image file: $e");
       return null;
     }
   }
 
-  /// Render image safely across platforms
+  /// Display image widget based on platform
   static Widget getImageWidget(String path, {BoxFit fit = BoxFit.cover}) {
     if (kIsWeb) {
       return Image.network(path, fit: fit);
@@ -75,7 +76,7 @@ class FarmerProfileService {
     }
   }
 
-  /// Optional: Save QR Image to disk
+  /// Save QR code image to local disk and return file path
   static Future<String?> saveQRImageToFile(Uint8List imageBytes, String filename) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
