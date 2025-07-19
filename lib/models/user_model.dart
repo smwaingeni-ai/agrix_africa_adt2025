@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'farmer_profile.dart'; // Ensure this file exists and exports FarmerProfile
+import 'package:agrix_africa_adt2025/models/farmer_profile.dart' as model;
 
 /// Represents a user in the AgriX system.
 class UserModel {
   final String id;
   final String name;
-  final String role;     // e.g., Farmer, Officer, Admin, etc.
-  final String passcode; // Optional login PIN or code
+  final String role;
+  final String passcode;
 
   const UserModel({
     required this.id,
@@ -15,7 +15,7 @@ class UserModel {
     required this.passcode,
   });
 
-  /// 🔹 Empty user (for forms or drafts)
+  /// Returns an empty user model with default values
   factory UserModel.empty() => const UserModel(
         id: '',
         name: '',
@@ -23,24 +23,22 @@ class UserModel {
         passcode: '',
       );
 
-  /// 🔁 Create from raw JSON string
+  /// Creates a UserModel from a raw JSON string
   factory UserModel.fromRawJson(String str) =>
       UserModel.fromJson(json.decode(str));
 
-  /// 🔁 Convert to raw JSON string
+  /// Converts UserModel to a raw JSON string
   String toRawJson() => json.encode(toJson());
 
-  /// 🔁 Create from JSON map
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      role: json['role'] ?? 'Farmer',
-      passcode: json['passcode'] ?? '',
-    );
-  }
+  /// Creates a UserModel from a JSON map
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        id: json['id'] ?? '',
+        name: json['name'] ?? '',
+        role: json['role'] ?? 'Farmer',
+        passcode: json['passcode'] ?? '',
+      );
 
-  /// 🔁 Convert to JSON map
+  /// Converts UserModel to a JSON map
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -48,30 +46,27 @@ class UserModel {
         'passcode': passcode,
       };
 
-  /// 🔄 Create UserModel from FarmerProfile
-  factory UserModel.fromFarmer(FarmerProfile profile) {
-    return UserModel(
-      id: profile.idNumber,
-      name: profile.fullName,
-      role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
-      passcode: '', // optional; handled externally
-    );
-  }
+  /// Converts a FarmerProfile into a UserModel
+  factory UserModel.fromFarmer(model.FarmerProfile profile) => UserModel(
+        id: profile.idNumber,
+        name: profile.fullName,
+        role: profile.subsidised ? 'Subsidised Farmer' : 'Farmer',
+        passcode: '',
+      );
 
-  /// 🔄 Create a modified copy
+  /// Returns a new UserModel with updated fields
   UserModel copyWith({
     String? id,
     String? name,
     String? role,
     String? passcode,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      role: role ?? this.role,
-      passcode: passcode ?? this.passcode,
-    );
-  }
+  }) =>
+      UserModel(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        role: role ?? this.role,
+        passcode: passcode ?? this.passcode,
+      );
 
   @override
   String toString() =>
